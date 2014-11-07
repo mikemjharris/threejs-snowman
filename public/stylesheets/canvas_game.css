@@ -1,8 +1,11 @@
 *{
   box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+
 }
 
-body {
+/*body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -73,4 +76,4 @@ a {
 
 #bullet {
   display: none;
-}
+}*/

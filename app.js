@@ -17,7 +17,6 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-
 passport.use(new TwitterStrategy({
     consumerKey: process.env.AUTH_TWITTER_NODE_GAME_KEY,
     consumerSecret: process.env.AUTH_TWITTER_NODE_GAME_SECRET,

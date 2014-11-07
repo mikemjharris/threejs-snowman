@@ -1,0 +1,19 @@
+[
+  {
+    "handle": "nodemon",
+    "spawn": {
+      "command": "nodemon",
+      "args":  [
+        "-w",
+        "bin",
+        "-w",
+        "node_modules/mm-assessment-engine/",
+        "-w",
+        "app.js",
+        "-e",
+        "jade,html,js"
+      ]
+    },
+    "stdinPrefix": "nodemon"
+  }
+]

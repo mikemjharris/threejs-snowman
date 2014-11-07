@@ -18,6 +18,7 @@ var io = require('socket.io').listen(server);
 io.sockets.on('connection', function(socket) {
 
   socket.emit('connected', socket.id, movers);
+  socket.emit('player joined', socket.id, movers);
 
 });
 
