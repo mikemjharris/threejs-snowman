@@ -1,0 +1,170 @@
+#!/usr/bin/env node
+var debug = require('debug')('game');
+var app = require('../app');
+
+
+app.set('port', process.env.PORT || 3000);
+
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});
+
+var clients = 0
+var movers = []
+var canvas_width = 700
+var canvas_height = 400
+
+var io = require('socket.io').listen(server);
+io.sockets.on('connection', function(socket) {
+
+  socket.emit('connected', socket.id, movers);
+
+});
+
+//   clients += 1;
+//   console.log(socket.id)
+//   console.log(clients + "connected")
+//   // socket.on('move', function(direction) {
+//   //   socket.broadcast.emit('move', direction);
+//   // });
+
+//   socket.on("new_game", function(player) {
+//     socket.broadcast.emit('new_game', [player]);
+//     movers.push(player)
+//   });
+
+//   socket.on("playerposition", function(player) {
+//     // movers
+//     socket.broadcast.emit('playerposition', player);
+//     console.log("here")
+//     updatePlayer(player);
+//   });
+
+//   socket.on("new_player", function(new_player) {
+//     socket.broadcast.emit('new_player', new_player);
+//     movers.push(new_player)
+//   });
+
+//   socket.on("bullet", function(bullet) {
+//     socket.broadcast.emit('bullet', bullet);
+//     movers.push(bullet)
+//   });
+
+
+
+//   socket.on('disconnect', function () {
+//     // console.log('client disconnected');
+//     // console.log(socket.id)
+//     // console.log("***" + movers)
+//     if (movers) {
+//       for(var i = 0 ; i < movers.length; i++) {
+//           if (movers[i].client_id == socket.id) {
+//             movers.splice(i,1)
+//             socket.broadcast.emit('player_removed', socket.id);
+//           }
+//       }
+//     }
+//     clients -= 1;
+//   });
+// })
+
+// function removePlayer(player_id) {
+//   for(var i = 0; i < movers.length; i ++) {
+//     if(movers[i].client_id == player_id){
+//       movers.splice(i,1);
+//     }
+//   }
+// }
+
+// function findAPlayer(player_id) {
+//   var foundplayer = ""
+//   for(var i = 0; i < movers.length; i ++) {
+//     if(movers[i].client_id == player_id){
+//       foundplayer =  movers[i]
+//     }
+//   }
+//   return foundplayer
+// }
+
+
+// // function updateMovers() {
+// //       for (var i = 0 ; i < movers.length; i ++) {
+// //         movers[i].x = Math.min(Math.max(movers[i].x + movers[i].speedx,0),400 -movers[i].w)
+// //         movers[i].y = Math.min(Math.max(movers[i].y + movers[i].speedy,0),400 -movers[i].h)
+// //       }
+// //   }
+
+
+// function updateMovers() {
+//       // var oldx = movers[0].x
+//       // var oldy = movers[0].y
+//        for (var i = 0 ; i < movers.length; i ++) {
+//         movers[i].x = Math.min(Math.max(movers[i].x + movers[i].speedx,0),canvas_width - movers[i].w )
+//         movers[i].y = Math.min(Math.max(movers[i].y + movers[i].speedy,0),canvas_height - movers[i].h )
+
+//         if (movers[i].client_id.substring(0,6) == "bullet") {
+//            if(movers[i].x == 0 || movers[i].x == (canvas_width - movers[i].w) || movers[i].y == 0 || movers[i].y == (canvas_height - movers[i].w) ) {
+//                 removePlayer(movers[i].client_id)
+//                 shots = 0
+//            }
+//         }
+//       }
+//   }
+
+//   function compareRect(R1, R2) {
+//    return !(R1.x+ R1.w <= R2.x ||
+//            R1.y >= R2.y + R2.w ||
+//            R1.x >= R2.x + R2.w ||
+//            R1.y + R1.w <= R2.y);
+// }
+
+// function checkCollisions() {
+//   to_remove = []
+//   for(var i = 0; i < movers.length; i++) {
+//     for(var j = i; j < movers.length; j++) {
+//       if(i !== j) {
+//         // if(movers[i].substring)
+//           // removePlayer(movers[i].client_id)
+//           // removePlayer(movers[j].client_id)
+//           // console.log(movers[i].client_id)
+//           if (compareRect(movers[i], movers[j]) && (movers[j].client_id.substring(0,6) == "bullet" || movers[i].client_id.substring(0,6) == "bullet") ) {
+
+
+//             to_remove.push([movers[i].client_id, movers[j].client_id])
+//              console.log(to_remove)
+
+//           }
+//       }
+//     }
+//   }
+
+//   for(var k = 0; k < to_remove.length; k++) {
+
+//     console.log(to_remove[k][0] + "***" + to_remove[k][1])
+//     if(to_remove[k][0].substring(0,6)=="bullet") {
+//       var shooter = findAPlayer(to_remove[k][0].substring(7,to_remove[k][0].length))
+//       var shot = findAPlayer(to_remove[k][1])
+//     } else {
+//       var shooter = findAPlayer(to_remove[k][1].substring(7,to_remove[k][1].length))
+//       var shot =    findAPlayer(to_remove[k][0])
+//     }
+//     var message = shooter.player_name + " shot " + shot.player_name
+//     console.log(shooter)
+//     io.sockets.emit('player_removed', to_remove[k][0], message);
+//     io.sockets.emit('player_removed', to_remove[k][1], message);
+//     removePlayer(to_remove[k][0])
+//     removePlayer(to_remove[k][1])
+//   }
+// }
+
+
+
+
+// var times_per_second = 60
+// setInterval(function(){
+//     // console.log("hi")
+//     updateMovers();
+//     checkCollisions();
+// }, 1000 / times_per_second)
+
+

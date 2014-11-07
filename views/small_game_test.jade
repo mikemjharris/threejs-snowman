@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  div(class="page_title")
+    p(id="status")
+  
+  div(class="user_details")
+    if user != ""
+      img(class="player_img" id="player_img" src="#{user.profile_image_url}")
+      div(class="name_box")
+        span(id="player_name")= user.name
+        br
+        a(href="/logout") Sign out
+      div(class="join_button" id="join_game_twitter") Join Game
+    else
+      label 
+      a(href="/auth/twitter") Sign in with Twitter
+      p or
+      a(href="#") Input name manually
+      input(id="player_name_input" placeholder="Enter user name")
+      div(class="join_button" id="join_game") Join Game
+    
+  div(id="main" onload="game()")
+    canvas(id="canvas" width="700px" height="400px")
+  div(id="current_players") Current Players
+    ul
+  div(id="bullet")
+    //- img(src="../images/mike.png")
+    img(src="http://t1.gstatic.com/images?q=tbn:ANd9GcSxRa0xj0RzhGMM2VBK8kXXZHfdZPc7nV4p_cA0e1xV6Q2EHJqFbw")
+  
+  script(src="../javascripts/small_canvas_game.js")
+  
+
+

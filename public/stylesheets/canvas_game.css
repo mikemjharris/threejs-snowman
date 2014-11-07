@@ -1,0 +1,76 @@
+*{
+  box-sizing: border-box;
+}
+
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+
+#main {
+  width: 700px;
+  height: 400px;
+  border: 1px solid black;
+  margin: 10px 30px;
+  display: inline-block;
+  }
+.user_details{
+  display: inline-block;
+  width:300px;
+}
+#current_players {
+  width: 300px;
+  margin-top: 10px;
+  border: 1px solid black;
+  height: 400px;
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+}
+
+#current_players ul {
+  list-style: none;
+  padding: none;
+  text-align: left;
+}
+
+.join_button {
+  width: 100px;
+  height: 50px;
+  padding: 5px;
+  border: 1px solid black;
+  background: gray;
+  cursor: pointer;
+  display: inline-block;
+  float: right;
+}
+
+.player_list img {
+  width: 50px;
+  height: 50px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+#player_img {
+  vertical-align: top;
+  padding-right: 10px;
+}
+.name_box {
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: top;
+}
+.page_title {
+  width: 700px;
+  margin: 0 30px;
+  display: inline-block;
+}
+
+#bullet {
+  display: none;
+}
