@@ -26,7 +26,7 @@ var light;
 var socket = io.connect(window.location.hostname);
 var playerSocketId
 var players = {}
-
+var oldx, oldz
 //init THREE.js scene
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -46,7 +46,7 @@ var eyeGeometry = new THREE.SphereGeometry(eyeRadius,30,30);
 var buttonGeometry = new THREE.SphereGeometry(buttonRadius,30,30);
 //Materials 
 var snowballMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false});
-var planeMaterial = new THREE.MeshPhongMaterial({color: 0xffffff });
+var planeMaterial = new THREE.MeshPhongMaterial({color: 0xcccccc });
 var bodyMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false});
 var headMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false});
 var hatMaterial = new THREE.MeshLambertMaterial({color: 0x333333, wireframe: false})              
@@ -289,11 +289,14 @@ var cubeMaterial = new THREE.MeshLambertMaterial({
 var cubes = []
 
 
-var nosCubes = 0
-for (var i = 0; i < nosCubes; i++) {
+var nosCubes = 2
+var cubePositions = [[20,30], [50,55], [0,100],[120,10], [-120,10], [-100,-40], [-140,70], [-60,130]]
+for (var i = 0; i < cubePositions.length; i++) {
     cubes[i] = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    randX = Math.random() * 500 - 250;
-    randZ = Math.random() * 500 - 250;
+    // randX = Math.random() * 500 - 250;
+    // randZ = Math.random() * 500 - 250;
+    randX = cubePositions[i][0]
+    randZ = cubePositions[i][1]
     cubes[i].position.x=randX;
     cubes[i].position.y= Math.random() * cubeSide/2 ;
     cubes[i].position.z=randZ;
@@ -362,10 +365,13 @@ function onWindowResize(){
       requestAnimationFrame( render );
       x += 0.02;
       
-      var oldx = mesh.position.x
-      var oldz = mesh.position.z
+      // var oldx = mesh.position.x
+      // var oldz = mesh.position.z
+      
 
       Object.keys(players).forEach( function( playerId) {
+          oldx = players[playerSocketId].position.x
+          oldz = players[playerSocketId].position.z
       
         players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
         players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
@@ -382,12 +388,15 @@ function onWindowResize(){
                 snowballs[i].position.z = Math.cos(snowballs[i].direction)*snowballSpeed + snowballs[i].position.z
               }
           }
-
-          for (var i in cubes) {
-              if (compareRect(mesh.position, cubes[i].position)) {
-                  mesh.position.x = oldx;
-                  mesh.position.z  = oldz;
+        if(Object.keys(players).length > 0 ) {
+          for (var i = 0; i < cubes.length; i++) {
+              
+              if (compareRect(players[playerSocketId].position, cubes[i].position)) {
+                  console.log('here')
+                  players[playerSocketId].position.x = oldx;
+                  players[playerSocketId].position.z = oldz;
               };
+            }
       };
 
 
