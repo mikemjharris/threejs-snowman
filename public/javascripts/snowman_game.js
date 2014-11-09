@@ -424,9 +424,9 @@ function sendUpdate() {
 
 
 function updatePlayers (socketId, player) {
-    console.log('Update', socketId, player)
+    
     if( !players[socketId]) {
-      console.log('i')
+      
       newPlayer = mesh.clone();
       newPlayer.position.x = player.position.x
       newPlayer.position.y =  player.position.y
@@ -434,7 +434,7 @@ function updatePlayers (socketId, player) {
       newPlayer.move= player.move
 
       scene.add(newPlayer)
-      // console.log(newPlayer.posit)
+      
       players[socketId] = newPlayer
     }  else {
       players[socketId].position.x = player.position.x
@@ -471,28 +471,16 @@ socket.on('connected', function(socketId, currentPlayers){
           },
           move: currentPlayers[playerId].move 
         }
-        console.log('here')
+        
       updatePlayers(playerId, playerToCreate)
     });
 
     sendUpdate()
 });
 
-// socket.on('newPlayer', function(socketId){
-//     playerSocketId = socketId
-//     players[playerSocketId] = mesh.clone() 
-//     players[playerSocketId].position.x = 0 
-//     players[playerSocketId].position.z = 0 
-//     players[playerSocketId].position.y = 0 
-//     players[playerSocketId].rotation.y = 0 
-//     scene.add(players[playerSocketId]);
-//     console.log('new player', socketId)
-// });
-
-
 
 socket.on('fireSnowball' , function( socketId ) {
-  console.log( socketId , 'fired')
+  // console.log( socketId , 'fired')
   fireSnowball( socketId )
 })
 
@@ -506,6 +494,10 @@ socket.on('user disconnected' , function( playerId ) {
     delete players[playerId]
 })
 
-
+socket.on('player shot',  function( killerId, deadId) {
+  scene.remove(players[deadId])
+  delete players[deadId]
+  console.log('killed', killerId, deadId)
+})
 
 

@@ -12,6 +12,8 @@ var server = app.listen(app.get('port'), function() {
 var clients = 0
 var players = {}
 var snowballs = []
+var snowBallSize = 2
+var snowballSpeed = 5
 
 var io = require('socket.io').listen(server);
 
@@ -36,6 +38,7 @@ io.sockets.on('connection', function(socket) {
 
  
   socket.on('fireSnowball' , function() {
+    fireSnowball(socket.id)
     socket.broadcast.emit('fireSnowball', socket.id)
 
    })
@@ -54,7 +57,7 @@ var cubeSides = 10
 var bodyRadius = 9
 var oldx = {}
 var oldz = {}
-
+var snow
 var times_per_second = 60
 setInterval(function(){
 
@@ -66,20 +69,26 @@ setInterval(function(){
       players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
 
       for (var i = 0; i < cubes.length; i++) { 
-
-      if (compareRect(players[playerId].position, bodyRadius, cubes[i].position, cubeSide)) {
-        players[playerId].position.x = oldx[playerId];
-        players[playerId].position.z =  oldz[playerId];
-      };
-    }
-
-      // io.sockets.emit('update' , playerId, players[playerId] ) 
+        if (compareRect(players[playerId].position, bodyRadius, cubes[i].position, cubeSide)) {
+         players[playerId].position.x = oldx[playerId];
+         players[playerId].position.z =  oldz[playerId];
+        };
+      }
+      for(var i = 0; i < snowballs.length; i++) {
+        if(snowballs[i].id != playerId) {
+          if( compareRect(players[playerId].position, bodyRadius, snowballs[i].position, snowBallSize) ) {
+            io.sockets.emit('player shot', snowballs[i].id, playerId)
+            snowballs.splice(i,1)
+            delete players[playerId]
+          }
+        }
+      }      
     })
 
    for (var i=0; i < snowballs.length; i++) {
     if (snowballs[i].position.z > 250 || snowballs[i].position.z < -250  ||
       snowballs[i].position.x > 250 || snowballs[i].position.x < -250) {
-      scene.remove(snowballs[i])
+      snowballs.splice(i,1)
     } else {
       snowballs[i].position.x = Math.sin(snowballs[i].direction)*snowballSpeed + snowballs[i].position.x
       snowballs[i].position.z = Math.cos(snowballs[i].direction)*snowballSpeed + snowballs[i].position.z
@@ -97,15 +106,22 @@ function compareRect(R1, R1w, R2, R2w) {
   }
 
 
+var snowball = {
+  direction: 0,
+  position: {
+    x: 0,
+    z: 0
+  },
+  id: null
+}
 
 function fireSnowball( playerId ) {
-  snowballs.push( new THREE.Mesh(snowballGeometry,snowballMaterial));
+  snowballs.push( snowball);
   snowballs[snowballs.length -1].direction =  players[playerId].rotation.y
   snowballs[snowballs.length -1].position.x = players[playerId].position.x + Math.sin(snowballs[snowballs.length -1].direction)*bodyRadius;
   snowballs[snowballs.length -1].position.y = bodyRadius
   snowballs[snowballs.length -1].position.z = players[playerId].position.z + Math.cos(snowballs[snowballs.length -1].direction)*bodyRadius;
   snowballs[snowballs.length -1].id = playerId
-  scene.add(snowballs[snowballs.length - 1])
 }
 
 
