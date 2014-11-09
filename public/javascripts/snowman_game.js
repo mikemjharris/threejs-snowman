@@ -137,6 +137,7 @@ function fireSnowball( playerId ) {
   snowballs[snowballs.length -1].position.y = bodyRadius
   snowballs[snowballs.length -1].position.z = players[playerId].position.z + Math.cos(snowballs[snowballs.length -1].direction)*bodyRadius;
   snowballs[snowballs.length -1].id = playerId
+  snowballs[snowballs.length -1].nos = playerId
   scene.add(snowballs[snowballs.length - 1])
 }
 
