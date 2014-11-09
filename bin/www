@@ -15,16 +15,30 @@ var canvas_width = 700
 var canvas_height = 400
 
 var io = require('socket.io').listen(server);
+
 io.sockets.on('connection', function(socket) {
 
   socket.emit('connected', socket.id , players);
-  socket.broadcast.emit('newPlayer', socket.id,  players );
+  // Object.keys(players).forEach(function(playerId ) {
+  //   socket.emit('update' , playerId, players[playerId])
+  // })
 
-  socket.on('update' , function( ) {
-      console.log('update')
-      socket.emit('hi')
-      socket.broadcast.emit('move' , { hi: 'test'})
+
+  socket.on('update' , function( player ) {
+      // console.log('update')
+      players[socket.id] = player
+      socket.broadcast.emit('update' , socket.id, player)
   })
+
+   socket.on('disconnect', function () {
+    delete players[socket.id]
+    socket.broadcast.emit('user disconnected', socket.id);
+  });
+
+   socket.on('fireSnowball' , function() {
+    socket.broadcast.emit('fireSnowball', socket.id)
+
+   })
 });
 
 
