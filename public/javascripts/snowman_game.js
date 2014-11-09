@@ -27,6 +27,8 @@ var socket = io.connect(window.location.hostname);
 var playerSocketId
 var players = {}
 var oldx, oldz
+var newPlayer 
+
 //init THREE.js scene
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -358,93 +360,65 @@ function onWindowResize(){
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth , window.innerHeight );
 }
-    camY = camera.rotation.y
-    camz = camera.rotation.z
-    camx = camera.rotation.x
-    function render() {
-      requestAnimationFrame( render );
-      x += 0.02;
-      
-      // var oldx = mesh.position.x
-      // var oldz = mesh.position.z
-      
-
-      Object.keys(players).forEach( function( playerId) {
-          oldx = players[playerSocketId].position.x
-          oldz = players[playerSocketId].position.z
-      
-        players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
-        players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
-        players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
-        // socket.emit('update', playerId, players[playerId])
-      })
-
-     for (var i=0; i < snowballs.length; i++) {
-              if (snowballs[i].position.z > 250 || snowballs[i].position.z < -250  ||
-                snowballs[i].position.x > 250 || snowballs[i].position.x < -250) {
-                scene.remove(snowballs[i])
-              } else {
-                snowballs[i].position.x = Math.sin(snowballs[i].direction)*snowballSpeed + snowballs[i].position.x
-                snowballs[i].position.z = Math.cos(snowballs[i].direction)*snowballSpeed + snowballs[i].position.z
-              }
-          }
-        if(Object.keys(players).length > 0 ) {
-          for (var i = 0; i < cubes.length; i++) {
-              
-              if (compareRect(players[playerSocketId].position, cubes[i].position)) {
-                  console.log('here')
-                  players[playerSocketId].position.x = oldx;
-                  players[playerSocketId].position.z = oldz;
-              };
-            }
+camY = camera.rotation.y
+camz = camera.rotation.z
+camx = camera.rotation.x
+function render() {
+  requestAnimationFrame( render );
+   x += 0.02;
+  Object.keys(players).forEach( function( playerId) {
+    oldx = players[playerSocketId].position.x
+    oldz = players[playerSocketId].position.z
+    players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
+    players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
+    players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
+  })
+  for (var i=0; i < snowballs.length; i++) {
+    if (snowballs[i].position.z > 250 || snowballs[i].position.z < -250  ||
+      snowballs[i].position.x > 250 || snowballs[i].position.x < -250) {
+      scene.remove(snowballs[i])
+    } else {
+      snowballs[i].position.x = Math.sin(snowballs[i].direction)*snowballSpeed + snowballs[i].position.x
+      snowballs[i].position.z = Math.cos(snowballs[i].direction)*snowballSpeed + snowballs[i].position.z
+    }
+  }
+  if(Object.keys(players).length > 0 ) {
+    for (var i = 0; i < cubes.length; i++) { 
+      if (compareRect(players[playerSocketId].position, cubes[i].position)) {
+        players[playerSocketId].position.x = oldx;
+        players[playerSocketId].position.z = oldz;
       };
-
-
-        camera.position.y =  camera.position.y + cameraY / 5
-        camera.lookAt(scene.position);
-
-
-
-        camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom
-        camera.position.z = camera.position.z + Math.cos(camera.rotation.y)*cameraZoom
-
-        distanceFromCenter = Math.sqrt((camera.position.x*camera.position.x ) + (camera.position.z*camera.position.z ))
-        cameraRotate = cameraRotate + cameraRotateInc
-        camera.position.x = Math.sin(cameraRotate/50)*distanceFromCenter
-        camera.position.z = Math.cos(cameraRotate/50)*distanceFromCenter
-
-      bigCube.rotation.x = x/2
-      // light.position.set(100 + 100*Math.sin(x/10), 100 , 100 + 100*Math.cos(x/10));
-      renderer.render( scene, camera );
+    }
+  };
+  camera.position.y =  camera.position.y + cameraY / 5
+  camera.lookAt(scene.position);
+  camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom
+  camera.position.z = camera.position.z + Math.cos(camera.rotation.y)*cameraZoom
+  distanceFromCenter = Math.sqrt((camera.position.x*camera.position.x ) + (camera.position.z*camera.position.z ))
+  cameraRotate = cameraRotate + cameraRotateInc
+  camera.position.x = Math.sin(cameraRotate/50)*distanceFromCenter
+  camera.position.z = Math.cos(cameraRotate/50)*distanceFromCenter
+  
+  bigCube.rotation.x = x/2
+  // light.position.set(100 + 100*Math.sin(x/10), 100 , 100 + 100*Math.cos(x/10));
+  renderer.render( scene, camera );
 }
 render();
 
 eventListeners()
 
-  function sendUpdate() {
-    socket.emit('update', {
-          position: players[playerSocketId].position, 
-          rotation: {
-            y: players[playerSocketId].rotation.y
-          },
-          move: players[playerSocketId].move 
-        })
-  }
+function sendUpdate() {
+  socket.emit('update', {
+    position: players[playerSocketId].position, 
+    rotation: {
+      y: players[playerSocketId].rotation.y
+    },
+    move: players[playerSocketId].move 
+  })
+}
 
 
-var newPlayer 
- // { 
- //        position: {
- //          x: 0,
- //          y: 0,
- //          z:0
- //        },
- //        rotation: 0,
- //        move: {
- //          incx: 0,
- //          incRot:0
- //        }
- //    }
+
 
 function updatePlayers (socketId, player) {
     console.log('Update', socketId, player)
@@ -463,7 +437,9 @@ function updatePlayers (socketId, player) {
       players[socketId].position.x = player.position.x
       players[socketId].position.z = player.position.z
       players[socketId].rotation.y = player.rotation.y
-      players[socketId].move = player.move
+      if(socketId != playerSocketId) {
+        players[socketId].move = player.move
+      } 
     }
 }
 

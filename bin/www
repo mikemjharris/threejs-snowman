@@ -39,16 +39,26 @@ io.sockets.on('connection', function(socket) {
     socket.broadcast.emit('fireSnowball', socket.id)
 
    })
+
 });
 
-
+var cubePositions = [[20,30], [50,55], [0,100],[120,10], [-120,10], [-100,-40], [-140,70], [-60,130]]
 
 var times_per_second = 60
-setInterval(function(){
-    // console.log('hi')
-    // updateMovers();
-    // checkCollisions();
-}, 1000 / times_per_second)
+// setInterval(function(){
+
+//    // Object.keys(players).forEach( function( playerId) {
+//    //    // oldx = players[playerSocketId].position.x
+//    //    // oldz = players[playerSocketId].position.z
+//    //    players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
+//    //    players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
+//    //    players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
+//    //    io.sockets.emit('update' , playerId, players[playerId] ) 
+//    //  })
+
+
+// }, 1000 / times_per_second)
+
 
 
 // players[socket.id] = {
