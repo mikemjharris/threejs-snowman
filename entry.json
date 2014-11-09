@@ -5,9 +5,7 @@
       "command": "nodemon",
       "args":  [
         "-w",
-        "bin",
-        "-w",
-        "node_modules/mm-assessment-engine/",
+        "bin/www",
         "-w",
         "app.js",
         "-e",

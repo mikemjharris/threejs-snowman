@@ -10,17 +10,45 @@ var server = app.listen(app.get('port'), function() {
 });
 
 var clients = 0
-var movers = []
+var players = {}
 var canvas_width = 700
 var canvas_height = 400
 
 var io = require('socket.io').listen(server);
 io.sockets.on('connection', function(socket) {
 
-  socket.emit('connected', socket.id, movers);
-  socket.emit('player joined', socket.id, movers);
+  socket.emit('connected', socket.id , players);
+  socket.broadcast.emit('newPlayer', socket.id,  players );
 
+  socket.on('update' , function( ) {
+      console.log('update')
+      socket.emit('hi')
+      socket.broadcast.emit('move' , { hi: 'test'})
+  })
 });
+
+
+
+var times_per_second = 60
+setInterval(function(){
+    // console.log('hi')
+    // updateMovers();
+    // checkCollisions();
+}, 1000 / times_per_second)
+
+
+// players[socket.id] = {
+//     position: {
+//       x: 0,
+//       y: 0,
+//       z: 0
+//     },
+//       rotation
+
+//     position.
+//   }
+
+
 
 //   clients += 1;
 //   console.log(socket.id)
@@ -161,11 +189,6 @@ io.sockets.on('connection', function(socket) {
 
 
 
-// var times_per_second = 60
-// setInterval(function(){
-//     // console.log("hi")
-//     updateMovers();
-//     checkCollisions();
-// }, 1000 / times_per_second)
+
 
 
