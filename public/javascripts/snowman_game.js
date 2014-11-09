@@ -26,7 +26,8 @@ var light;
 var socket = io.connect(window.location.hostname);
 var playerSocketId
 var players = {}
-var oldx, oldz
+var oldx = {} 
+var oldz = {}
 var newPlayer 
 
 //init THREE.js scene
@@ -129,12 +130,13 @@ head.position.y= (parseInt(bodyRadius)*2 + parseInt(headRadius));
 head.position.z=0;
         
 
-function fireSnowball( player ) {
+function fireSnowball( playerId ) {
   snowballs.push( new THREE.Mesh(snowballGeometry,snowballMaterial));
-  snowballs[snowballs.length -1].direction =  player.rotation.y
-  snowballs[snowballs.length -1].position.x = player.position.x + Math.sin(snowballs[snowballs.length -1].direction)*bodyRadius;
+  snowballs[snowballs.length -1].direction =  players[playerId].rotation.y
+  snowballs[snowballs.length -1].position.x = players[playerId].position.x + Math.sin(snowballs[snowballs.length -1].direction)*bodyRadius;
   snowballs[snowballs.length -1].position.y = bodyRadius
-  snowballs[snowballs.length -1].position.z = player.position.z + Math.cos(snowballs[snowballs.length -1].direction)*bodyRadius;
+  snowballs[snowballs.length -1].position.z = players[playerId].position.z + Math.cos(snowballs[snowballs.length -1].direction)*bodyRadius;
+  snowballs[snowballs.length -1].id = playerId
   scene.add(snowballs[snowballs.length - 1])
 }
 
@@ -193,7 +195,7 @@ function fireSnowball( player ) {
           players[playerSocketId].move.incx =  Math.max(players[playerSocketId].move.incRot - 1,  -1)
           break;
         case 32: // spacebar
-          fireSnowball( players[playerSocketId] )
+          fireSnowball( playerSocketId )
           socket.emit('fireSnowball')
           break;
         }
@@ -293,6 +295,7 @@ var cubes = []
 
 var nosCubes = 2
 var cubePositions = [[20,30], [50,55], [0,100],[120,10], [-120,10], [-100,-40], [-140,70], [-60,130]]
+ // var cubePositions = []
 for (var i = 0; i < cubePositions.length; i++) {
     cubes[i] = new THREE.Mesh(cubeGeometry, cubeMaterial);
     // randX = Math.random() * 500 - 250;
@@ -367,12 +370,19 @@ function render() {
   requestAnimationFrame( render );
    x += 0.02;
   Object.keys(players).forEach( function( playerId) {
-    oldx = players[playerSocketId].position.x
-    oldz = players[playerSocketId].position.z
+    oldx[playerId] = players[playerId].position.x
+    oldz[playerId] = players[playerId].position.z
     players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
     players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
     players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
+    for (var i = 0; i < cubes.length; i++) { 
+      if (compareRect(players[playerId].position, cubes[i].position)) {
+        players[playerId].position.x = oldx[playerId];
+        players[playerId].position.z =  oldz[playerId];
+      };
+    }
   })
+
   for (var i=0; i < snowballs.length; i++) {
     if (snowballs[i].position.z > 250 || snowballs[i].position.z < -250  ||
       snowballs[i].position.x > 250 || snowballs[i].position.x < -250) {
@@ -382,14 +392,7 @@ function render() {
       snowballs[i].position.z = Math.cos(snowballs[i].direction)*snowballSpeed + snowballs[i].position.z
     }
   }
-  if(Object.keys(players).length > 0 ) {
-    for (var i = 0; i < cubes.length; i++) { 
-      if (compareRect(players[playerSocketId].position, cubes[i].position)) {
-        players[playerSocketId].position.x = oldx;
-        players[playerSocketId].position.z = oldz;
-      };
-    }
-  };
+  
   camera.position.y =  camera.position.y + cameraY / 5
   camera.lookAt(scene.position);
   camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom
@@ -490,7 +493,7 @@ socket.on('connected', function(socketId, currentPlayers){
 
 socket.on('fireSnowball' , function( socketId ) {
   console.log( socketId , 'fired')
-  fireSnowball( players[socketId] )
+  fireSnowball( socketId )
 })
 
 

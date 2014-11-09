@@ -11,8 +11,7 @@ var server = app.listen(app.get('port'), function() {
 
 var clients = 0
 var players = {}
-var canvas_width = 700
-var canvas_height = 400
+var snowballs = []
 
 var io = require('socket.io').listen(server);
 
@@ -35,7 +34,8 @@ io.sockets.on('connection', function(socket) {
     socket.broadcast.emit('user disconnected', socket.id);
   });
 
-   socket.on('fireSnowball' , function() {
+ 
+  socket.on('fireSnowball' , function() {
     socket.broadcast.emit('fireSnowball', socket.id)
 
    })
@@ -43,176 +43,70 @@ io.sockets.on('connection', function(socket) {
 });
 
 var cubePositions = [[20,30], [50,55], [0,100],[120,10], [-120,10], [-100,-40], [-140,70], [-60,130]]
+var cubes = []
+for( var i = 0; i < cubePositions; i++ ) {
+  cubes[i] = {}
+  cubes[i].x = cubePositions[i][0]
+  cubes[i].z = cubePositions[i][1]
+}
+
+var cubeSides = 10
+var bodyRadius = 9
+var oldx = {}
+var oldz = {}
 
 var times_per_second = 60
-// setInterval(function(){
+setInterval(function(){
 
-//    // Object.keys(players).forEach( function( playerId) {
-//    //    // oldx = players[playerSocketId].position.x
-//    //    // oldz = players[playerSocketId].position.z
-//    //    players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
-//    //    players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
-//    //    players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
-//    //    io.sockets.emit('update' , playerId, players[playerId] ) 
-//    //  })
+   Object.keys(players).forEach( function( playerId) {
+     oldx[playerId] = players[playerId].position.x
+    oldz[playerId] = players[playerId].position.z
+      players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
+      players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
+      players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
+
+      for (var i = 0; i < cubes.length; i++) { 
+
+      if (compareRect(players[playerId].position, bodyRadius, cubes[i].position, cubeSide)) {
+        players[playerId].position.x = oldx[playerId];
+        players[playerId].position.z =  oldz[playerId];
+      };
+    }
+
+      // io.sockets.emit('update' , playerId, players[playerId] ) 
+    })
+
+   for (var i=0; i < snowballs.length; i++) {
+    if (snowballs[i].position.z > 250 || snowballs[i].position.z < -250  ||
+      snowballs[i].position.x > 250 || snowballs[i].position.x < -250) {
+      scene.remove(snowballs[i])
+    } else {
+      snowballs[i].position.x = Math.sin(snowballs[i].direction)*snowballSpeed + snowballs[i].position.x
+      snowballs[i].position.z = Math.cos(snowballs[i].direction)*snowballSpeed + snowballs[i].position.z
+    }
+  }
 
 
-// }, 1000 / times_per_second)
+}, 1000 / times_per_second)
 
-
-
-// players[socket.id] = {
-//     position: {
-//       x: 0,
-//       y: 0,
-//       z: 0
-//     },
-//       rotation
-
-//     position.
-//   }
-
-
-
-//   clients += 1;
-//   console.log(socket.id)
-//   console.log(clients + "connected")
-//   // socket.on('move', function(direction) {
-//   //   socket.broadcast.emit('move', direction);
-//   // });
-
-//   socket.on("new_game", function(player) {
-//     socket.broadcast.emit('new_game', [player]);
-//     movers.push(player)
-//   });
-
-//   socket.on("playerposition", function(player) {
-//     // movers
-//     socket.broadcast.emit('playerposition', player);
-//     console.log("here")
-//     updatePlayer(player);
-//   });
-
-//   socket.on("new_player", function(new_player) {
-//     socket.broadcast.emit('new_player', new_player);
-//     movers.push(new_player)
-//   });
-
-//   socket.on("bullet", function(bullet) {
-//     socket.broadcast.emit('bullet', bullet);
-//     movers.push(bullet)
-//   });
+function compareRect(R1, R1w, R2, R2w) {
+   return !(R1.x+ R1w*2  <= R2.x + R2w/ 2 ||
+           R1.z - R1w*2  >= R2.z - R2w/2 ||
+           R1.x >= R2.x + R2w ||
+           R1.z + R1w*2  <= R2.z + R2w/2);
+  }
 
 
 
-//   socket.on('disconnect', function () {
-//     // console.log('client disconnected');
-//     // console.log(socket.id)
-//     // console.log("***" + movers)
-//     if (movers) {
-//       for(var i = 0 ; i < movers.length; i++) {
-//           if (movers[i].client_id == socket.id) {
-//             movers.splice(i,1)
-//             socket.broadcast.emit('player_removed', socket.id);
-//           }
-//       }
-//     }
-//     clients -= 1;
-//   });
-// })
-
-// function removePlayer(player_id) {
-//   for(var i = 0; i < movers.length; i ++) {
-//     if(movers[i].client_id == player_id){
-//       movers.splice(i,1);
-//     }
-//   }
-// }
-
-// function findAPlayer(player_id) {
-//   var foundplayer = ""
-//   for(var i = 0; i < movers.length; i ++) {
-//     if(movers[i].client_id == player_id){
-//       foundplayer =  movers[i]
-//     }
-//   }
-//   return foundplayer
-// }
-
-
-// // function updateMovers() {
-// //       for (var i = 0 ; i < movers.length; i ++) {
-// //         movers[i].x = Math.min(Math.max(movers[i].x + movers[i].speedx,0),400 -movers[i].w)
-// //         movers[i].y = Math.min(Math.max(movers[i].y + movers[i].speedy,0),400 -movers[i].h)
-// //       }
-// //   }
-
-
-// function updateMovers() {
-//       // var oldx = movers[0].x
-//       // var oldy = movers[0].y
-//        for (var i = 0 ; i < movers.length; i ++) {
-//         movers[i].x = Math.min(Math.max(movers[i].x + movers[i].speedx,0),canvas_width - movers[i].w )
-//         movers[i].y = Math.min(Math.max(movers[i].y + movers[i].speedy,0),canvas_height - movers[i].h )
-
-//         if (movers[i].client_id.substring(0,6) == "bullet") {
-//            if(movers[i].x == 0 || movers[i].x == (canvas_width - movers[i].w) || movers[i].y == 0 || movers[i].y == (canvas_height - movers[i].w) ) {
-//                 removePlayer(movers[i].client_id)
-//                 shots = 0
-//            }
-//         }
-//       }
-//   }
-
-//   function compareRect(R1, R2) {
-//    return !(R1.x+ R1.w <= R2.x ||
-//            R1.y >= R2.y + R2.w ||
-//            R1.x >= R2.x + R2.w ||
-//            R1.y + R1.w <= R2.y);
-// }
-
-// function checkCollisions() {
-//   to_remove = []
-//   for(var i = 0; i < movers.length; i++) {
-//     for(var j = i; j < movers.length; j++) {
-//       if(i !== j) {
-//         // if(movers[i].substring)
-//           // removePlayer(movers[i].client_id)
-//           // removePlayer(movers[j].client_id)
-//           // console.log(movers[i].client_id)
-//           if (compareRect(movers[i], movers[j]) && (movers[j].client_id.substring(0,6) == "bullet" || movers[i].client_id.substring(0,6) == "bullet") ) {
-
-
-//             to_remove.push([movers[i].client_id, movers[j].client_id])
-//              console.log(to_remove)
-
-//           }
-//       }
-//     }
-//   }
-
-//   for(var k = 0; k < to_remove.length; k++) {
-
-//     console.log(to_remove[k][0] + "***" + to_remove[k][1])
-//     if(to_remove[k][0].substring(0,6)=="bullet") {
-//       var shooter = findAPlayer(to_remove[k][0].substring(7,to_remove[k][0].length))
-//       var shot = findAPlayer(to_remove[k][1])
-//     } else {
-//       var shooter = findAPlayer(to_remove[k][1].substring(7,to_remove[k][1].length))
-//       var shot =    findAPlayer(to_remove[k][0])
-//     }
-//     var message = shooter.player_name + " shot " + shot.player_name
-//     console.log(shooter)
-//     io.sockets.emit('player_removed', to_remove[k][0], message);
-//     io.sockets.emit('player_removed', to_remove[k][1], message);
-//     removePlayer(to_remove[k][0])
-//     removePlayer(to_remove[k][1])
-//   }
-// }
-
-
-
-
+function fireSnowball( playerId ) {
+  snowballs.push( new THREE.Mesh(snowballGeometry,snowballMaterial));
+  snowballs[snowballs.length -1].direction =  players[playerId].rotation.y
+  snowballs[snowballs.length -1].position.x = players[playerId].position.x + Math.sin(snowballs[snowballs.length -1].direction)*bodyRadius;
+  snowballs[snowballs.length -1].position.y = bodyRadius
+  snowballs[snowballs.length -1].position.z = players[playerId].position.z + Math.cos(snowballs[snowballs.length -1].direction)*bodyRadius;
+  snowballs[snowballs.length -1].id = playerId
+  scene.add(snowballs[snowballs.length - 1])
+}
 
 
 
