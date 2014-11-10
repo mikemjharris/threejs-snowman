@@ -1,15 +1,19 @@
 node_game
 =========
 
-Experimenting with node, express and HTML5 canvas
+Multiplayer snowman game built with three.js and node.
 
 
-Have multiple players moving around in a square.
+Clone repositry then:
 
-Git clone repositry
+`npm install`
 
-npm install
+To run the game:  
 
-npm start
+`entry`  
 
-localhost:3000/games/small   **current working version - still work in progress!
+Navigate to:  
+
+`localhost:3000/snowman`   
+
+Controllers - arrows to move, spacebar to fire.  w,s,e,d,r,f to move the camera view.
