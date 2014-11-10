@@ -1,5 +1,5 @@
-node_game
-=========
+Three Js Node Snowman Multiplayer Game
+========================
 
 Multiplayer snowman game built with three.js and node.
 
