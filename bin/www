@@ -62,8 +62,9 @@ var times_per_second = 60
 setInterval(function(){
 
    Object.keys(players).forEach( function( playerId) {
-     oldx[playerId] = players[playerId].position.x
-    oldz[playerId] = players[playerId].position.z
+    if( !players[playerId].dead) {
+      oldx[playerId] = players[playerId].position.x
+      oldz[playerId] = players[playerId].position.z
       players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
       players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
       players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
@@ -79,11 +80,12 @@ setInterval(function(){
           if( compareRect(players[playerId].position, bodyRadius, snowballs[i].position, snowBallSize) ) {
             io.sockets.emit('player shot', snowballs[i].id, playerId)
             snowballs.splice(i,1)
-            delete players[playerId]
+            players[playerId].dead = true
           }
         }
-      }      
-    })
+      }
+    }      
+  })
 
    for (var i=0; i < snowballs.length; i++) {
     if (snowballs[i].position.z > 250 || snowballs[i].position.z < -250  ||
