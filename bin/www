@@ -36,7 +36,7 @@ io.sockets.on('connection', function(socket) {
     socket.broadcast.emit('user disconnected', socket.id);
   });
 
- 
+
   socket.on('fireSnowball' , function() {
     fireSnowball(socket.id)
     socket.broadcast.emit('fireSnowball', socket.id)
@@ -62,13 +62,14 @@ var times_per_second = 60
 setInterval(function(){
 
    Object.keys(players).forEach( function( playerId) {
-     oldx[playerId] = players[playerId].position.x
-    oldz[playerId] = players[playerId].position.z
+    if( !players[playerId].dead) {
+      oldx[playerId] = players[playerId].position.x
+      oldz[playerId] = players[playerId].position.z
       players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
       players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
       players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
 
-      for (var i = 0; i < cubes.length; i++) { 
+      for (var i = 0; i < cubes.length; i++) {
         if (compareRect(players[playerId].position, bodyRadius, cubes[i].position, cubeSide)) {
          players[playerId].position.x = oldx[playerId];
          players[playerId].position.z =  oldz[playerId];
@@ -79,11 +80,12 @@ setInterval(function(){
           if( compareRect(players[playerId].position, bodyRadius, snowballs[i].position, snowBallSize) ) {
             io.sockets.emit('player shot', snowballs[i].id, playerId)
             snowballs.splice(i,1)
-            delete players[playerId]
+            players[playerId].dead = true
           }
         }
-      }      
-    })
+      }
+    }
+  })
 
    for (var i=0; i < snowballs.length; i++) {
     if (snowballs[i].position.z > 250 || snowballs[i].position.z < -250  ||
