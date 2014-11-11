@@ -3,10 +3,20 @@ extends layout
 block content
   div(id="canvas-view")
   div(class='controls')
-    h1 Snowball Fight!
-    label Enter your name to join
+    div(class='start')
+      h2 Snowball Fight!
+      label Enter your name to join
+    div(class="regenerate")
+      h2 You got shot! 
+      h2 Click the button to rejoin
     input(type='text' id='player-name')
     div(id='join-game') Join Game!
-
+  div(class='info')
+    h3 Players 
+    table(id='players')
+      th Name
+      th W
+      th L
+  div(id='message')
 
   script(src="../javascripts/snowman_game.js")

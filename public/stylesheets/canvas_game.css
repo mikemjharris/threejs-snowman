@@ -28,12 +28,23 @@
   opacity: 0.5;
 }
 
+.ingame .start {
+  display: none;
+}
+
+.regenerate {
+  display: none;
+}
+.ingame > .regenerate {
+  display: block;
+}
+
 .hide-controls {
   opactiy: 0;
   z-index: -100;
 }
 
-.controls h1 {
+.controls h2 {
   color: white;
   opacity: 1;
 }
@@ -64,6 +75,32 @@ label {
   color: white;
 }
 
+.info {
+  position: absolute;
+  top: 45px;
+  left: 10px;
+  width: 200px;
+  border: 1px solid black;
+
+}
+
+#message {
+  padding: 5px;
+  position: absolute;
+  margin: 0 auto;
+  height: 40px;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  opacity: 0.8;
+  text-align: center;
+}
+
+td {
+  padding: 2px 5px;
+}
 /*body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }

@@ -29,6 +29,7 @@ var players = {}
 var oldx = {}
 var oldz = {}
 var newPlayer
+var thisPlayerName
 
 //init THREE.js scene
 var scene = new THREE.Scene();
@@ -159,6 +160,14 @@ function fireSnowball( playerId ) {
   }
 
 
+window.addEventListener('keydown', function(event) {
+      switch (event.keyCode) {
+        case 13: // W
+        joinGameClicked( )
+        break
+      }
+    })
+
   function eventListeners () {
     window.addEventListener('keydown', function(event) {
       // console.log('called')
@@ -265,7 +274,27 @@ for( var j = 0; j < eyes.length ; j++) {
 scene.add(plane);
 
 
+var canvas1 = document.createElement('canvas');
+var context1 = canvas1.getContext('2d');
+  context1.font = "Bold 10px Arial";
+  context1.fillStyle = "rgba(200,200,200,0.95)";
+  context1.fillText('Hello, world!', 0, 20);
+  
+  // canvas contents will be used for a texture
+  var texture1 = new THREE.Texture(canvas1) 
+  texture1.needsUpdate = true;
+      
+  var material1 = new THREE.MeshBasicMaterial( {map: texture1, side:THREE.DoubleSide } );
+  material1.transparent = true;
 
+var mesh1 = new THREE.Mesh(
+  new THREE.PlaneGeometry(canvas1.width, canvas1.height),
+       material1
+  );
+  mesh1.position.set(0,0,0);
+  // scene.add( mesh1 );
+
+// mesh.add(mesh1)
 camera.position.x = 170;
 camera.position.y = 60;
 camera.position.z = 170;
@@ -333,10 +362,10 @@ for (var i = 0; i < cubePositions.length; i++) {
 
 
 var highlightRadius   = bodyRadius,
-    highlightMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } ),
-    highlightGeometry = new THREE.CircleGeometry( highlightRadius, 30 );
-    var highlight  = new THREE.Line( highlightGeometry, highlightMaterial )
-    highlight.rotation.x = Math.PI/2
+    highlightMaterial = new THREE.MeshLambertMaterial( { color: 0x0000ff } ),
+    highlightGeometry = new THREE.CylinderGeometry(bodyRadius, bodyRadius, 1, 30);
+var highlight  = new THREE.Mesh( highlightGeometry, highlightMaterial )
+    highlight.rotation.x = Math.PI
 
 
 
@@ -345,14 +374,25 @@ var highlightRadius   = bodyRadius,
 
 
 $('#join-game').on('click', function() {
+  joinGameClicked( )  
+})
+
+function joinGameClicked( )  {
   console.log('clicked')
-  if($('#player-name').val() != '') {
+  var playerName = $('#player-name').val()
+  $('#player-name').val('')
+  if(playerName != '') {
     eventListeners()
     $('.controls').addClass('hide-controls')
-
-    joinGame($('#player-name').val())
+    addToPlayersList(playerSocketId , playerName)
+    joinGame(playerName)
   }
-})
+}
+
+
+function addToPlayersList(socketId, playerName) {
+  $('#players').append('<tr id=' + socketId + '><td>' + playerName + '</td>|<td class="win">0</td>|<td class="loss">0</td></tr>')
+}
 
 document.getElementById("canvas-view").appendChild(renderer.domElement);
 
@@ -370,6 +410,7 @@ function render() {
   requestAnimationFrame( render );
    x += 0.02;
   Object.keys(players).forEach( function( playerId) {
+    // mesh1.position.x = 
     oldx[playerId] = players[playerId].position.x
     oldz[playerId] = players[playerId].position.z
     players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
@@ -410,13 +451,16 @@ render();
 
 
 function sendUpdate() {
-  socket.emit('update', {
-    position: players[playerSocketId].position,
-    rotation: {
-      y: players[playerSocketId].rotation.y
-    },
-    move: players[playerSocketId].move
-  })
+  if( players[playerSocketId]) {
+      socket.emit('update', {
+        position: players[playerSocketId].position,
+        rotation: {
+          y: players[playerSocketId].rotation.y
+        },
+        move: players[playerSocketId].move,
+        playerName: players[playerSocketId].playerName
+      })
+    }
 }
 
 
@@ -431,7 +475,8 @@ function updatePlayers (socketId, player) {
       newPlayer.position.y =  player.position.y
       newPlayer.position.z =  player.position.z
       newPlayer.move= player.move
-
+      newPlayer.playerName = player.playerName
+      addToPlayersList(socketId, player.playerName)
       scene.add(newPlayer)
 
       players[socketId] = newPlayer
@@ -449,7 +494,7 @@ function updatePlayers (socketId, player) {
 var playerToCreate
 
 function joinGame( playerName ) {
-
+    thisPlayerName = playerName
     players[playerSocketId] = mesh.clone()
     players[playerSocketId].add(highlight)
     players[playerSocketId].move = {
@@ -462,12 +507,11 @@ function joinGame( playerName ) {
 }
 
 
-socket.on('connected', function(socketId, currentPlayers){
+socket.on('connected', function(socketId, currentPlayers, score){
     console.log('This socket id:', socketId)
     console.log('currentPlayers', currentPlayers)
     playerSocketId = socketId
 
-    // console.log('here', currentPlayers)
     Object.keys(currentPlayers).forEach( function( playerId) {
       console.log(currentPlayers[playerId].position)
       playerToCreate = {
@@ -475,33 +519,55 @@ socket.on('connected', function(socketId, currentPlayers){
           rotation: {
             y: currentPlayers[playerId].rotation.y
           },
-          move: currentPlayers[playerId].move
+          move: currentPlayers[playerId].move,
+          playerName: currentPlayers[playerId].playerName
+          // score: currentPlayers[playerId].score
         }
-
       updatePlayers(playerId, playerToCreate)
+      updateScoreboard( score )
     });
 
 
 });
 
+function updateScoreboard ( score ) {
+  Object.keys(score).forEach( function ( playerId ) {
+    $('#'+playerId+' .win').text(score[playerId].w)
+    $('#'+playerId+' .loss').text(score[playerId].l)
+  })
+}
+
+function regenerate () {
+  $('.controls').addClass('ingame')
+  $('.controls').removeClass('hide-controls')
+  $('#player-name').val(thisPlayerName)
+}
+
 
 socket.on('fireSnowball' , function( socketId ) {
-  // console.log( socketId , 'fired')
   fireSnowball( socketId )
 })
 
+socket.on('score' , function ( score ) {
+  updateScoreboard( score )
+})
 
 socket.on('update' , function( socketId, player ) {
   updatePlayers(socketId, player)
 })
 
 socket.on('user disconnected' , function( playerId ) {
+    $('#' + playerId).remove()
     scene.remove(players[playerId])
     delete players[playerId]
 })
 
 socket.on('player shot',  function( killerId, deadId) {
+  $('#message').text(players[killerId].playerName + ' hit ' + players[deadId].playerName + ' with a snowball!')
   scene.remove(players[deadId])
+  if( deadId == playerSocketId) {
+    regenerate()
+  }
   delete players[deadId]
   console.log('killed', killerId, deadId)
 })
