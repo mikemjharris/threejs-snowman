@@ -87,12 +87,19 @@ setInterval(function(){
       for(var i = 0; i < snowballs.length; i++) {
         if(snowballs[i].id != playerId) {
           if( compareRect(players[playerId].position, bodyRadius, snowballs[i].position, snowBallSize) ) {
+            
             io.sockets.emit('player shot', snowballs[i].id, playerId)
-            score[snowballs[i].id].w = score[snowballs[i].id].w + 1
-            score[playerId].l = score[playerId].l + 1 
-            io.sockets.emit('score', score)
-            snowballs.splice(i,1)
+            console.log(players)
+            console.log(score)
+            if(!players[playerId].dead) {
+              score[snowballs[i].id].w = score[snowballs[i].id].w + 1
+              score[playerId].l = score[playerId].l + 1 
+            }
             players[playerId].dead = true
+            io.sockets.emit('score', score)
+            console.log(score)
+            snowballs.splice(i,1)
+            
           }
         }
       }
@@ -113,10 +120,10 @@ setInterval(function(){
 }, 1000 / times_per_second)
 
 function compareRect(R1, R1w, R2, R2w) {
-   return !(R1.x+ R1w*2  <= R2.x + R2w/ 2 ||
-           R1.z - R1w*2  >= R2.z - R2w/2 ||
+   return !(R1.x+ R1w*2  <= R2.x + R2w ||
+           R1.z - R1w*2  >= R2.z - R2w ||
            R1.x >= R2.x + R2w ||
-           R1.z + R1w*2  <= R2.z + R2w/2);
+           R1.z + R1w*2  <= R2.z + R2w);
   }
 
 

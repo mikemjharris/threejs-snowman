@@ -216,18 +216,18 @@ window.addEventListener('keydown', function(event) {
     sendUpdate()
     switch (event.keyCode) {
       case 37: // left
-        players[playerSocketId].move.incRot =  Math.max(players[playerSocketId].move.incRot - 0.1,  -0.1)
+        players[playerSocketId].move.incRot =  0 //Math.max(players[playerSocketId].move.incRot - 0.1,  -0.1)
         //incz =  Math.max(incz - 1,  -1)
         break;
       case 39: // right
-        players[playerSocketId].move.incRot =  Math.min(players[playerSocketId].move.incRot+ 0.1,  +0.1)
+        players[playerSocketId].move.incRot =  0 //Math.min(players[playerSocketId].move.incRot+ 0.1,  +0.1)
         // incz =  Math.min(incz + 1,  1)
         break;
       case 38: // up
-        players[playerSocketId].move.incx =  Math.max(players[playerSocketId].move.incx - 1,  -1)
+        players[playerSocketId].move.incx =  0 //Math.max(players[playerSocketId].move.incx - 1,  -1)
         break;
       case 40: // down
-        players[playerSocketId].move.incx =  Math.min(players[playerSocketId].move.incx + 1,  1)
+        players[playerSocketId].move.incx =  0 //Math.min(players[playerSocketId].move.incx + 1,  1)
         break;
       case 68: // E
         cameraY = 0
@@ -391,7 +391,9 @@ function joinGameClicked( )  {
 
 
 function addToPlayersList(socketId, playerName) {
-  $('#players').append('<tr id=' + socketId + '><td>' + playerName + '</td>|<td class="win">0</td>|<td class="loss">0</td></tr>')
+  if($('#' + socketId).length == 0) {
+    $('#players').append('<tr id=' + socketId + '><td>' + playerName + '</td>|<td class="win">0</td>|<td class="loss">0</td></tr>')
+  }
 }
 
 document.getElementById("canvas-view").appendChild(renderer.domElement);
@@ -531,9 +533,10 @@ socket.on('connected', function(socketId, currentPlayers, score){
 });
 
 function updateScoreboard ( score ) {
+  console.log( score )
   Object.keys(score).forEach( function ( playerId ) {
-    $('#'+playerId+' .win').text(score[playerId].w)
-    $('#'+playerId+' .loss').text(score[playerId].l)
+    $('#'+playerId +' .win').text(score[playerId].w)
+    $('#'+playerId +' .loss').text(score[playerId].l)
   })
 }
 
@@ -563,7 +566,7 @@ socket.on('user disconnected' , function( playerId ) {
 })
 
 socket.on('player shot',  function( killerId, deadId) {
-  $('#message').text(players[killerId].playerName + ' hit ' + players[deadId].playerName + ' with a snowball!')
+  // $('#message').text(players[killerId].playerName + ' hit ' + players[deadId].playerName + ' with a snowball!')
   scene.remove(players[deadId])
   if( deadId == playerSocketId) {
     regenerate()
