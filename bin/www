@@ -36,7 +36,7 @@ io.sockets.on('connection', function(socket) {
     socket.broadcast.emit('user disconnected', socket.id);
   });
 
- 
+
   socket.on('fireSnowball' , function() {
     fireSnowball(socket.id)
     socket.broadcast.emit('fireSnowball', socket.id)
@@ -69,7 +69,7 @@ setInterval(function(){
       players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
       players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
 
-      for (var i = 0; i < cubes.length; i++) { 
+      for (var i = 0; i < cubes.length; i++) {
         if (compareRect(players[playerId].position, bodyRadius, cubes[i].position, cubeSide)) {
          players[playerId].position.x = oldx[playerId];
          players[playerId].position.z =  oldz[playerId];
@@ -84,7 +84,7 @@ setInterval(function(){
           }
         }
       }
-    }      
+    }
   })
 
    for (var i=0; i < snowballs.length; i++) {
@@ -116,6 +116,8 @@ var snowball = {
   },
   id: null
 }
+
+
 
 function fireSnowball( playerId ) {
   snowballs.push( snowball);

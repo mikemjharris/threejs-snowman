@@ -18,9 +18,9 @@ passport.deserializeUser(function(user, done) {
 });
 
 passport.use(new TwitterStrategy({
-    consumerKey: process.env.AUTH_TWITTER_NODE_GAME_KEY,
-    consumerSecret: process.env.AUTH_TWITTER_NODE_GAME_SECRET,
-    callbackURL: process.env.AUTH_TWITTER_NODE_GAME_CALLBACK
+    consumerKey: 'blank',
+    consumerSecret: 'blank',
+    callbackURL: 'blank'
   },
   function(token, tokenSecret, profile, done) {
     user = profile;

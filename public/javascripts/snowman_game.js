@@ -26,9 +26,9 @@ var light;
 var socket = io.connect(window.location.hostname);
 var playerSocketId
 var players = {}
-var oldx = {} 
+var oldx = {}
 var oldz = {}
-var newPlayer 
+var newPlayer
 
 //init THREE.js scene
 var scene = new THREE.Scene();
@@ -37,7 +37,7 @@ var renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(new THREE.Color(0xEEEEEE));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMapEnabled = true;
-       
+
 //Geometries
 var snowballGeometry = new THREE.SphereGeometry(snowBallSize,30,30);
 var planeGeometry = new THREE.PlaneGeometry(500,500);
@@ -47,12 +47,12 @@ var hatGeometry = new THREE.CylinderGeometry(3, 3, hatHeight, 40)
 var hatRimGeometry = new THREE.CylinderGeometry(4, 4, hatRimHeight, 40)
 var eyeGeometry = new THREE.SphereGeometry(eyeRadius,30,30);
 var buttonGeometry = new THREE.SphereGeometry(buttonRadius,30,30);
-//Materials 
+//Materials
 var snowballMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false});
 var planeMaterial = new THREE.MeshPhongMaterial({color: 0xcccccc });
 var bodyMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false});
 var headMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false});
-var hatMaterial = new THREE.MeshLambertMaterial({color: 0x333333, wireframe: false})              
+var hatMaterial = new THREE.MeshLambertMaterial({color: 0x333333, wireframe: false})
 var eyeMaterial = new THREE.MeshLambertMaterial({color: 0x666666, wireframe: false});
 var buttonMaterial = new THREE.MeshLambertMaterial({color: 0x000000, wireframe: false});
 var armMaterial = new THREE.LineBasicMaterial({ color: 0xA52A2A });
@@ -61,14 +61,14 @@ var armMaterial = new THREE.LineBasicMaterial({ color: 0xA52A2A });
 //Create objects
 var plane = new THREE.Mesh(planeGeometry,planeMaterial);
 var body = new THREE.Mesh(bodyGeometry,bodyMaterial);
-var head = new THREE.Mesh(headGeometry,headMaterial);        
+var head = new THREE.Mesh(headGeometry,headMaterial);
 var hat = new THREE.Mesh(hatGeometry, hatMaterial);
 var hatRim = new THREE.Mesh(hatRimGeometry, hatMaterial);
-    
 
 
 
-for (var i = 0; i < nosButtons; i++ ) {          
+
+for (var i = 0; i < nosButtons; i++ ) {
   buttons[i] = new THREE.Mesh(buttonGeometry,buttonMaterial);
   buttonAngle = (i+3)*Math.PI / 6
   buttons[i].position.x = 0
@@ -99,10 +99,10 @@ for (var i = 0; i < 2; i++) {
 
   var arm1 = new THREE.Line(arm1Geometry, armMaterial);
   var arm2 = new THREE.Line(arm2Geometry, armMaterial);
-          
 
 
-  var nose = new THREE.Mesh(new THREE.CylinderGeometry(1, 0, noseHeight, 40), new THREE.MeshLambertMaterial({color: 0xFFA500, wireframe: false}));     
+
+  var nose = new THREE.Mesh(new THREE.CylinderGeometry(1, 0, noseHeight, 40), new THREE.MeshLambertMaterial({color: 0xFFA500, wireframe: false}));
   nose.rotation.z =  Math.PI / 2
   nose.rotation.y =  Math.PI * 1.5
   nose.position.z = headRadius + noseHeight / 2
@@ -128,7 +128,7 @@ body.castShadow = true;
 head.position.x=0;
 head.position.y= (parseInt(bodyRadius)*2 + parseInt(headRadius));
 head.position.z=0;
-        
+
 
 function fireSnowball( playerId ) {
   snowballs.push( new THREE.Mesh(snowballGeometry,snowballMaterial));
@@ -150,14 +150,14 @@ function fireSnowball( playerId ) {
 
   function sendUpdate() {
     socket.emit('update', {
-      position: players[playerSocketId].position, 
+      position: players[playerSocketId].position,
       rotation: {
         y: players[playerSocketId].rotation.y
       },
-      move: players[playerSocketId].move 
+      move: players[playerSocketId].move
     })
   }
-    
+
 
   function eventListeners () {
     window.addEventListener('keydown', function(event) {
@@ -242,7 +242,7 @@ function fireSnowball( playerId ) {
     }, false)
 }
 
-      
+
 
 
 //Create snowman
@@ -265,7 +265,7 @@ for( var j = 0; j < eyes.length ; j++) {
 scene.add(plane);
 
 
-        
+
 camera.position.x = 170;
 camera.position.y = 60;
 camera.position.z = 170;
@@ -277,7 +277,7 @@ light.position.set(100, 100, 100);
 // light.position.set(100, 800, -100);
 light.position.multiplyScalar(1.3);
 light.castShadow = true;
-  
+
 
 light.shadowCameraFar = 1000;
 light.shadowDarkness = 0.2;
@@ -330,7 +330,7 @@ for (var i = 0; i < cubePositions.length; i++) {
         mesh.castShadow = true;
 
         // mesh.position.z = 60
-        
+
 
 var highlightRadius   = bodyRadius,
     highlightMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } ),
@@ -343,18 +343,17 @@ var highlightRadius   = bodyRadius,
 
 
 
-// large background enemy
-// var enemy = mesh.clone()
-// enemy.scale.x = 5
-// enemy.scale.y = 5
-// enemy.scale.z = 5
-// enemy.position.x = -100
-// enemy.position.z = -50
-// enemy.rotation.y = 0.45
-// scene.add(enemy)
 
+$('#join-game').on('click', function() {
+  console.log('clicked')
+  if($('#player-name').val() != '') {
+    eventListeners()
+    $('.controls').addClass('hide-controls')
 
-  
+    joinGame($('#player-name').val())
+  }
+})
+
 document.getElementById("canvas-view").appendChild(renderer.domElement);
 
 window.addEventListener( 'resize', onWindowResize, false );
@@ -376,7 +375,7 @@ function render() {
     players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
     players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
     players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
-    for (var i = 0; i < cubes.length; i++) { 
+    for (var i = 0; i < cubes.length; i++) {
       if (compareRect(players[playerId].position, cubes[i].position)) {
         players[playerId].position.x = oldx[playerId];
         players[playerId].position.z =  oldz[playerId];
@@ -393,7 +392,7 @@ function render() {
       snowballs[i].position.z = Math.cos(snowballs[i].direction)*snowballSpeed + snowballs[i].position.z
     }
   }
-  
+
   camera.position.y =  camera.position.y + cameraY / 5
   camera.lookAt(scene.position);
   camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom
@@ -402,22 +401,21 @@ function render() {
   cameraRotate = cameraRotate + cameraRotateInc
   camera.position.x = Math.sin(cameraRotate/50)*distanceFromCenter
   camera.position.z = Math.cos(cameraRotate/50)*distanceFromCenter
-  
+
   bigCube.rotation.x = x/2
   // light.position.set(100 + 100*Math.sin(x/10), 100 , 100 + 100*Math.cos(x/10));
   renderer.render( scene, camera );
 }
 render();
 
-eventListeners()
 
 function sendUpdate() {
   socket.emit('update', {
-    position: players[playerSocketId].position, 
+    position: players[playerSocketId].position,
     rotation: {
       y: players[playerSocketId].rotation.y
     },
-    move: players[playerSocketId].move 
+    move: players[playerSocketId].move
   })
 }
 
@@ -425,9 +423,9 @@ function sendUpdate() {
 
 
 function updatePlayers (socketId, player) {
-    
+
     if( !players[socketId]) {
-      
+
       newPlayer = mesh.clone();
       newPlayer.position.x = player.position.x
       newPlayer.position.y =  player.position.y
@@ -435,7 +433,7 @@ function updatePlayers (socketId, player) {
       newPlayer.move= player.move
 
       scene.add(newPlayer)
-      
+
       players[socketId] = newPlayer
     }  else {
       players[socketId].position.x = player.position.x
@@ -443,40 +441,47 @@ function updatePlayers (socketId, player) {
       players[socketId].rotation.y = player.rotation.y
       if(socketId != playerSocketId) {
         players[socketId].move = player.move
-      } 
+      }
     }
 }
 
 
-var playerToCreate 
+var playerToCreate
 
-socket.on('connected', function(socketId, currentPlayers){
-    console.log('This socket id:', socketId)
-    console.log('currentPlayers', currentPlayers)
-    playerSocketId = socketId
+function joinGame( playerName ) {
+
     players[playerSocketId] = mesh.clone()
     players[playerSocketId].add(highlight)
     players[playerSocketId].move = {
       incx: 0,
       incRot: 0
     }
-    scene.add(players[playerSocketId]);    
+    players[playerSocketId].playerName = playerName
+    scene.add(players[playerSocketId]);
+    sendUpdate()
+}
+
+
+socket.on('connected', function(socketId, currentPlayers){
+    console.log('This socket id:', socketId)
+    console.log('currentPlayers', currentPlayers)
+    playerSocketId = socketId
 
     // console.log('here', currentPlayers)
-    Object.keys(currentPlayers).forEach( function( playerId) { 
+    Object.keys(currentPlayers).forEach( function( playerId) {
       console.log(currentPlayers[playerId].position)
       playerToCreate = {
-          position: currentPlayers[playerId].position, 
+          position: currentPlayers[playerId].position,
           rotation: {
             y: currentPlayers[playerId].rotation.y
           },
-          move: currentPlayers[playerId].move 
+          move: currentPlayers[playerId].move
         }
-        
+
       updatePlayers(playerId, playerToCreate)
     });
 
-    sendUpdate()
+
 });
 
 
@@ -487,7 +492,7 @@ socket.on('fireSnowball' , function( socketId ) {
 
 
 socket.on('update' , function( socketId, player ) {
-  updatePlayers(socketId, player)  
+  updatePlayers(socketId, player)
 })
 
 socket.on('user disconnected' , function( playerId ) {

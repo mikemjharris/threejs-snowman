@@ -24,6 +24,13 @@
   background: #444444;
   /*opacity: 0.7;*/
   outline: 50px solid white;
+  transition: 0.1s all;
+  opacity: 0.5;
+}
+
+.hide-controls {
+  opactiy: 0;
+  z-index: -100;
 }
 
 .controls h1 {
