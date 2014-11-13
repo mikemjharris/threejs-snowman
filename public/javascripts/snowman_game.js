@@ -133,11 +133,11 @@ head.position.z=0;
 
 function fireSnowball( playerId ) {
   snowballs.push( new THREE.Mesh(snowballGeometry,snowballMaterial));
-  snowballs[snowballs.length -1].direction =  players[playerId].rotation.y
+  snowballs[snowballs.length -1].direction =  players[playerId].rotation.y;
   snowballs[snowballs.length -1].position.x = players[playerId].position.x + Math.sin(snowballs[snowballs.length -1].direction)*bodyRadius;
-  snowballs[snowballs.length -1].position.y = bodyRadius
+  snowballs[snowballs.length -1].position.y = bodyRadius;
   snowballs[snowballs.length -1].position.z = players[playerId].position.z + Math.cos(snowballs[snowballs.length -1].direction)*bodyRadius;
-  snowballs[snowballs.length -1].id = playerId
+  snowballs[snowballs.length -1].id = playerId;
   snowballs[snowballs.length -1].nos = playerId
   scene.add(snowballs[snowballs.length - 1])
 }
@@ -279,11 +279,11 @@ var context1 = canvas1.getContext('2d');
   context1.font = "Bold 10px Arial";
   context1.fillStyle = "rgba(200,200,200,0.95)";
   context1.fillText('Hello, world!', 0, 20);
-  
+
   // canvas contents will be used for a texture
-  var texture1 = new THREE.Texture(canvas1) 
+  var texture1 = new THREE.Texture(canvas1)
   texture1.needsUpdate = true;
-      
+
   var material1 = new THREE.MeshBasicMaterial( {map: texture1, side:THREE.DoubleSide } );
   material1.transparent = true;
 
@@ -374,7 +374,7 @@ var highlight  = new THREE.Mesh( highlightGeometry, highlightMaterial )
 
 
 $('#join-game').on('click', function() {
-  joinGameClicked( )  
+  joinGameClicked( )
 })
 
 function joinGameClicked( )  {
@@ -412,7 +412,7 @@ function render() {
   requestAnimationFrame( render );
    x += 0.02;
   Object.keys(players).forEach( function( playerId) {
-    // mesh1.position.x = 
+    // mesh1.position.x =
     oldx[playerId] = players[playerId].position.x
     oldz[playerId] = players[playerId].position.z
     players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
