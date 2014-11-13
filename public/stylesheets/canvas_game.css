@@ -3,8 +3,104 @@
   margin: 0px;
   padding: 0px;
      overflow: hidden;
+     font-family: Verdana;
 }
 
+
+.controls{
+  position: absolute;
+  margin: 0 auto;
+  top: 20vh;
+  /*left: 20%;*/
+  /*left: 10px;*/
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 60%;
+  min-width: 400px;
+  border: 15px solid black;
+  height: 350px;
+  text-align: center;
+  background: #444444;
+  /*opacity: 0.7;*/
+  outline: 50px solid white;
+  transition: 0.1s all;
+  opacity: 0.5;
+}
+
+.ingame .start {
+  display: none;
+}
+
+.regenerate {
+  display: none;
+}
+.ingame > .regenerate {
+  display: block;
+}
+
+.hide-controls {
+  opactiy: 0;
+  z-index: -100;
+}
+
+.controls h2 {
+  color: white;
+  opacity: 1;
+}
+
+input{
+  padding: 10px;
+  margin: 7px;
+}
+
+label {
+  color: white;
+}
+
+#join-game {
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: top;
+  border: 2px solid black;
+  background: white;
+  transition: all 0.2s;
+}
+
+#join-game:hover {
+  border: 2px solid white;
+  background: black;
+  color: white;
+}
+
+.info {
+  position: absolute;
+  top: 45px;
+  left: 10px;
+  width: 200px;
+  border: 1px solid black;
+
+}
+
+#message {
+  padding: 5px;
+  position: absolute;
+  margin: 0 auto;
+  height: 40px;
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  opacity: 0.8;
+  text-align: center;
+}
+
+td {
+  padding: 2px 5px;
+}
 /*body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }

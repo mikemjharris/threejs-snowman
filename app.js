@@ -24,24 +24,14 @@ passport.use(new TwitterStrategy({
   },
   function(token, tokenSecret, profile, done) {
     user = profile;
-    session.profile = profile
+    session.profile = profile;
     done(null, profile._json);
-    // User.findOrCreate(..., function(err, user) {
-      // if (err) { return done(err); }
-      // done(null, user);
-    // });
   }
 ));
 
-
-var routes = require('./routes/index');
-var users = require('./routes/users');
 var games = require('./routes/games');
 
-
 var app = express();
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -66,27 +56,21 @@ app.get('/auth/twitter/callback',
 
 app.get('/logout', function (req, res){
   req.session.destroy(function (err) {
-    res.redirect('/'); //Inside a callback… bulletproof!
+    res.redirect('/');
   });
 });
 
 
 app.use('/', games);
-app.use('/users', users);
-// app.use('/games', games);
 
 
-/// catch 404 and forward to error handler
+
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
-/// error handlers
-
-// development error handler
-// will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
@@ -97,8 +81,6 @@ if (app.get('env') === 'development') {
     });
 }
 
-// production error handler
-// no stacktraces leaked to user
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
@@ -106,9 +88,6 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
-
 
 
 module.exports = app;

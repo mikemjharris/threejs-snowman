@@ -14,25 +14,27 @@ var players = {}
 var snowballs = []
 var snowBallSize = 2
 var snowballSpeed = 5
+var score = {}
 
 var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket) {
 
-  socket.emit('connected', socket.id , players);
-  // Object.keys(players).forEach(function(playerId ) {
-  //   socket.emit('update' , playerId, players[playerId])
-  // })
+  score[socket.id] = {
+      w: 0,
+      l: 0
+    }
 
+  socket.emit('connected', socket.id , players, score);
 
   socket.on('update' , function( player ) {
-      // console.log('update')
-      players[socket.id] = player
-      socket.broadcast.emit('update' , socket.id, player)
+    players[socket.id] = player
+    socket.broadcast.emit('update' , socket.id, player)
   })
 
    socket.on('disconnect', function () {
     delete players[socket.id]
+    delete score[socket.id]
     socket.broadcast.emit('user disconnected', socket.id);
   });
 
@@ -78,9 +80,17 @@ setInterval(function(){
       for(var i = 0; i < snowballs.length; i++) {
         if(snowballs[i].id != playerId) {
           if( compareRect(players[playerId].position, bodyRadius, snowballs[i].position, snowBallSize) ) {
-            io.sockets.emit('player shot', snowballs[i].id, playerId)
-            snowballs.splice(i,1)
+
+            io.sockets.emit('player shot', snowballs[i].id, playerId);
+            if(!players[playerId].dead) {
+              score[snowballs[i].id].w = score[snowballs[i].id].w + 1;
+              score[playerId].l = score[playerId].l + 1
+            }
             players[playerId].dead = true
+            io.sockets.emit('score', score)
+            snowballs.splice(i,1)
+
+
           }
         }
       }
@@ -101,10 +111,10 @@ setInterval(function(){
 }, 1000 / times_per_second)
 
 function compareRect(R1, R1w, R2, R2w) {
-   return !(R1.x+ R1w*2  <= R2.x + R2w/ 2 ||
-           R1.z - R1w*2  >= R2.z - R2w/2 ||
+   return !(R1.x+ R1w*2  <= R2.x + R2w ||
+           R1.z - R1w*2  >= R2.z - R2w ||
            R1.x >= R2.x + R2w ||
-           R1.z + R1w*2  <= R2.z + R2w/2);
+           R1.z + R1w*2  <= R2.z + R2w);
   }
 
 
@@ -116,6 +126,8 @@ var snowball = {
   },
   id: null
 }
+
+
 
 function fireSnowball( playerId ) {
   snowballs.push( snowball);

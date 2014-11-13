@@ -26,9 +26,10 @@ var light;
 var socket = io.connect(window.location.hostname);
 var playerSocketId
 var players = {}
-var oldx = {} 
+var oldx = {}
 var oldz = {}
-var newPlayer 
+var newPlayer
+var thisPlayerName
 
 //init THREE.js scene
 var scene = new THREE.Scene();
@@ -37,7 +38,7 @@ var renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(new THREE.Color(0xEEEEEE));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMapEnabled = true;
-       
+
 //Geometries
 var snowballGeometry = new THREE.SphereGeometry(snowBallSize,30,30);
 var planeGeometry = new THREE.PlaneGeometry(500,500);
@@ -47,12 +48,12 @@ var hatGeometry = new THREE.CylinderGeometry(3, 3, hatHeight, 40)
 var hatRimGeometry = new THREE.CylinderGeometry(4, 4, hatRimHeight, 40)
 var eyeGeometry = new THREE.SphereGeometry(eyeRadius,30,30);
 var buttonGeometry = new THREE.SphereGeometry(buttonRadius,30,30);
-//Materials 
+//Materials
 var snowballMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false});
 var planeMaterial = new THREE.MeshPhongMaterial({color: 0xcccccc });
 var bodyMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false});
 var headMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false});
-var hatMaterial = new THREE.MeshLambertMaterial({color: 0x333333, wireframe: false})              
+var hatMaterial = new THREE.MeshLambertMaterial({color: 0x333333, wireframe: false})
 var eyeMaterial = new THREE.MeshLambertMaterial({color: 0x666666, wireframe: false});
 var buttonMaterial = new THREE.MeshLambertMaterial({color: 0x000000, wireframe: false});
 var armMaterial = new THREE.LineBasicMaterial({ color: 0xA52A2A });
@@ -61,14 +62,14 @@ var armMaterial = new THREE.LineBasicMaterial({ color: 0xA52A2A });
 //Create objects
 var plane = new THREE.Mesh(planeGeometry,planeMaterial);
 var body = new THREE.Mesh(bodyGeometry,bodyMaterial);
-var head = new THREE.Mesh(headGeometry,headMaterial);        
+var head = new THREE.Mesh(headGeometry,headMaterial);
 var hat = new THREE.Mesh(hatGeometry, hatMaterial);
 var hatRim = new THREE.Mesh(hatRimGeometry, hatMaterial);
-    
 
 
 
-for (var i = 0; i < nosButtons; i++ ) {          
+
+for (var i = 0; i < nosButtons; i++ ) {
   buttons[i] = new THREE.Mesh(buttonGeometry,buttonMaterial);
   buttonAngle = (i+3)*Math.PI / 6
   buttons[i].position.x = 0
@@ -99,10 +100,10 @@ for (var i = 0; i < 2; i++) {
 
   var arm1 = new THREE.Line(arm1Geometry, armMaterial);
   var arm2 = new THREE.Line(arm2Geometry, armMaterial);
-          
 
 
-  var nose = new THREE.Mesh(new THREE.CylinderGeometry(1, 0, noseHeight, 40), new THREE.MeshLambertMaterial({color: 0xFFA500, wireframe: false}));     
+
+  var nose = new THREE.Mesh(new THREE.CylinderGeometry(1, 0, noseHeight, 40), new THREE.MeshLambertMaterial({color: 0xFFA500, wireframe: false}));
   nose.rotation.z =  Math.PI / 2
   nose.rotation.y =  Math.PI * 1.5
   nose.position.z = headRadius + noseHeight / 2
@@ -128,15 +129,15 @@ body.castShadow = true;
 head.position.x=0;
 head.position.y= (parseInt(bodyRadius)*2 + parseInt(headRadius));
 head.position.z=0;
-        
+
 
 function fireSnowball( playerId ) {
   snowballs.push( new THREE.Mesh(snowballGeometry,snowballMaterial));
-  snowballs[snowballs.length -1].direction =  players[playerId].rotation.y
+  snowballs[snowballs.length -1].direction =  players[playerId].rotation.y;
   snowballs[snowballs.length -1].position.x = players[playerId].position.x + Math.sin(snowballs[snowballs.length -1].direction)*bodyRadius;
-  snowballs[snowballs.length -1].position.y = bodyRadius
+  snowballs[snowballs.length -1].position.y = bodyRadius;
   snowballs[snowballs.length -1].position.z = players[playerId].position.z + Math.cos(snowballs[snowballs.length -1].direction)*bodyRadius;
-  snowballs[snowballs.length -1].id = playerId
+  snowballs[snowballs.length -1].id = playerId;
   snowballs[snowballs.length -1].nos = playerId
   scene.add(snowballs[snowballs.length - 1])
 }
@@ -150,14 +151,22 @@ function fireSnowball( playerId ) {
 
   function sendUpdate() {
     socket.emit('update', {
-      position: players[playerSocketId].position, 
+      position: players[playerSocketId].position,
       rotation: {
         y: players[playerSocketId].rotation.y
       },
-      move: players[playerSocketId].move 
+      move: players[playerSocketId].move
     })
   }
-    
+
+
+window.addEventListener('keydown', function(event) {
+      switch (event.keyCode) {
+        case 13: // W
+        joinGameClicked( )
+        break
+      }
+    })
 
   function eventListeners () {
     window.addEventListener('keydown', function(event) {
@@ -207,18 +216,18 @@ function fireSnowball( playerId ) {
     sendUpdate()
     switch (event.keyCode) {
       case 37: // left
-        players[playerSocketId].move.incRot =  Math.max(players[playerSocketId].move.incRot - 0.1,  -0.1)
+        players[playerSocketId].move.incRot =  0 //Math.max(players[playerSocketId].move.incRot - 0.1,  -0.1)
         //incz =  Math.max(incz - 1,  -1)
         break;
       case 39: // right
-        players[playerSocketId].move.incRot =  Math.min(players[playerSocketId].move.incRot+ 0.1,  +0.1)
+        players[playerSocketId].move.incRot =  0 //Math.min(players[playerSocketId].move.incRot+ 0.1,  +0.1)
         // incz =  Math.min(incz + 1,  1)
         break;
       case 38: // up
-        players[playerSocketId].move.incx =  Math.max(players[playerSocketId].move.incx - 1,  -1)
+        players[playerSocketId].move.incx =  0 //Math.max(players[playerSocketId].move.incx - 1,  -1)
         break;
       case 40: // down
-        players[playerSocketId].move.incx =  Math.min(players[playerSocketId].move.incx + 1,  1)
+        players[playerSocketId].move.incx =  0 //Math.min(players[playerSocketId].move.incx + 1,  1)
         break;
       case 68: // E
         cameraY = 0
@@ -242,7 +251,7 @@ function fireSnowball( playerId ) {
     }, false)
 }
 
-      
+
 
 
 //Create snowman
@@ -265,7 +274,27 @@ for( var j = 0; j < eyes.length ; j++) {
 scene.add(plane);
 
 
-        
+var canvas1 = document.createElement('canvas');
+var context1 = canvas1.getContext('2d');
+  context1.font = "Bold 10px Arial";
+  context1.fillStyle = "rgba(200,200,200,0.95)";
+  context1.fillText('Hello, world!', 0, 20);
+
+  // canvas contents will be used for a texture
+  var texture1 = new THREE.Texture(canvas1)
+  texture1.needsUpdate = true;
+
+  var material1 = new THREE.MeshBasicMaterial( {map: texture1, side:THREE.DoubleSide } );
+  material1.transparent = true;
+
+var mesh1 = new THREE.Mesh(
+  new THREE.PlaneGeometry(canvas1.width, canvas1.height),
+       material1
+  );
+  mesh1.position.set(0,0,0);
+  // scene.add( mesh1 );
+
+// mesh.add(mesh1)
 camera.position.x = 170;
 camera.position.y = 60;
 camera.position.z = 170;
@@ -277,7 +306,7 @@ light.position.set(100, 100, 100);
 // light.position.set(100, 800, -100);
 light.position.multiplyScalar(1.3);
 light.castShadow = true;
-  
+
 
 light.shadowCameraFar = 1000;
 light.shadowDarkness = 0.2;
@@ -330,31 +359,43 @@ for (var i = 0; i < cubePositions.length; i++) {
         mesh.castShadow = true;
 
         // mesh.position.z = 60
-        
+
 
 var highlightRadius   = bodyRadius,
-    highlightMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } ),
-    highlightGeometry = new THREE.CircleGeometry( highlightRadius, 30 );
-    var highlight  = new THREE.Line( highlightGeometry, highlightMaterial )
-    highlight.rotation.x = Math.PI/2
+    highlightMaterial = new THREE.MeshLambertMaterial( { color: 0x0000ff } ),
+    highlightGeometry = new THREE.CylinderGeometry(bodyRadius, bodyRadius, 1, 30);
+var highlight  = new THREE.Mesh( highlightGeometry, highlightMaterial )
+    highlight.rotation.x = Math.PI
 
 
 
 
 
 
-// large background enemy
-// var enemy = mesh.clone()
-// enemy.scale.x = 5
-// enemy.scale.y = 5
-// enemy.scale.z = 5
-// enemy.position.x = -100
-// enemy.position.z = -50
-// enemy.rotation.y = 0.45
-// scene.add(enemy)
+
+$('#join-game').on('click', function() {
+  joinGameClicked( )
+})
+
+function joinGameClicked( )  {
+  console.log('clicked')
+  var playerName = $('#player-name').val()
+  $('#player-name').val('')
+  if(playerName != '') {
+    eventListeners()
+    $('.controls').addClass('hide-controls')
+    addToPlayersList(playerSocketId , playerName)
+    joinGame(playerName)
+  }
+}
 
 
-  
+function addToPlayersList(socketId, playerName) {
+  if($('#' + socketId).length == 0) {
+    $('#players').append('<tr id=' + socketId + '><td>' + playerName + '</td>|<td class="win">0</td>|<td class="loss">0</td></tr>')
+  }
+}
+
 document.getElementById("canvas-view").appendChild(renderer.domElement);
 
 window.addEventListener( 'resize', onWindowResize, false );
@@ -371,12 +412,13 @@ function render() {
   requestAnimationFrame( render );
    x += 0.02;
   Object.keys(players).forEach( function( playerId) {
+    // mesh1.position.x =
     oldx[playerId] = players[playerId].position.x
     oldz[playerId] = players[playerId].position.z
     players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
     players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
     players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
-    for (var i = 0; i < cubes.length; i++) { 
+    for (var i = 0; i < cubes.length; i++) {
       if (compareRect(players[playerId].position, cubes[i].position)) {
         players[playerId].position.x = oldx[playerId];
         players[playerId].position.z =  oldz[playerId];
@@ -393,7 +435,7 @@ function render() {
       snowballs[i].position.z = Math.cos(snowballs[i].direction)*snowballSpeed + snowballs[i].position.z
     }
   }
-  
+
   camera.position.y =  camera.position.y + cameraY / 5
   camera.lookAt(scene.position);
   camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom
@@ -402,40 +444,43 @@ function render() {
   cameraRotate = cameraRotate + cameraRotateInc
   camera.position.x = Math.sin(cameraRotate/50)*distanceFromCenter
   camera.position.z = Math.cos(cameraRotate/50)*distanceFromCenter
-  
+
   bigCube.rotation.x = x/2
   // light.position.set(100 + 100*Math.sin(x/10), 100 , 100 + 100*Math.cos(x/10));
   renderer.render( scene, camera );
 }
 render();
 
-eventListeners()
 
 function sendUpdate() {
-  socket.emit('update', {
-    position: players[playerSocketId].position, 
-    rotation: {
-      y: players[playerSocketId].rotation.y
-    },
-    move: players[playerSocketId].move 
-  })
+  if( players[playerSocketId]) {
+      socket.emit('update', {
+        position: players[playerSocketId].position,
+        rotation: {
+          y: players[playerSocketId].rotation.y
+        },
+        move: players[playerSocketId].move,
+        playerName: players[playerSocketId].playerName
+      })
+    }
 }
 
 
 
 
 function updatePlayers (socketId, player) {
-    
+
     if( !players[socketId]) {
-      
+
       newPlayer = mesh.clone();
       newPlayer.position.x = player.position.x
       newPlayer.position.y =  player.position.y
       newPlayer.position.z =  player.position.z
       newPlayer.move= player.move
-
+      newPlayer.playerName = player.playerName
+      addToPlayersList(socketId, player.playerName)
       scene.add(newPlayer)
-      
+
       players[socketId] = newPlayer
     }  else {
       players[socketId].position.x = player.position.x
@@ -443,62 +488,92 @@ function updatePlayers (socketId, player) {
       players[socketId].rotation.y = player.rotation.y
       if(socketId != playerSocketId) {
         players[socketId].move = player.move
-      } 
+      }
     }
 }
 
 
-var playerToCreate 
+var playerToCreate
 
-socket.on('connected', function(socketId, currentPlayers){
-    console.log('This socket id:', socketId)
-    console.log('currentPlayers', currentPlayers)
-    playerSocketId = socketId
+function joinGame( playerName ) {
+    thisPlayerName = playerName
     players[playerSocketId] = mesh.clone()
     players[playerSocketId].add(highlight)
     players[playerSocketId].move = {
       incx: 0,
       incRot: 0
     }
-    scene.add(players[playerSocketId]);    
+    players[playerSocketId].playerName = playerName
+    scene.add(players[playerSocketId]);
+    sendUpdate()
+}
 
-    // console.log('here', currentPlayers)
-    Object.keys(currentPlayers).forEach( function( playerId) { 
+
+socket.on('connected', function(socketId, currentPlayers, score){
+    console.log('This socket id:', socketId)
+    console.log('currentPlayers', currentPlayers)
+    playerSocketId = socketId
+
+    Object.keys(currentPlayers).forEach( function( playerId) {
       console.log(currentPlayers[playerId].position)
       playerToCreate = {
-          position: currentPlayers[playerId].position, 
+          position: currentPlayers[playerId].position,
           rotation: {
             y: currentPlayers[playerId].rotation.y
           },
-          move: currentPlayers[playerId].move 
+          move: currentPlayers[playerId].move,
+          playerName: currentPlayers[playerId].playerName
+          // score: currentPlayers[playerId].score
         }
-        
       updatePlayers(playerId, playerToCreate)
+      updateScoreboard( score )
     });
 
-    sendUpdate()
+
 });
+
+function updateScoreboard ( score ) {
+  console.log( score )
+  Object.keys(score).forEach( function ( playerId ) {
+    $('#'+playerId +' .win').text(score[playerId].w)
+    $('#'+playerId +' .loss').text(score[playerId].l)
+  })
+}
+
+function regenerate () {
+  $('.controls').addClass('ingame')
+  $('.controls').removeClass('hide-controls')
+  $('#player-name').val(thisPlayerName)
+}
 
 
 socket.on('fireSnowball' , function( socketId ) {
-  // console.log( socketId , 'fired')
   fireSnowball( socketId )
 })
 
+socket.on('score' , function ( score ) {
+  updateScoreboard( score )
+})
 
 socket.on('update' , function( socketId, player ) {
-  updatePlayers(socketId, player)  
+  updatePlayers(socketId, player)
 })
 
 socket.on('user disconnected' , function( playerId ) {
+    $('#' + playerId).remove()
     scene.remove(players[playerId])
     delete players[playerId]
 })
 
 socket.on('player shot',  function( killerId, deadId) {
+  // $('#message').text(players[killerId].playerName + ' hit ' + players[deadId].playerName + ' with a snowball!')
   scene.remove(players[deadId])
+  if( deadId == playerSocketId) {
+    regenerate()
+  }
   delete players[deadId]
   console.log('killed', killerId, deadId)
 })
+
 
 
