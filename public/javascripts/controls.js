@@ -1,4 +1,4 @@
-
+var snowballPower = 0
 
 window.addEventListener('keydown', function(event) {
   switch (event.keyCode) {
@@ -44,7 +44,8 @@ window.addEventListener('keydown', function(event) {
       Game.playerToMove.moveDirection( -1 );
       break;
     case 32: // spacebar
-      Game.playerToMove.fireSnowball();
+    console.log('power', snowballPower)
+      snowBallPowerUp = true;
       // socket.emit('fireSnowball')
       break;
     case 77: //m
@@ -89,8 +90,15 @@ window.addEventListener('keyup', function(event) {
       cameraRotateInc = 0
       break;
     case 82: // R
-        cameraZoom = 0
-        break;
+      cameraZoom = 0
+      break;
+    case 32:
+    console.log('poweree', snowballPower)
+    var test = snowballPower
+      Game.playerToMove.fireSnowball( test );
+      snowBallPowerUp = false;
+      snowballPower = 0;
+      break;
       case 70: // F
         cameraZoom = 0
           }

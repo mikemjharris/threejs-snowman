@@ -3,6 +3,9 @@
 //player.js
 //snowman.js
 
+var snowBallPowerUp = false;
+
+
 var incx = 0;
 var incz = 0;
 var incRot = 0;
@@ -42,10 +45,8 @@ function sendUpdate() {
       y: players[playerSocketId].rotation.y
     },
     move: players[playerSocketId].move
-  })
+  });
 }
-
-
 
 
 
@@ -172,106 +173,37 @@ camx = camera.rotation.x
 
 var ooPlayer
 
-var Game = {
-  players: [],
-  snowballs: []
-
-}
 
 
 
 
 
-function Player( threeJSObject , id , options) {
-  this.tjs = threeJSObject;
-  this.id = id;
-  this.move = {
-      incx: 0,
-      incRot: 0
-    }
-  this.playerName = ''
-
-  if( options ){
-  if( options.move ) {
-    this.move = options.move
-  }
-  if( options.playerName) {
-    this.playerName = options.playerName
-  }
-}
-}
-
-Player.prototype.moveDirection = function( incx ) {
-    this.move.incx = incx
-};
-
-Player.prototype.rotateDirection = function( rot ) {
-  this.move.incRot = rot
-}
-
-Player.prototype.update = function() {
-  // this.old.x = this.tjs.position.x
-  // this.old.z = this.tjs.position.z
-
-  this.tjs.position.x += this.move.incx * Math.sin(this.tjs.rotation.y)
-  this.tjs.position.z += this.move.incx * Math.cos(this.tjs.rotation.y)
-  this.tjs.rotation.y += this.move.incRot
-}
-
-Player.prototype.fireSnowball = function() {
-  var newSnowball = new Snowball( this.id, this.tjs.position, this.tjs.rotation.y)
-  Game.snowballs.push( newSnowball )
-}
 
 
-
-Game.createPlayer = function ( id , options ) {
-  var newPlayer = new Player(mesh.clone(), id, options)
-  scene.add(newPlayer.tjs)
-  this.players.push( newPlayer );
-  this.playerToMove = newPlayer
-}
-
-Game.findPlayer = function( id ){
-  return this.players.filter(function(player) {
-    return player.id === id
-  })[0]
-}
-
-Game.createPlayers = function ( currentPlayers ){
-  currentPlayers.forEach(function ( player ) {
-    this.createPlayer(player.id, player)
-  })
-}
-
-Game.update = function () {
-  this.players.forEach(function ( player ) {
-    player.update()
-  })
-  this.snowballs.forEach(function ( snowball ) {
-    snowball.update()
-  })
-}
 
 Game.createPlayer('t')
 eventListeners()
 
 
 
-
+var snowBallPower = 0
 
 function render() {
   requestAnimationFrame( render );
    x += 0.02;
    Game.update()
+    camera.position.y =  camera.position.y + cameraY / 5
 
 
-  camera.position.y =  camera.position.y + cameraY / 5
+    if( snowBallPowerUp) {
+
+      snowballPower += 0.1;
+    }
 
   if( cameraType == 'static') {
-camera.position.x = 170;
-camera.position.y = 60;
-camera.position.z = 170;
+    camera.position.x = 170;
+    camera.position.y = 60;
+    camera.position.z = 170;
 
 
     camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom

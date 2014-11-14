@@ -26,6 +26,7 @@
   outline: 50px solid white;
   transition: 0.1s all;
   opacity: 0.5;
+  display: none;
 }
 
 .ingame .start {
