@@ -559,13 +559,13 @@ function joinGame( playerName ) {
 }
 
 
-// function Player( threeJSObject ) {
-//   this.threeJSObject = threeJSObject;
-//   this.move = {
-//     incx: 0
-//     incRot: 0
-//   }
-// }
+function Player( tJSObject ) {
+  this.tJSObject = tJSObject;
+  this.move = {
+    incx: 0,
+    incRot: 0
+  }
+}
 
 
 // Player.prototype.moveForward = function() {
@@ -579,7 +579,7 @@ function joinGame( playerName ) {
 //   this.move.incRot = -0.1
 // }
 
-players[playerSocketId].move.incRot =  Math.min(players[playerSocketId].move.incRot + 0.1,  0.1)
+// players[playerSocketId].move.incRot =  Math.min(players[playerSocketId].move.incRot + 0.1,  0.1)
 
 socket.on('connected', function(socketId, currentPlayers, score){
     firstTimeConnect = false;
