@@ -30,7 +30,13 @@ var oldx = {}
 var oldz = {}
 var newPlayer
 var thisPlayerName
-
+var toLookat = {
+  x: 0,
+  y: 0,
+  z: 0
+}
+var firstTimeConnect = true;
+var planeSize = 1000;
 //init THREE.js scene
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -41,7 +47,7 @@ var renderer = new THREE.WebGLRenderer();
 
 //Geometries
 var snowballGeometry = new THREE.SphereGeometry(snowBallSize,30,30);
-var planeGeometry = new THREE.PlaneGeometry(500,500);
+var planeGeometry = new THREE.PlaneGeometry(planeSize,planeSize);
 var bodyGeometry = new THREE.SphereGeometry(bodyRadius,30,30);
 var headGeometry = new THREE.SphereGeometry(headRadius,30,30);
 var hatGeometry = new THREE.CylinderGeometry(3, 3, hatHeight, 40)
@@ -208,7 +214,16 @@ window.addEventListener('keydown', function(event) {
           fireSnowball( playerSocketId )
           socket.emit('fireSnowball')
           break;
+        case 77: //m
+          if ( cameraType === 'static' ) {
+            cameraType = 'move'
+          } else {
+
+            cameraType = 'static'
+          }
+          break;
         }
+
         sendUpdate()
       }, false)
 
@@ -369,7 +384,7 @@ var highlight  = new THREE.Mesh( highlightGeometry, highlightMaterial )
 
 
 
-
+var tree
 
 
 
@@ -395,7 +410,14 @@ function addToPlayersList(socketId, playerName) {
     $('#players').append('<tr id=' + socketId + '><td>' + playerName + '</td>|<td class="win">0</td>|<td class="loss">0</td></tr>')
   }
 }
-
+var cameraType = 'move'
+camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom
+camera.position.z = camera.position.z + Math.cos(camera.rotation.y)*cameraZoom
+distanceFromCenter = Math.sqrt((camera.position.x*camera.position.x ) + (camera.position.z*camera.position.z ))
+cameraRotate = cameraRotate + cameraRotateInc
+camera.position.x = Math.sin(cameraRotate/50)*distanceFromCenter
+camera.position.z = Math.cos(cameraRotate/50)*distanceFromCenter
+camera.lookAt(scene.position);
 document.getElementById("canvas-view").appendChild(renderer.domElement);
 
 window.addEventListener( 'resize', onWindowResize, false );
@@ -408,6 +430,8 @@ function onWindowResize(){
 camY = camera.rotation.y
 camz = camera.rotation.z
 camx = camera.rotation.x
+
+
 function render() {
   requestAnimationFrame( render );
    x += 0.02;
@@ -427,8 +451,8 @@ function render() {
   })
 
   for (var i=0; i < snowballs.length; i++) {
-    if (snowballs[i].position.z > 250 || snowballs[i].position.z < -250  ||
-      snowballs[i].position.x > 250 || snowballs[i].position.x < -250) {
+    if (snowballs[i].position.z > planeSize/2 || snowballs[i].position.z < -planeSize/2  ||
+      snowballs[i].position.x > planeSize/2 || snowballs[i].position.x < -planeSize/2) {
       scene.remove(snowballs[i])
     } else {
       snowballs[i].position.x = Math.sin(snowballs[i].direction)*snowballSpeed + snowballs[i].position.x
@@ -437,13 +461,39 @@ function render() {
   }
 
   camera.position.y =  camera.position.y + cameraY / 5
-  camera.lookAt(scene.position);
-  camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom
-  camera.position.z = camera.position.z + Math.cos(camera.rotation.y)*cameraZoom
-  distanceFromCenter = Math.sqrt((camera.position.x*camera.position.x ) + (camera.position.z*camera.position.z ))
-  cameraRotate = cameraRotate + cameraRotateInc
-  camera.position.x = Math.sin(cameraRotate/50)*distanceFromCenter
-  camera.position.z = Math.cos(cameraRotate/50)*distanceFromCenter
+
+  if( cameraType == 'static') {
+camera.position.x = 170;
+camera.position.y = 60;
+camera.position.z = 170;
+
+
+    camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom
+    camera.position.z = camera.position.z + Math.cos(camera.rotation.y)*cameraZoom
+    distanceFromCenter = Math.sqrt((camera.position.x*camera.position.x ) + (camera.position.z*camera.position.z ))
+    cameraRotate = cameraRotate + cameraRotateInc
+    camera.position.x = Math.sin(cameraRotate/50)*distanceFromCenter
+    camera.position.z = Math.cos(cameraRotate/50)*distanceFromCenter
+
+    camera.lookAt(scene.position);
+
+  } else if (cameraType == 'move') {
+    if( players[playerSocketId] ) {
+
+
+      camera.position.x = players[playerSocketId].position.x - 40 * Math.sin(players[playerSocketId].rotation.y)
+      camera.position.z = players[playerSocketId].position.z - 40 * Math.cos(players[playerSocketId].rotation.y)
+      camera.position.y = 60
+
+      toLookat = players[playerSocketId].position.clone()
+      toLookat.x = toLookat.x + 100 * Math.sin(players[playerSocketId].rotation.y)
+      toLookat.z = toLookat.z + 100 * Math.cos(players[playerSocketId].rotation.y)
+      camera.lookAt(toLookat)
+    } else {
+      camera.lookAt(scene.position);
+    }
+  }
+
 
   bigCube.rotation.x = x/2
   // light.position.set(100 + 100*Math.sin(x/10), 100 , 100 + 100*Math.cos(x/10));
@@ -510,8 +560,7 @@ function joinGame( playerName ) {
 
 
 socket.on('connected', function(socketId, currentPlayers, score){
-    console.log('This socket id:', socketId)
-    console.log('currentPlayers', currentPlayers)
+    firstTimeConnect = false;
     playerSocketId = socketId
 
     Object.keys(currentPlayers).forEach( function( playerId) {
@@ -540,12 +589,27 @@ function updateScoreboard ( score ) {
   })
 }
 
-function regenerate () {
-  $('.controls').addClass('ingame')
+function regenerate ( whyRegenerate) {
+
+  if(thisPlayerName) {
+    $('.controls').addClass('ingame')
+    $('.controls').removeClass('hide-controls')
+    $('#player-name').val(thisPlayerName)
+
+  } else {
+    $('.controls').removeClass('hide-controls')
+  }
+
+  if( whyRegenerate === 'disconnect') {
+    $('.regenerate h2').text('Reconnected to the server - click the button to rejoin the game')
+  } else {
+    $('.regenerate h2').text("You got shot! Click the button to rejoin")
+  }
+
   $('.controls').removeClass('hide-controls')
-  $('#player-name').val(thisPlayerName)
 }
 
+var haveDisconnected = false
 
 socket.on('fireSnowball' , function( socketId ) {
   fireSnowball( socketId )
@@ -565,8 +629,24 @@ socket.on('user disconnected' , function( playerId ) {
     delete players[playerId]
 })
 
+socket.on('connect' , function(){
+  $('#message').text('Connected')
+  regenerate('disconnect')
+
+})
+socket.on('disconnect' , function(){
+  $('#message').text('Disconnected from the server')
+  Object.keys(players).forEach(function ( playerId) {
+    $('#' + playerId).remove()
+    scene.remove(players[playerId])
+    delete players[playerId]
+  })
+
+
+})
+
 socket.on('player shot',  function( killerId, deadId) {
-  // $('#message').text(players[killerId].playerName + ' hit ' + players[deadId].playerName + ' with a snowball!')
+  $('#message').text(players[killerId].playerName + ' hit ' + players[deadId].playerName + ' with a snowball!')
   scene.remove(players[deadId])
   if( deadId == playerSocketId) {
     regenerate()

@@ -85,10 +85,11 @@ label {
 }
 
 #message {
+  font-size: 30px;
   padding: 5px;
   position: absolute;
   margin: 0 auto;
-  height: 40px;
+  height: 50px;
   width: 100%;
   top: 0;
   left: 0;

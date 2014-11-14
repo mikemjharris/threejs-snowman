@@ -6,13 +6,12 @@ block content
     div(class='start')
       h2 Snowball Fight!
       label Enter your name to join
+      input(type='text' id='player-name')
     div(class="regenerate")
-      h2 You got shot! 
-      h2 Click the button to rejoin
-    input(type='text' id='player-name')
+      h2 You got shot! Click the button to rejoin
     div(id='join-game') Join Game!
   div(class='info')
-    h3 Players 
+    h3 Players
     table(id='players')
       th Name
       th W
