@@ -14,6 +14,6 @@ To run the game:
 
 Navigate to:  
 
-`localhost:3000/snowman`   
+`localhost:3000/`   
 
 Controllers - arrows to move, spacebar to fire.  w,s,e,d,r,f to move the camera view.
