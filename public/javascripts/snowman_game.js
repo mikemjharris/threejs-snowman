@@ -137,6 +137,13 @@ head.position.y= (parseInt(bodyRadius)*2 + parseInt(headRadius));
 head.position.z=0;
 
 
+
+
+
+
+
+
+
 function fireSnowball( playerId ) {
   snowballs.push( new THREE.Mesh(snowballGeometry,snowballMaterial));
   snowballs[snowballs.length -1].direction =  players[playerId].rotation.y;
@@ -173,11 +180,8 @@ window.addEventListener('keydown', function(event) {
         break
       }
     })
-
   function eventListeners () {
     window.addEventListener('keydown', function(event) {
-      // console.log('called')
-      // console.log(players[playerSocketId])
       sendUpdate()
       switch (event.keyCode) {
         case 87: // W
@@ -199,16 +203,17 @@ window.addEventListener('keydown', function(event) {
           cameraZoom = -1
           break;
         case 37: // left
-          players[playerSocketId].move.incRot =  Math.min(players[playerSocketId].move.incRot + 0.1,  0.1)
+          Game.playerToMove.rotateDirection( 0.1 );
+          console.log('here')
           break;
         case 39: // right
-          players[playerSocketId].move.incRot =  Math.max(players[playerSocketId].move.incRot - 0.1,  -0.1)
+          Game.playerToMove.rotateDirection( -0.1 );
           break;
         case 38: // up
-          players[playerSocketId].move.incx =  Math.min(players[playerSocketId].move.incx + 1,  1)
+          Game.playerToMove.moveDirection( 1 );
           break;
         case 40: // down
-          players[playerSocketId].move.incx =  Math.max(players[playerSocketId].move.incRot - 1,  -1)
+          Game.playerToMove.moveDirection( -1 );
           break;
         case 32: // spacebar
           fireSnowball( playerSocketId )
@@ -231,18 +236,18 @@ window.addEventListener('keydown', function(event) {
     sendUpdate()
     switch (event.keyCode) {
       case 37: // left
-        players[playerSocketId].move.incRot =  0 //Math.max(players[playerSocketId].move.incRot - 0.1,  -0.1)
+        Game.playerToMove.rotateDirection(0);
         //incz =  Math.max(incz - 1,  -1)
         break;
       case 39: // right
-        players[playerSocketId].move.incRot =  0 //Math.min(players[playerSocketId].move.incRot+ 0.1,  +0.1)
+        Game.playerToMove.rotateDirection(0);
         // incz =  Math.min(incz + 1,  1)
         break;
       case 38: // up
-        players[playerSocketId].move.incx =  0 //Math.max(players[playerSocketId].move.incx - 1,  -1)
+        Game.playerToMove.moveDirection(0);
         break;
       case 40: // down
-        players[playerSocketId].move.incx =  0 //Math.min(players[playerSocketId].move.incx + 1,  1)
+        Game.playerToMove.moveDirection(0);
         break;
       case 68: // E
         cameraY = 0
@@ -431,10 +436,89 @@ camY = camera.rotation.y
 camz = camera.rotation.z
 camx = camera.rotation.x
 
+var ooPlayer
+
+var Game = {
+  players: []
+
+}
+
+
+function Player( threeJSObject , id , options) {
+  this.tjs = threeJSObject;
+  this.id = id;
+  this.move = {
+      incx: 0,
+      incRot: 0
+    }
+  this.playerName = ''
+
+  if( options ){
+  if( options.move ) {
+    this.move = options.move
+  }
+  if( options.playerName) {
+    this.playerName = options.playerName
+  }
+}
+}
+
+Player.prototype.moveDirection = function( incx ) {
+    this.move.incx = incx
+};
+
+Player.prototype.rotateDirection = function( rot ) {
+  this.move.incRot = rot
+}
+
+Player.prototype.update = function() {
+
+    // this.old.x = this.tjs.position.x
+    // this.old.z = this.tjs.position.z
+
+    this.tjs.position.x += this.move.incx * Math.sin(this.tjs.rotation.y)
+    this.tjs.position.z += this.move.incx * Math.cos(this.tjs.rotation.y)
+    this.tjs.rotation.y += this.move.incRot
+}
+
+
+
+Game.createPlayer = function ( id , options ) {
+  var newPlayer = new Player(mesh.clone(), id, options)
+  scene.add(newPlayer.tjs)
+  this.players.push( newPlayer );
+  this.playerToMove = newPlayer
+}
+
+Game.findPlayer = function( id ){
+  return this.players.filter(function(player) {
+    return player.id === id
+  })[0]
+}
+
+Game.createPlayers = function ( currentPlayers ){
+  currentPlayers.forEach(function ( player ) {
+    this.createPlayer(player.id, player)
+  })
+}
+
+Game.update = function () {
+  this.players.forEach(function ( player ) {
+    player.update()
+  })
+}
+
+Game.createPlayer('t')
+eventListeners()
+
+
+
+
 
 function render() {
   requestAnimationFrame( render );
    x += 0.02;
+   Game.update()
   Object.keys(players).forEach( function( playerId) {
     // mesh1.position.x =
     oldx[playerId] = players[playerId].position.x
@@ -559,34 +643,13 @@ function joinGame( playerName ) {
 }
 
 
-// function Player( threeJSObject ) {
-//   this.threeJSObject = threeJSObject;
-//   this.move = {
-//     incx: 0
-//     incRot: 0
-//   }
-// }
-
-
-// Player.prototype.moveForward = function() {
-//     this.incx =
-// };
-
-// Player.prototype.rotateLeft = function() {
-//   this.move.incRot = 0.1
-// }
-// Player.prototype.rotateRight = function() {
-//   this.move.incRot = -0.1
-// }
-
-players[playerSocketId].move.incRot =  Math.min(players[playerSocketId].move.incRot + 0.1,  0.1)
+// players[playerSocketId].move.incRot =  Math.min(players[playerSocketId].move.incRot + 0.1,  0.1)
 
 socket.on('connected', function(socketId, currentPlayers, score){
     firstTimeConnect = false;
     playerSocketId = socketId
 
     Object.keys(currentPlayers).forEach( function( playerId) {
-      console.log(currentPlayers[playerId].position)
       playerToCreate = {
           position: currentPlayers[playerId].position,
           rotation: {
