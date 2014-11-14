@@ -77,10 +77,10 @@ var hatRim = new THREE.Mesh(hatRimGeometry, hatMaterial);
 
 for (var i = 0; i < nosButtons; i++ ) {
   buttons[i] = new THREE.Mesh(buttonGeometry,buttonMaterial);
-  buttonAngle = (i+3)*Math.PI / 6
-  buttons[i].position.x = 0
-  buttons[i].position.y =  bodyRadius * ( 1 - Math.cos( buttonAngle) )
-  buttons[i].position.z = bodyRadius * Math.sin( buttonAngle) + buttonRadius * 0.8
+  buttonAngle = (i+3)*Math.PI / 6;
+  buttons[i].position.x = 0;
+  buttons[i].position.y =  bodyRadius * ( 1 - Math.cos( buttonAngle) );
+  buttons[i].position.z = bodyRadius * Math.sin( buttonAngle) + buttonRadius * 0.8;
   buttons[i].castShadow = true;
 }
 
@@ -89,14 +89,14 @@ for (var i = 0; i < 2; i++) {
   eyeAngelZ =   Math.PI * 3/8
   eyeAngelXY =  Math.PI * 5/8
   //todo - the maths here isn't right.
-  eyes[i].position.x =  (-1 + 2*i)*headRadius * Math.cos((-1 + 2*i)*eyeAngelZ) + eyeRadius*(-1 + 2*i)/5
-  eyes[i].position.z = headRadius + eyeRadius + Math.cos(eyeAngelXY) * Math.sin(  eyeAngelZ )*headRadius
+  eyes[i].position.x =  (-1 + 2*i)*headRadius * Math.cos((-1 + 2*i)*eyeAngelZ) + eyeRadius*(-1 + 2*i)/5;
+  eyes[i].position.z = headRadius + eyeRadius + Math.cos(eyeAngelXY) * Math.sin(  eyeAngelZ )*headRadius;
   eyes[i].position.y = bodyRadius * 2 + headRadius + Math.sin(eyeAngelXY) * Math.cos(  eyeAngelZ )*headRadius;
 }
 
   var arm1Geometry = new THREE.Geometry();
-  arm1Geometry.vertices.push(new THREE.Vector3(0 , bodyRadius  , 0));
-  arm1Geometry.vertices.push(new THREE.Vector3(bodyRadius * 1.5 , bodyRadius* 1.5, 0));
+  arm1Geometry.vertices.push(new THREE.Vector3(0, bodyRadius, 0));
+  arm1Geometry.vertices.push(new THREE.Vector3(bodyRadius * 1.5, bodyRadius* 1.5, 0));
   arm1Geometry.vertices.push(new THREE.Vector3(bodyRadius * 1.7, bodyRadius * 2, 0));
 
   var arm2Geometry = new THREE.Geometry();
@@ -109,21 +109,21 @@ for (var i = 0; i < 2; i++) {
 
 
 
-  var nose = new THREE.Mesh(new THREE.CylinderGeometry(1, 0, noseHeight, 40), new THREE.MeshLambertMaterial({color: 0xFFA500, wireframe: false}));
-  nose.rotation.z =  Math.PI / 2
-  nose.rotation.y =  Math.PI * 1.5
-  nose.position.z = headRadius + noseHeight / 2
-  nose.position.y = bodyRadius * 2  +  headRadius
+  var nose = new THREE.Mesh(new THREE.CylinderGeometry(1, 0, noseHeight, 40), new THREE.MeshLambertMaterial({ color: 0xFFA500, wireframe: false }));
+  nose.rotation.z =  Math.PI / 2;
+  nose.rotation.y =  Math.PI * 1.5;
+  nose.position.z = headRadius + noseHeight / 2;
+  nose.position.y = bodyRadius * 2  +  headRadius;
 
 
   // hat.overdraw = true;
-  hat.position.y = bodyRadius * 2  +  headRadius * 1.75 + hatHeight / 2
-  hatRim.position.y = bodyRadius * 2  +  headRadius * 1.75 + hatRimHeight / 2
+  hat.position.y = bodyRadius * 2  +  headRadius * 1.75 + hatHeight / 2;
+  hatRim.position.y = bodyRadius * 2  +  headRadius * 1.75 + hatRimHeight / 2;
 
 plane.rotation.x=-0.5*Math.PI;
-plane.position.x=0
-plane.position.y=0
-plane.position.z=0
+plane.position.x=0;
+plane.position.y=0;
+plane.position.z=0;
 plane.receiveShadow = true;
 
 body.castShadow = true;
@@ -144,8 +144,8 @@ function fireSnowball( playerId ) {
   snowballs[snowballs.length -1].position.y = bodyRadius;
   snowballs[snowballs.length -1].position.z = players[playerId].position.z + Math.cos(snowballs[snowballs.length -1].direction)*bodyRadius;
   snowballs[snowballs.length -1].id = playerId;
-  snowballs[snowballs.length -1].nos = playerId
-  scene.add(snowballs[snowballs.length - 1])
+  snowballs[snowballs.length -1].nos = playerId;
+  scene.add(snowballs[snowballs.length - 1]);
 }
 
   function compareRect(R1, R2) {
@@ -558,6 +558,28 @@ function joinGame( playerName ) {
     sendUpdate()
 }
 
+
+// function Player( threeJSObject ) {
+//   this.threeJSObject = threeJSObject;
+//   this.move = {
+//     incx: 0
+//     incRot: 0
+//   }
+// }
+
+
+// Player.prototype.moveForward = function() {
+//     this.incx =
+// };
+
+// Player.prototype.rotateLeft = function() {
+//   this.move.incRot = 0.1
+// }
+// Player.prototype.rotateRight = function() {
+//   this.move.incRot = -0.1
+// }
+
+players[playerSocketId].move.incRot =  Math.min(players[playerSocketId].move.incRot + 0.1,  0.1)
 
 socket.on('connected', function(socketId, currentPlayers, score){
     firstTimeConnect = false;
