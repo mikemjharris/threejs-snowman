@@ -194,11 +194,18 @@ function render() {
    Game.update()
     camera.position.y =  camera.position.y + cameraY / 5
 
-
-    if( snowBallPowerUp) {
-
+    $('#power').css('width', window.innerWidth / 12 * snowballPower + 'px')
+    if( snowBallPowerUp && snowballPower < 10) {
       snowballPower += 0.1;
     }
+
+
+        var pCount = parts.length;
+          while(pCount--) {
+            parts[pCount].update();
+          }
+
+
 
   if( cameraType == 'static') {
     camera.position.x = 170;
@@ -216,16 +223,16 @@ function render() {
     camera.lookAt(scene.position);
 
   } else if (cameraType == 'move') {
-    if( players[playerSocketId] ) {
+    if( Game.playerToMove.tjs ) {
 
 
-      camera.position.x = players[playerSocketId].position.x - 40 * Math.sin(players[playerSocketId].rotation.y)
-      camera.position.z = players[playerSocketId].position.z - 40 * Math.cos(players[playerSocketId].rotation.y)
+      camera.position.x = Game.playerToMove.tjs.position.x - 40 * Math.sin(Game.playerToMove.tjs.rotation.y)
+      camera.position.z = Game.playerToMove.tjs.position.z - 40 * Math.cos(Game.playerToMove.tjs.rotation.y)
       camera.position.y = 60
 
-      toLookat = players[playerSocketId].position.clone()
-      toLookat.x = toLookat.x + 100 * Math.sin(players[playerSocketId].rotation.y)
-      toLookat.z = toLookat.z + 100 * Math.cos(players[playerSocketId].rotation.y)
+      toLookat = Game.playerToMove.tjs.position.clone()
+      toLookat.x = toLookat.x + 100 * Math.sin(Game.playerToMove.tjs.rotation.y)
+      toLookat.z = toLookat.z + 100 * Math.cos(Game.playerToMove.tjs.rotation.y)
       camera.lookAt(toLookat)
     } else {
       camera.lookAt(scene.position);

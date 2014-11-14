@@ -29,6 +29,14 @@
   display: none;
 }
 
+
+#power {
+  height: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 20px;
+  background: red;
+}
 .ingame .start {
   display: none;
 }

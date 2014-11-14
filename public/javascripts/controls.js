@@ -44,15 +44,12 @@ window.addEventListener('keydown', function(event) {
       Game.playerToMove.moveDirection( -1 );
       break;
     case 32: // spacebar
-    console.log('power', snowballPower)
       snowBallPowerUp = true;
-      // socket.emit('fireSnowball')
       break;
     case 77: //m
       if ( cameraType === 'static' ) {
         cameraType = 'move';
       } else {
-
         cameraType = 'static';
       }
       break;
