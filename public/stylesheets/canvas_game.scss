@@ -1,11 +1,13 @@
-* {
+*{
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;
-  overflow: hidden;
-  font-family: Verdana; }
+     overflow: hidden;
+     font-family: Verdana;
+}
 
-.controls {
+
+.controls{
   position: absolute;
   margin: 0 auto;
   top: 20vh;
@@ -24,38 +26,46 @@
   outline: 50px solid white;
   transition: 0.1s all;
   opacity: 0.5;
-  display: none; }
+  display: none;
+}
+
 
 #power {
   height: 10px;
   position: absolute;
   bottom: 0;
   width: 20px;
-  background: red; }
-
+  background: red;
+}
 .ingame .start {
-  display: none; }
+  display: none;
+}
 
 .regenerate {
-  display: none; }
-
+  display: none;
+}
 .ingame > .regenerate {
-  display: block; }
+  display: block;
+}
 
 .hide-controls {
   opactiy: 0;
-  z-index: -100; }
+  z-index: -100;
+}
 
 .controls h2 {
   color: white;
-  opacity: 1; }
+  opacity: 1;
+}
 
-input {
+input{
   padding: 10px;
-  margin: 7px; }
+  margin: 7px;
+}
 
 label {
-  color: white; }
+  color: white;
+}
 
 #join-game {
   padding: 10px;
@@ -65,19 +75,23 @@ label {
   vertical-align: top;
   border: 2px solid black;
   background: white;
-  transition: all 0.2s; }
+  transition: all 0.2s;
+}
 
 #join-game:hover {
   border: 2px solid white;
   background: black;
-  color: white; }
+  color: white;
+}
 
 .info {
   position: absolute;
   top: 55px;
   left: 10px;
   width: 200px;
-  border: 1px solid black; }
+  border: 1px solid black;
+
+}
 
 #message {
   font-size: 30px;
@@ -91,11 +105,12 @@ label {
   right: 0;
   background: white;
   opacity: 0.8;
-  text-align: center; }
+  text-align: center;
+}
 
 td {
-  padding: 2px 5px; }
-
+  padding: 2px 5px;
+}
 /*body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
