@@ -1,7 +1,8 @@
 var Game = {
   players: [],
   snowballs: [],
-  marks: []
+  marks: [],
+  explosions: []
 };
 
 Game.createPlayer = function ( id , options ) {
@@ -24,9 +25,12 @@ Game.createPlayers = function ( currentPlayers ){
 };
 
 Game.update = function () {
+  //Move the players
   this.players.forEach(function ( player ) {
     player.update();
   });
+
+  //move snowballs
   this.snowballs.forEach(function ( snowball , i) {
     if( snowball.alive) {
       snowball.update();
@@ -34,14 +38,20 @@ Game.update = function () {
       scene.remove( snowball.tjs );
     }
   });
+
   this.checkSnowballsHitFloor()
+
+  //explode explosion
+  this.explosions.forEach( function ( explosion , i) {
+    explosion.update();
+  })
 };
 
 Game.checkSnowballsHitFloor = function () {
   this.snowballs.forEach(function ( snowball ) {
     if( snowball.alive && snowball.crossY ) {
       snowball.kill();
-      parts.push(new ExplodeAnimation(snowball.crossX, 0, snowball.crossZ));
+      Game.explosions.push(new ExplodeAnimation(snowball.crossX, 0, snowball.crossZ));
       Game.markHit( snowball.crossX, snowball.crossZ );
     }
   });
@@ -54,7 +64,6 @@ Game.markHit = function ( x, z ) {
   newMark.position.y = -1 + 2*Math.random()
   this.marks.push(newMark)
   scene.add(newMark)
-
-
-
 }
+
+

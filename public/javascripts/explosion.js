@@ -1,17 +1,13 @@
-//////////////settings/////////
 var movementSpeed = 8;
 var totalObjects = 100;
 var objectSize = 1;
 var sizeRandomness = 4000;
-/////////////////////////////////
 var dirs = [];
 var parts = [];
 
 
-function ExplodeAnimation(x,y,z)
-{
+function ExplodeAnimation(x,y,z) {
   var geometry = new THREE.Geometry();
-
   for (i = 0; i < totalObjects; i ++)
   {
     var vertex = new THREE.Vector3();
@@ -32,7 +28,7 @@ function ExplodeAnimation(x,y,z)
   this.yDir = (Math.random() * movementSpeed)-(movementSpeed/2);
   this.zDir = (Math.random() * movementSpeed)-(movementSpeed/2);
 
-  scene.add( this.object  );
+  scene.add( this.object );
 
   this.update = function(){
     if (this.status == true){
@@ -49,16 +45,8 @@ function ExplodeAnimation(x,y,z)
 
 }
 
-parts.push(new ExplodeAnimation(80, -20));
 
+ 
 
-window.addEventListener( 'mousedown', onclick, false );
-
-
-function onclick(){
-  event.preventDefault();
-  console.log('here')
-  parts.push(new ExplodeAnimation(20, 20));
-}
 
 

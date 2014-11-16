@@ -8,9 +8,9 @@ snowball.castShadow = true;
 function Snowball( playerId, position, direction, power) {
   this.tjs = snowball.clone();
   this.direction = direction; //equivalent to rotation.y on a threeJS object;
-  this.tjs.position.x = position.x + Math.sin(direction)*bodyRadius;
-  this.tjs.position.y = bodyRadius;
-  this.tjs.position.z = position.z + Math.cos(direction)*bodyRadius;
+  this.tjs.position.x = position.x + Math.sin(direction - Math.PI/2)*(bodyRadius + 5);
+  this.tjs.position.y = bodyRadius +1;
+  this.tjs.position.z = position.z + Math.cos(direction - Math.PI/2)*(bodyRadius + 5);
   this.id = playerId;
   this.speedY = power;
 

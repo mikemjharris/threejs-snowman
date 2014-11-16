@@ -4,12 +4,7 @@
 //snowman.js
 
 var snowBallPowerUp = false;
-
-
-var incx = 0;
-var incz = 0;
-var incRot = 0;
-var snowmanSpeed = 2;
+var snowBallPower = 0
 var cameraY = 0;
 var cameraRotate = 0;
 var cameraRotateInc = 0
@@ -26,9 +21,6 @@ var toLookat = {
   y: 0,
   z: 0
 };
-var firstTimeConnect = true;
-var planeSize = 1000;
-
 var socket = io.connect(window.location.hostname);
 
 function compareRect(R1, R2) {
@@ -69,63 +61,6 @@ light.shadowDarkness = 0.2;
 scene.add(light);
 
 
-//removed for now - should come from the server
-var cubeSide = 10
-var cubeGeometry = new THREE.BoxGeometry(cubeSide,cubeSide,cubeSide);
-var cubeMaterial = new THREE.MeshLambertMaterial({
-  map: THREE.ImageUtils.loadTexture('../images/m.gif')
-});
-var cubes = []
-
-
-var nosCubes = 2
-var cubePositions = [[20,30], [50,55], [0,100],[120,10], [-120,10], [-100,-40], [-140,70], [-60,130]]
- // var cubePositions = []
-for (var i = 0; i < cubePositions.length; i++) {
-    cubes[i] = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    // randX = Math.random() * 500 - 250;
-    // randZ = Math.random() * 500 - 250;
-    randX = cubePositions[i][0]
-    randZ = cubePositions[i][1]
-    cubes[i].position.x=randX;
-    cubes[i].position.y= Math.random() * cubeSide/2 ;
-    cubes[i].position.z=randZ;
-    cubes[i].castShadow = true;
-
-
-    scene.add(cubes[i]);
-}
-
-
-        // var cubebigSide = 10
-        var bigCubeGeometry = new THREE.BoxGeometry(50,50,300);
-        var bigCubeMaterial = new THREE.MeshLambertMaterial({
-          map: THREE.ImageUtils.loadTexture('../images/mammal_logo.jpg')
-        });
-
-        var bigCube = new THREE.Mesh( bigCubeGeometry, bigCubeMaterial );
-        bigCube.position.y = 100
-        bigCube.position.x = 0
-        bigCube.position.z = -300
-        bigCube.rotation.y = Math.PI/2
-
-        scene.add( bigCube )
-
-        mesh.castShadow = true;
-
-        // mesh.position.z = 60
-
-
-var highlightRadius   = bodyRadius,
-    highlightMaterial = new THREE.MeshLambertMaterial( { color: 0x0000ff } ),
-    highlightGeometry = new THREE.CylinderGeometry(bodyRadius, bodyRadius, 1, 30);
-var highlight  = new THREE.Mesh( highlightGeometry, highlightMaterial )
-    highlight.rotation.x = Math.PI
-
-
-
-var tree
-
 
 
 $('#join-game').on('click', function() {
@@ -150,6 +85,14 @@ function addToPlayersList(socketId, playerName) {
     $('#players').append('<tr id=' + socketId + '><td>' + playerName + '</td>|<td class="win">0</td>|<td class="loss">0</td></tr>')
   }
 }
+
+function powerInidcator () {
+  $('#power').css('width', window.innerWidth / 12 * snowballPower + 'px')
+  if( snowBallPowerUp && snowballPower < 10) {
+    snowballPower += 0.1;
+  }
+}
+
 var cameraType = 'move'
 camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom
 camera.position.z = camera.position.z + Math.cos(camera.rotation.y)*cameraZoom
@@ -171,77 +114,20 @@ camY = camera.rotation.y
 camz = camera.rotation.z
 camx = camera.rotation.x
 
-var ooPlayer
-
-
-
-
-
-
-
-
 
 Game.createPlayer('t')
 eventListeners()
 
 
 
-var snowBallPower = 0
-
+//game loop
 function render() {
   requestAnimationFrame( render );
-   x += 0.02;
-   Game.update()
-    camera.position.y =  camera.position.y + cameraY / 5
-
-    $('#power').css('width', window.innerWidth / 12 * snowballPower + 'px')
-    if( snowBallPowerUp && snowballPower < 10) {
-      snowballPower += 0.1;
-    }
-
-
-        var pCount = parts.length;
-          while(pCount--) {
-            parts[pCount].update();
-          }
-
-
-
-  if( cameraType == 'static') {
-    camera.position.x = 170;
-    camera.position.y = 60;
-    camera.position.z = 170;
-
-
-    camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom
-    camera.position.z = camera.position.z + Math.cos(camera.rotation.y)*cameraZoom
-    distanceFromCenter = Math.sqrt((camera.position.x*camera.position.x ) + (camera.position.z*camera.position.z ))
-    cameraRotate = cameraRotate + cameraRotateInc
-    camera.position.x = Math.sin(cameraRotate/50)*distanceFromCenter
-    camera.position.z = Math.cos(cameraRotate/50)*distanceFromCenter
-
-    camera.lookAt(scene.position);
-
-  } else if (cameraType == 'move') {
-    if( Game.playerToMove.tjs ) {
-
-
-      camera.position.x = Game.playerToMove.tjs.position.x - 40 * Math.sin(Game.playerToMove.tjs.rotation.y)
-      camera.position.z = Game.playerToMove.tjs.position.z - 40 * Math.cos(Game.playerToMove.tjs.rotation.y)
-      camera.position.y = 60
-
-      toLookat = Game.playerToMove.tjs.position.clone()
-      toLookat.x = toLookat.x + 100 * Math.sin(Game.playerToMove.tjs.rotation.y)
-      toLookat.z = toLookat.z + 100 * Math.cos(Game.playerToMove.tjs.rotation.y)
-      camera.lookAt(toLookat)
-    } else {
-      camera.lookAt(scene.position);
-    }
-  }
-
-
+  x += 0.02;
+  Game.update()
+  powerInidcator() 
+  updateCamera()
   bigCube.rotation.x = x/2
-  // light.position.set(100 + 100*Math.sin(x/10), 100 , 100 + 100*Math.cos(x/10));
   renderer.render( scene, camera );
 }
 render();
