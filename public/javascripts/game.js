@@ -112,7 +112,7 @@ Game.checkTargetCollision = function () {
   var targetToCheck = this.targets[0];
   this.snowballs.forEach(function ( snowball ) {
     // if( !snowball.checkedTargetCollision && snowball.tjs.position.y < 2 && Game.check3dCollision( targetToCheck , snowball) ) {
-      if( !snowball.checkedTargetCollision &&  Game.check3dCollision( targetToCheck , snowball) ) {
+      if( !snowball.checkedTargetCollision && Game.check3dCollision( targetToCheck , snowball) ) {
       snowball.checkedTargetCollision = true;
       Game.targets[0].dead = true;
       timePoints = Math.round(targetToCheck.counter * 10)/10;
@@ -121,6 +121,8 @@ Game.checkTargetCollision = function () {
       Game.message('Hit the target! Time ' + timePoints + ' x distance ' + distPoints +' = ' + points +' points');
       Game.totalPoints += points;
       $('#score').text(Game.totalPoints);
+      Game.explosions.push(new ExplodeAnimation(targetToCheck.tjs.position.x, targetWidthY / 2 , targetToCheck.tjs.position.z))
+      scene.remove(snowball.tjs)
       scene.remove( Game.targets[0].tjs);
       Game.createTarget();
     }
@@ -139,8 +141,7 @@ Game.check3dCollision = function ( rect1, rect2 ) {
          rect1.tjs.position.z - rect1.widthZ / 2  >= rect2.tjs.position.z + rect2.widthZ /2 ||
          rect1.tjs.position.x - rect1.widthX / 2 >= rect2.tjs.position.x + rect2.widthX /2 ||
          rect1.tjs.position.z + rect1.widthZ / 2  <= rect2.tjs.position.z - rect2.widthZ /2||
-         rect1.tjs.position.y + rect1.widthY   <= rect2.tjs.position.y - rect2.widthY /2);;
-
+         rect1.tjs.position.y + rect1.widthY   <= rect2.tjs.position.y - rect2.widthY /2);
 };
 
 

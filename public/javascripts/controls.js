@@ -89,7 +89,6 @@ window.addEventListener('keyup', function(event) {
       cameraZoom = 0
       break;
     case 32:
-    console.log('poweree', snowballPower)
     var test = snowballPower
       Game.playerToMove.fireSnowball( test );
       snowBallPowerUp = false;
