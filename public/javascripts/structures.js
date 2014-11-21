@@ -13,12 +13,13 @@ var noseHeight = 3;
 var planeSize = 1000;
 
 //init THREE.js scene
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-var renderer = new THREE.WebGLRenderer();
+ var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  var renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(new THREE.Color(0xEEEEEE));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMapEnabled = true;
+
 
 //Geometries
 // var snowballGeometry = new THREE.SphereGeometry(snowBallSize,30,30);
@@ -124,28 +125,26 @@ mesh.castShadow = true;
 scene.add(plane);
 
 
-var treeHeight  = 60 
+var treeHeight  = 60
 var trunkHeight  = 15
 
 var treeGeometry = new THREE.CylinderGeometry(0, 20, treeHeight, 40);
 var treeMaterial = new THREE.MeshLambertMaterial({color: 0x00ff00, wireframe: false});
-var tree = new THREE.Mesh(treeGeometry,treeMaterial); 
+var tree = new THREE.Mesh(treeGeometry,treeMaterial);
 var trunkGeometry = new THREE.CylinderGeometry(5, 5, trunkHeight, 40);
 var trunkMaterial = new THREE.MeshLambertMaterial({color: 0x000000, wireframe: false});
-var trunk = new THREE.Mesh(trunkGeometry,trunkMaterial); 
+var trunk = new THREE.Mesh(trunkGeometry,trunkMaterial);
 
 tree.position.y = treeHeight/2 + trunkHeight
 trunk.position.y = trunkHeight/2
 tree.castShadow = true
 
 var wholeTree = new THREE.Group();
-wholeTree.add(trunk)
-wholeTree.add(tree)
-
-
-wholeTree.castShadow = true
-wholeTree.position.x = 100
-wholeTree.position.z = 100
+wholeTree.add(trunk);
+wholeTree.add(tree);
+wholeTree.castShadow = true;
+wholeTree.position.x = 100;
+wholeTree.position.z = 100;
 
 scene.add(wholeTree)
 
@@ -162,7 +161,6 @@ var cubes = []
 
 var nosCubes = 2
 var cubePositions = [[20,30], [50,55], [0,100],[120,10], [-120,10], [-100,-40], [-140,70], [-60,130]]
- // var cubePositions = []
 for (var i = 0; i < cubePositions.length; i++) {
     cubes[i] = new THREE.Mesh(cubeGeometry, cubeMaterial);
     // randX = Math.random() * 500 - 250;
@@ -179,23 +177,20 @@ for (var i = 0; i < cubePositions.length; i++) {
 }
 
 
-        // var cubebigSide = 10
-        var bigCubeGeometry = new THREE.BoxGeometry(50,50,300);
-        var bigCubeMaterial = new THREE.MeshLambertMaterial({
-          map: THREE.ImageUtils.loadTexture('../images/mammal_logo.jpg')
-        });
+  // var cubebigSide = 10
+  var bigCubeGeometry = new THREE.BoxGeometry(50,50,300);
+  var bigCubeMaterial = new THREE.MeshLambertMaterial({
+    map: THREE.ImageUtils.loadTexture('../images/mammal_logo.jpg')
+  });
+  var bigCube = new THREE.Mesh( bigCubeGeometry, bigCubeMaterial );
+  bigCube.position.y = 100;
+  bigCube.position.x = 0;
+  bigCube.position.z = -300;
+  bigCube.rotation.y = Math.PI/2;
 
-        var bigCube = new THREE.Mesh( bigCubeGeometry, bigCubeMaterial );
-        bigCube.position.y = 100
-        bigCube.position.x = 0
-        bigCube.position.z = -300
-        bigCube.rotation.y = Math.PI/2
+  scene.add( bigCube );
 
-        scene.add( bigCube )
-
-        mesh.castShadow = true;
-
-        // mesh.position.z = 60
+  mesh.castShadow = true;
 
 
 var highlightRadius   = bodyRadius,
@@ -206,5 +201,10 @@ var highlight  = new THREE.Mesh( highlightGeometry, highlightMaterial )
 
 
 
+var targetSize   = 30,
+    targetMaterial = new THREE.MeshLambertMaterial( { color: 0xff0000 } ),
+    targetGeometry = new THREE.BoxGeometry(targetSize,2,targetSize);
+var target  = new THREE.Mesh( targetGeometry, targetMaterial )
+    // target.rotation.x = Math.PI
 
 

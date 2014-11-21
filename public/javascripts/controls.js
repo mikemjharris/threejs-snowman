@@ -19,29 +19,28 @@ window.addEventListener('keydown', function(event) {
       cameraRotateInc = -1
       break;
     case 68: // E
-      cameraY = 5
+      cameraY = 5;
       break;
     case 69: // D
-      cameraY = -5
+      cameraY = -5;
       break;
     case 82: // R
-      cameraZoom = 1
+      cameraZoom = 1;
       break;
     case 70: // F
-      cameraZoom = -1
+      cameraZoom = -1;
       break;
     case 37: // left
-      Game.playerToMove.rotateDirection( 0.1 );
-      console.log('here')
+      Game.playerToMove.rotateDirection( 0.05 );
       break;
     case 39: // right
-      Game.playerToMove.rotateDirection( -0.1 );
+      Game.playerToMove.rotateDirection( -0.05 );
       break;
     case 38: // up
-      Game.playerToMove.moveDirection( 1 );
+      Game.playerToMove.moveDirection( 2 );
       break;
     case 40: // down
-      Game.playerToMove.moveDirection( -1 );
+      Game.playerToMove.moveDirection( -2 );
       break;
     case 32: // spacebar
       snowBallPowerUp = true;

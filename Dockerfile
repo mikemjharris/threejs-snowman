@@ -10,8 +10,6 @@ ADD . /var/www/
 
 WORKDIR /var/www/
 
-RUN npm install -g entry
-
 CMD npm start
 
 EXPOSE 80

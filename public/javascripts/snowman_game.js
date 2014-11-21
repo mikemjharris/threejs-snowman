@@ -41,20 +41,42 @@ function sendUpdate() {
 }
 
 
+function init() {
 
+
+}
+
+
+document.getElementById("canvas-view").appendChild(renderer.domElement);
+
+window.addEventListener( 'resize', onWindowResize, false );
+
+init();
+
+
+
+var cameraType = 'move';
 camera.position.x = 170;
 camera.position.y = 60;
 camera.position.z = 170;
 camera.lookAt(scene.position);
+camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom;
+camera.position.z = camera.position.z + Math.cos(camera.rotation.y)*cameraZoom;
+distanceFromCenter = Math.sqrt((camera.position.x*camera.position.x ) + (camera.position.z*camera.position.z ));
+cameraRotate = cameraRotate + cameraRotateInc;
+camera.position.x = Math.sin(cameraRotate/50)*distanceFromCenter;
+camera.position.z = Math.cos(cameraRotate/50)*distanceFromCenter;
+camera.lookAt(scene.position);
+camY = camera.rotation.y;
+camz = camera.rotation.z;
+camx = camera.rotation.x;
+
 
 
 light = new THREE.DirectionalLight(0xdfebff, 1.75);
 light.position.set(100, 100, 100);
-// light.position.set(100, 800, -100);
 light.position.multiplyScalar(1.3);
 light.castShadow = true;
-
-
 light.shadowCameraFar = 1000;
 light.shadowDarkness = 0.2;
 
@@ -68,67 +90,59 @@ $('#join-game').on('click', function() {
 })
 
 function joinGameClicked( )  {
-  console.log('clicked')
-  var playerName = $('#player-name').val()
-  $('#player-name').val('')
-  if(playerName != '') {
-    eventListeners()
-    $('.controls').addClass('hide-controls')
-    addToPlayersList(playerSocketId , playerName)
-    joinGame(playerName)
+  var playerName = $('#player-name').val();
+  $('#player-name').val('');
+  if(playerName !== '') {
+    eventListeners();
+    $('.controls').addClass('hide-controls');
+    addToPlayersList(playerSocketId , playerName);
+    joinGame(playerName);
   }
 }
 
 
 function addToPlayersList(socketId, playerName) {
-  if($('#' + socketId).length == 0) {
+  if($('#' + socketId).length === 0) {
     $('#players').append('<tr id=' + socketId + '><td>' + playerName + '</td>|<td class="win">0</td>|<td class="loss">0</td></tr>')
   }
 }
 
 function powerInidcator () {
-  $('#power').css('width', window.innerWidth / 12 * snowballPower + 'px')
+  $('#last-power').css('width', window.innerWidth / 12 * Game.lastPower + 'px');
+  $('#power').css('width', window.innerWidth / 12 * snowballPower + 'px');
   if( snowBallPowerUp && snowballPower < 10) {
     snowballPower += 0.1;
   }
 }
 
-var cameraType = 'move'
-camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom
-camera.position.z = camera.position.z + Math.cos(camera.rotation.y)*cameraZoom
-distanceFromCenter = Math.sqrt((camera.position.x*camera.position.x ) + (camera.position.z*camera.position.z ))
-cameraRotate = cameraRotate + cameraRotateInc
-camera.position.x = Math.sin(cameraRotate/50)*distanceFromCenter
-camera.position.z = Math.cos(cameraRotate/50)*distanceFromCenter
-camera.lookAt(scene.position);
-document.getElementById("canvas-view").appendChild(renderer.domElement);
 
-window.addEventListener( 'resize', onWindowResize, false );
+Game.createPlayer('t');
+Game.createTarget()
+eventListeners();
+
+
+
 
 function onWindowResize(){
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth , window.innerHeight );
 }
-camY = camera.rotation.y
-camz = camera.rotation.z
-camx = camera.rotation.x
-
-
-Game.createPlayer('t')
-eventListeners()
-
-
 
 //game loop
 function render() {
-  requestAnimationFrame( render );
-  x += 0.02;
-  Game.update()
-  powerInidcator() 
-  updateCamera()
-  bigCube.rotation.x = x/2
-  renderer.render( scene, camera );
+  if(Game.time > 0) {
+    requestAnimationFrame( render );
+    x += 0.02;
+    Game.update()
+    powerInidcator()
+    updateCamera()
+    bigCube.rotation.x = x/2
+    renderer.render( scene, camera );
+  } else {
+
+    Game.message('Game over - you scored ' + Game.totalPoints)
+  }
 }
 render();
 

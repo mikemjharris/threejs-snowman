@@ -6,7 +6,7 @@ Multiplayer snowman game built with three.js and node.
 
 Clone repositry then:
 
-`npm install`
+`npm install` 
 
 To run the game:  
 
