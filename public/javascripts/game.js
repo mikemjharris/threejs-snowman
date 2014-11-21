@@ -5,7 +5,7 @@ var Game = {
   explosions: [],
   targets: [],
   totalPoints: 0,
-  time: 10
+  time: 60
 };
 
 Game.createPlayer = function ( id , options ) {
@@ -42,7 +42,7 @@ Game.update = function () {
     }
   });
 
-  this.updateTarget()
+  this.updateTarget();
   this.checkTargetCollision();
   this.checkSnowballsHitFloor();
 
@@ -51,9 +51,10 @@ Game.update = function () {
     explosion.update();
   });
   this.time -= 1/60;
-  // console.log( this.time)
-  $('#time').text(Math.round(this.time) )
+  $('#time').text(Math.round(this.time));
   $('#counter').text(Math.round(this.targets[0].counter) );
+  var distanceToTarget = Math.round(Math.sqrt(Math.pow((this.players[0].tjs.position.x - this.targets[0].tjs.position.x),2) + Math.pow((this.players[0].tjs.position.z - this.targets[0].tjs.position.z),2)));
+  $('#dist').text(distanceToTarget);
 
 };
 
@@ -79,10 +80,12 @@ Game.markHit = function ( x, z ) {
 Game.createTarget = function ( ) {
   var targetToAdd = {};
   targetToAdd.tjs = target.clone();
-  targetToAdd.widthX = targetSize ;
-  targetToAdd.widthZ = targetSize ;
+  targetToAdd.widthX = targetWidthX ;
+  targetToAdd.widthZ = targetWidthZ ;
+  targetToAdd.widthY = targetWidthY ;
   targetToAdd.tjs.position.x = 250 - Math.random() * 500;
   targetToAdd.tjs.position.z = 250 - Math.random() * 500;
+
   targetToAdd.counter = 20;
   this.targets[0] = targetToAdd ;
   scene.add(targetToAdd.tjs);
@@ -108,7 +111,8 @@ Game.message = function( text ) {
 Game.checkTargetCollision = function () {
   var targetToCheck = this.targets[0];
   this.snowballs.forEach(function ( snowball ) {
-    if( !snowball.checkedTargetCollision && snowball.tjs.position.y < 2 && Game.checkCollision( targetToCheck , snowball) ) {
+    // if( !snowball.checkedTargetCollision && snowball.tjs.position.y < 2 && Game.check3dCollision( targetToCheck , snowball) ) {
+      if( !snowball.checkedTargetCollision &&  Game.check3dCollision( targetToCheck , snowball) ) {
       snowball.checkedTargetCollision = true;
       Game.targets[0].dead = true;
       timePoints = Math.round(targetToCheck.counter * 10)/10;
@@ -130,6 +134,14 @@ Game.checkCollision = function ( rect1, rect2 ) {
          rect1.tjs.position.z + rect1.widthZ / 2  <= rect2.tjs.position.z - rect2.widthZ);
 };
 
+Game.check3dCollision = function ( rect1, rect2 ) {
+ return !(rect1.tjs.position.x + rect1.widthX / 2 <= rect2.tjs.position.x  -  rect2.widthX/2 ||
+         rect1.tjs.position.z - rect1.widthZ / 2  >= rect2.tjs.position.z + rect2.widthZ /2 ||
+         rect1.tjs.position.x - rect1.widthX / 2 >= rect2.tjs.position.x + rect2.widthX /2 ||
+         rect1.tjs.position.z + rect1.widthZ / 2  <= rect2.tjs.position.z - rect2.widthZ /2||
+         rect1.tjs.position.y + rect1.widthY   <= rect2.tjs.position.y - rect2.widthY /2);;
+
+};
 
 
 

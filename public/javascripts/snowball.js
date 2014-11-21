@@ -9,6 +9,7 @@ function Snowball( playerId, position, direction, power) {
   this.tjs = snowball.clone();
   this.widthX = snowballSize * 2;
   this.widthZ = snowballSize * 2;
+  this.widthY = snowballSize * 2;
   this.direction = direction; //equivalent to rotation.y on a threeJS object;
   this.tjs.position.x = position.x + Math.sin(direction - Math.PI/2)*(bodyRadius + 5);
   this.tjs.position.y = bodyRadius +1;

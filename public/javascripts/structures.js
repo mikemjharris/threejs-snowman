@@ -204,7 +204,11 @@ var highlight  = new THREE.Mesh( highlightGeometry, highlightMaterial )
 var targetSize   = 30,
     targetMaterial = new THREE.MeshLambertMaterial( { color: 0xff0000 } ),
     targetGeometry = new THREE.BoxGeometry(targetSize,2,targetSize);
-var target  = new THREE.Mesh( targetGeometry, targetMaterial )
+// var target  = new THREE.Mesh( targetGeometry, targetMaterial )
+  var target = mesh.clone()
+  var targetWidthX = bodyRadius * 2
+  var targetWidthZ = bodyRadius * 2
+  var targetWidthY = bodyRadius * 2 + headRadius * 2;
     // target.rotation.x = Math.PI
 
 
