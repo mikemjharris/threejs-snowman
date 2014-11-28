@@ -5,15 +5,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var user = []
-var passport = require('passport')
+var user = [];
+var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function ( user, done ) {
   done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function (user, done ) {
   done(null, user);
 });
 
@@ -43,10 +43,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({secret: '1234567890QWERTY'}));
+app.use(session({
+  secret: '1234567890QWERTY'
+}));
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
@@ -54,40 +55,36 @@ app.get('/auth/twitter/callback',
   passport.authenticate('twitter', { successRedirect: '/',
                                      failureRedirect: '/login' }));
 
-app.get('/logout', function (req, res){
-  req.session.destroy(function (err) {
+app.get('/logout', function ( req, res ) {
+  req.session.destroy(function ( err ) {
     res.redirect('/');
   });
 });
 
-
 app.use('/', games);
 
-
-
-app.use(function(req, res, next) {
+app.use(function (req, res, next ) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-
-app.use(function(err, req, res, next) {
+  app.use(function ( err, req, res, next ) {
     res.status(err.status || 500);
     res.render('error', {
-        message: err.message,
-        error: {}
+      message: err.message,
+      error: err
     });
-});
+  });
+}
 
+app.use(function ( err, req, res, next ) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
 
 module.exports = app;

@@ -2,121 +2,127 @@
 var debug = require('debug')('game');
 var app = require('../app');
 
-
 app.set('port', process.env.PORT || 3000);
 
 var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
 });
 
-var clients = 0
-var players = {}
-var snowballs = []
-var snowBallSize = 2
-var snowballSpeed = 5
-var score = {}
+var clients = 0;
+var players = {};
+var snowballs = [];
+var snowBallSize = 2;
+var snowballSpeed = 5;
+var score = {};
 
 var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket) {
 
   score[socket.id] = {
-      w: 0,
-      l: 0
-    }
+    w: 0,
+    l: 0
+  };
 
-  socket.emit('connected', socket.id , players, score);
+  socket.emit('connected', socket.id, players, score);
 
-  socket.on('update' , function( player ) {
-    players[socket.id] = player
-    socket.broadcast.emit('update' , socket.id, player)
-  })
+  socket.on('update', function( player ) {
+    players[socket.id] = player;
+    socket.broadcast.emit('update', socket.id, player);
+  });
 
-   socket.on('disconnect', function () {
-    delete players[socket.id]
-    delete score[socket.id]
+  socket.on('disconnect', function () {
+    delete players[socket.id];
+    delete score[socket.id];
     socket.broadcast.emit('user disconnected', socket.id);
   });
 
-
-  socket.on('fireSnowball' , function() {
-    fireSnowball(socket.id)
-    socket.broadcast.emit('fireSnowball', socket.id)
-
-   })
+  socket.on('fireSnowball', function() {
+    fireSnowball(socket.id);
+    socket.broadcast.emit('fireSnowball', socket.id);
+ });
 
 });
 
-var cubePositions = [[20,30], [50,55], [0,100],[120,10], [-120,10], [-100,-40], [-140,70], [-60,130]]
-var cubes = []
-for( var i = 0; i < cubePositions; i++ ) {
-  cubes[i] = {}
-  cubes[i].x = cubePositions[i][0]
-  cubes[i].z = cubePositions[i][1]
+var cubePositions = [
+  [20, 30],
+  [50, 55],
+  [0, 100],
+  [120, 10],
+  [-120, 10],
+  [-100, -40],
+  [-140,70],
+  [-60,130]
+];
+
+var cubes = [];
+for ( var i = 0; i < cubePositions; i++ ) {
+  cubes[i] = {};
+  cubes[i].x = cubePositions[i][0];
+  cubes[i].z = cubePositions[i][1];
 }
 
-var cubeSides = 10
-var bodyRadius = 9
-var oldx = {}
-var oldz = {}
-var snow
-var times_per_second = 60
-setInterval(function(){
+var cubeSides = 10;
+var bodyRadius = 9;
+var oldx = {};
+var oldz = {};
+var snow;
+var times_per_second = 60;
+setInterval(function() {
+  Object.keys(players).forEach( function( playerId) {
+    if ( !players[playerId].dead ) {
+      oldx[playerId] = players[playerId].position.x;
+      oldz[playerId] = players[playerId].position.z;
+      players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx * Math.sin(players[playerId].rotation.y);
+      players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx * Math.cos(players[playerId].rotation.y);
+      players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot;
 
-   Object.keys(players).forEach( function( playerId) {
-    if( !players[playerId].dead) {
-      oldx[playerId] = players[playerId].position.x
-      oldz[playerId] = players[playerId].position.z
-      players[playerId].position.x = players[playerId].position.x + players[playerId].move.incx* Math.sin(players[playerId].rotation.y)
-      players[playerId].position.z = players[playerId].position.z + players[playerId].move.incx* Math.cos(players[playerId].rotation.y)
-      players[playerId].rotation.y = players[playerId].rotation.y + players[playerId].move.incRot
-
-      for (var i = 0; i < cubes.length; i++) {
-        if (compareRect(players[playerId].position, bodyRadius, cubes[i].position, cubeSide)) {
-         players[playerId].position.x = oldx[playerId];
-         players[playerId].position.z =  oldz[playerId];
-        };
+      var i;
+      for ( i = 0; i < cubes.length; i++ ) {
+        if ( compareRect(players[playerId].position, bodyRadius, cubes[i].position, cubeSide) ) {
+          players[playerId].position.x = oldx[playerId];
+          players[playerId].position.z =  oldz[playerId];
+        }
       }
-      for(var i = 0; i < snowballs.length; i++) {
-        if(snowballs[i].id != playerId) {
-          if( compareRect(players[playerId].position, bodyRadius, snowballs[i].position, snowBallSize) ) {
 
+      for ( i = 0; i < snowballs.length; i++ ) {
+        if ( snowballs[i].id !== playerId ) {
+          if ( compareRect(players[playerId].position, bodyRadius, snowballs[i].position, snowBallSize) ) {
             io.sockets.emit('player shot', snowballs[i].id, playerId);
-            if(!players[playerId].dead) {
+            if ( !players[playerId].dead ) {
               score[snowballs[i].id].w = score[snowballs[i].id].w + 1;
-              score[playerId].l = score[playerId].l + 1
+              score[playerId].l = score[playerId].l + 1;
             }
-            players[playerId].dead = true
-            io.sockets.emit('score', score)
-            snowballs.splice(i,1)
-
-
+            players[playerId].dead = true;
+            io.sockets.emit('score', score);
+            snowballs.splice(i,1);
           }
         }
       }
     }
-  })
+  });
 
-   for (var i=0; i < snowballs.length; i++) {
-    if (snowballs[i].position.z > 250 || snowballs[i].position.z < -250  ||
-      snowballs[i].position.x > 250 || snowballs[i].position.x < -250) {
-      snowballs.splice(i,1)
+   for ( var i = 0; i < snowballs.length; i++ ) {
+    if (
+        snowballs[i].position.z > 250 || snowballs[i].position.z < -250  ||
+        snowballs[i].position.x > 250 || snowballs[i].position.x < -250
+    ) {
+      snowballs.splice(i,1);
     } else {
-      snowballs[i].position.x = Math.sin(snowballs[i].direction)*snowballSpeed + snowballs[i].position.x
-      snowballs[i].position.z = Math.cos(snowballs[i].direction)*snowballSpeed + snowballs[i].position.z
+      snowballs[i].position.x = Math.sin(snowballs[i].direction) * snowballSpeed + snowballs[i].position.x;
+      snowballs[i].position.z = Math.cos(snowballs[i].direction) * snowballSpeed + snowballs[i].position.z;
     }
   }
-
-
-}, 1000 / times_per_second)
+}, 1000 / times_per_second);
 
 function compareRect(R1, R1w, R2, R2w) {
-   return !(R1.x+ R1w*2  <= R2.x + R2w ||
-           R1.z - R1w*2  >= R2.z - R2w ||
-           R1.x >= R2.x + R2w ||
-           R1.z + R1w*2  <= R2.z + R2w);
-  }
-
+  return !(
+      R1.x + R1w * 2  <= R2.x + R2w ||
+      R1.z - R1w * 2  >= R2.z - R2w ||
+      R1.x >= R2.x + R2w ||
+      R1.z + R1w * 2  <= R2.z + R2w
+  );
+}
 
 var snowball = {
   direction: 0,
@@ -125,18 +131,13 @@ var snowball = {
     z: 0
   },
   id: null
-}
-
-
+};
 
 function fireSnowball( playerId ) {
   snowballs.push( snowball);
-  snowballs[snowballs.length -1].direction =  players[playerId].rotation.y
-  snowballs[snowballs.length -1].position.x = players[playerId].position.x + Math.sin(snowballs[snowballs.length -1].direction)*bodyRadius;
-  snowballs[snowballs.length -1].position.y = bodyRadius
-  snowballs[snowballs.length -1].position.z = players[playerId].position.z + Math.cos(snowballs[snowballs.length -1].direction)*bodyRadius;
-  snowballs[snowballs.length -1].id = playerId
+  snowballs[snowballs.length - 1].direction =  players[playerId].rotation.y;
+  snowballs[snowballs.length - 1].position.x = players[playerId].position.x + Math.sin(snowballs[snowballs.length - 1].direction) * bodyRadius;
+  snowballs[snowballs.length - 1].position.y = bodyRadius;
+  snowballs[snowballs.length - 1].position.z = players[playerId].position.z + Math.cos(snowballs[snowballs.length - 1].direction) * bodyRadius;
+  snowballs[snowballs.length - 1].id = playerId;
 }
-
-
-

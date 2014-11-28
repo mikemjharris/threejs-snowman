@@ -4,11 +4,11 @@
 //snowman.js
 
 var snowBallPowerUp = false;
-var snowBallPower = 0
+var snowBallPower = 0;
 var cameraY = 0;
 var cameraRotate = 0;
-var cameraRotateInc = 0
-var cameraZoom = 0
+var cameraRotateInc = 0;
+var cameraZoom = 0;
 var x = 0;
 var light;
 var playerSocketId;
@@ -24,10 +24,12 @@ var toLookat = {
 var socket = io.connect(window.location.hostname);
 
 function compareRect(R1, R2) {
- return !(R1.x+ bodyRadius*2  <= R2.x + cubeSide/ 2 ||
-         R1.z - bodyRadius*2  >= R2.z - cubeSide/2 ||
-         R1.x >= R2.x + cubeSide ||
-         R1.z + bodyRadius*2  <= R2.z + cubeSide/2);
+  return !(
+      R1.x + bodyRadius * 2  <= R2.x + cubeSide / 2 ||
+      R1.z - bodyRadius * 2  >= R2.z - cubeSide / 2 ||
+      R1.x >= R2.x + cubeSide ||
+      R1.z + bodyRadius * 2  <= R2.z + cubeSide / 2
+  );
 }
 
 function sendUpdate() {
@@ -40,38 +42,32 @@ function sendUpdate() {
   });
 }
 
-
 function init() {
 
 
 }
 
-
-document.getElementById("canvas-view").appendChild(renderer.domElement);
+document.getElementById('canvas-view').appendChild(renderer.domElement);
 
 window.addEventListener( 'resize', onWindowResize, false );
 
 init();
-
-
 
 var cameraType = 'move';
 camera.position.x = 170;
 camera.position.y = 60;
 camera.position.z = 170;
 camera.lookAt(scene.position);
-camera.position.x = camera.position.x + Math.sin(camera.rotation.y)*cameraZoom;
-camera.position.z = camera.position.z + Math.cos(camera.rotation.y)*cameraZoom;
-distanceFromCenter = Math.sqrt((camera.position.x*camera.position.x ) + (camera.position.z*camera.position.z ));
+camera.position.x = camera.position.x + Math.sin(camera.rotation.y) * cameraZoom;
+camera.position.z = camera.position.z + Math.cos(camera.rotation.y) * cameraZoom;
+distanceFromCenter = Math.sqrt((camera.position.x * camera.position.x ) + (camera.position.z * camera.position.z ));
 cameraRotate = cameraRotate + cameraRotateInc;
-camera.position.x = Math.sin(cameraRotate/50)*distanceFromCenter;
-camera.position.z = Math.cos(cameraRotate/50)*distanceFromCenter;
+camera.position.x = Math.sin(cameraRotate / 50) * distanceFromCenter;
+camera.position.z = Math.cos(cameraRotate / 50) * distanceFromCenter;
 camera.lookAt(scene.position);
 camY = camera.rotation.y;
 camz = camera.rotation.z;
 camx = camera.rotation.x;
-
-
 
 light = new THREE.DirectionalLight(0xdfebff, 1.75);
 light.position.set(100, 100, 100);
@@ -82,82 +78,72 @@ light.shadowDarkness = 0.2;
 
 scene.add(light);
 
-
-
-
 $('#join-game').on('click', function() {
-  joinGameClicked( )
-})
+  joinGameClicked();
+});
 
-function joinGameClicked( )  {
+function joinGameClicked() {
   var playerName = $('#player-name').val();
   $('#player-name').val('');
-  if(playerName !== '') {
+  if ( playerName !== '' ) {
     eventListeners();
     $('.controls').addClass('hide-controls');
-    addToPlayersList(playerSocketId , playerName);
+    addToPlayersList(playerSocketId, playerName);
     joinGame(playerName);
   }
 }
 
-
-function addToPlayersList(socketId, playerName) {
-  if($('#' + socketId).length === 0) {
-    $('#players').append('<tr id=' + socketId + '><td>' + playerName + '</td>|<td class="win">0</td>|<td class="loss">0</td></tr>')
+function addToPlayersList( socketId, playerName ) {
+  if ( $('#' + socketId).length === 0 ) {
+    $('#players').append('<tr id=' + socketId + '><td>' + playerName + '</td>|<td class="win">0</td>|<td class="loss">0</td></tr>');
   }
 }
 
-function powerInidcator () {
+function powerInidcator() {
   $('#last-power').css('width', window.innerWidth / 12 * Game.lastPower + 'px');
   $('#power').css('width', window.innerWidth / 12 * snowballPower + 'px');
-  if( snowBallPowerUp && snowballPower < 10) {
+  if ( snowBallPowerUp && snowballPower < 10) {
     snowballPower += 0.1;
   }
 }
 
-
 Game.createPlayer('t');
-Game.createTarget()
+Game.createTarget();
 eventListeners();
-
-
-
 
 function onWindowResize(){
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize( window.innerWidth , window.innerHeight );
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 //game loop
 function render() {
-  if(Game.time > 0) {
+  if (Game.time > 0) {
     requestAnimationFrame( render );
     x += 0.02;
-    Game.update()
-    powerInidcator()
-    updateCamera()
-    bigCube.rotation.x = x/2
+    Game.update();
+    powerInidcator();
+    updateCamera();
+    bigCube.rotation.x  x / 2;
     renderer.render( scene, camera );
   } else {
-
-    Game.message('Game over - you scored ' + Game.totalPoints)
+    Game.message('Game over - you scored ' + Game.totalPoints);
   }
-}
-render();
+}render();
 
 
 function sendUpdate() {
-  if( players[playerSocketId]) {
-      socket.emit('update', {
-        position: players[playerSocketId].position,
-        rotation: {
-          y: players[playerSocketId].rotation.y
-        },
-        move: players[playerSocketId].move,
-        playerName: players[playerSocketId].playerName
-      })
-    }
+  if ( players[playerSocId] ) {
+    socket.emit('update', {
+      position: players[playerSocketId].position,
+      rotation: {
+        y: players[playerSocketId].rotation.y
+      },
+      move: players[playerSocketId].move,
+      playerName: players[playerSocketId].playerName
+    });
+  }
 }
 
 
@@ -165,7 +151,7 @@ function sendUpdate() {
 
 function updatePlayers (socketId, player) {
 
-    if( !players[socketId]) {
+    if ( !players[socketId]) {
 
       newPlayer = mesh.clone();
       newPlayer.position.x = player.position.x
@@ -181,7 +167,7 @@ function updatePlayers (socketId, player) {
       players[socketId].position.x = player.position.x
       players[socketId].position.z = player.position.z
       players[socketId].rotation.y = player.rotation.y
-      if(socketId != playerSocketId) {
+      if (socketId != playerSocketId) {
         players[socketId].move = player.move
       }
     }
@@ -237,7 +223,7 @@ function updateScoreboard ( score ) {
 
 function regenerate ( whyRegenerate) {
 
-  if(thisPlayerName) {
+  if (thisPlayerName) {
     $('.controls').addClass('ingame')
     $('.controls').removeClass('hide-controls')
     $('#player-name').val(thisPlayerName)
@@ -246,10 +232,10 @@ function regenerate ( whyRegenerate) {
     $('.controls').removeClass('hide-controls')
   }
 
-  if( whyRegenerate === 'disconnect') {
+  if ( whyRegenerate === 'disconnect') {
     $('.regenerate h2').text('Reconnected to the server - click the button to rejoin the game')
   } else {
-    $('.regenerate h2').text("You got shot! Click the button to rejoin")
+    $('.regenerate h2').text('You got shot! Click the button to rejoin')
   }
 
   $('.controls').removeClass('hide-controls')
@@ -257,49 +243,39 @@ function regenerate ( whyRegenerate) {
 
 var haveDisconnected = false
 
-socket.on('fireSnowball' , function( socketId ) {
+socket.on('fireSnowball', function( socketId ) {
   fireSnowball( socketId )
 })
 
-socket.on('score' , function ( score ) {
+socket.on('score', function ( score ) {
   updateScoreboard( score )
 })
 
-socket.on('update' , function( socketId, player ) {
-  updatePlayers(socketId, player)
+socket.on('update', function( socketId, player ) {
+  updatePlayers(socketId, player
 })
 
-socket.on('user disconnected' , function( playerId ) {
+socket.on('user disconnected', function( playerId ) {
     $('#' + playerId).remove()
     scene.remove(players[playerId])
-    delete players[playerId]
-})
+    delte players[playerId]})
 
-socket.on('connect' , function(){
-  $('#message').text('Connected')
+socket.on('connect', function(){
+  $('#messag').text('Connected');
   regenerate('disconnect')
-
-})
-socket.on('disconnect' , function(){
+socket.on('disconnec', function(){
   $('#message').text('Disconnected from the server')
-  Object.keys(players).forEach(function ( playerId) {
-    $('#' + playerId).remove()
-    scene.remove(players[playerId])
-    delete players[playerId]
-  })
-
-
-})
-
-socket.on('player shot',  function( killerId, deadId) {
+  Object.key(players).forEach(function ( playerId) {;
+    $('#' + playerId).remove()  scene.remove(players[playerId])
+    delete players[playerId;
+  }))
+;
+set.on('plaer shot',  fuction( killerId, deadId) {
   $('#message').text(players[killerId].playerName + ' hit ' + players[deadId].playerName + ' with a snowball!')
   scene.remove(players[deadId])
-  if( deadId == playerSocketId) {
-    regenerate()
-  }
-  delete players[deadId]
+  if ( deadId == playerSocketId) {;
+    regenerate()}
+  delete playes[deadId]
   console.log('killed', killerId, deadId)
 })
-
-
-
+;

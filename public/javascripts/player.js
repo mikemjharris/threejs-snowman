@@ -1,4 +1,4 @@
-function Player( threeJSObject , id , options) {
+function Player( threeJSObject, id, options ) {
   this.tjs = threeJSObject;
   this.id = id;
   this.move = {
@@ -7,11 +7,11 @@ function Player( threeJSObject , id , options) {
     };
   this.playerName = '';
 
-  if( options ){
-    if( options.move ) {
+  if ( options ){
+    if ( options.move ) {
       this.move = options.move;
     }
-    if( options.playerName) {
+    if ( options.playerName) {
       this.playerName = options.playerName;
     }
   }
@@ -35,8 +35,7 @@ Player.prototype.update = function() {
 };
 
 Player.prototype.fireSnowball = function( power ) {
-  var newSnowball = new Snowball( this.id, this.tjs.position, this.tjs.rotation.y, power);
+  var newSnowball = new Snowball(this.id, this.tjs.position, this.tjs.rotation.y, power);
   Game.lastPower = power;
   Game.snowballs.push( newSnowball );
 };
-
