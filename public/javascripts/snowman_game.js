@@ -78,7 +78,7 @@ light.shadowDarkness = 0.2;
 
 scene.add(light);
 
-$('#join-game').on('click', function() {
+$('#join-game').on('click', function () {
   joinGameClicked();
 });
 
@@ -102,7 +102,7 @@ function addToPlayersList( socketId, playerName ) {
 function powerInidcator() {
   $('#last-power').css('width', window.innerWidth / 12 * Game.lastPower + 'px');
   $('#power').css('width', window.innerWidth / 12 * snowballPower + 'px');
-  if ( snowBallPowerUp && snowballPower < 10) {
+  if ( snowBallPowerUp && snowballPower < 10 ) {
     snowballPower += 0.1;
   }
 }
@@ -111,7 +111,7 @@ Game.createPlayer('t');
 Game.createTarget();
 eventListeners();
 
-function onWindowResize(){
+function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -119,13 +119,13 @@ function onWindowResize(){
 
 //game loop
 function render() {
-  if (Game.time > 0) {
+  if ( Game.time > 0 ) {
     requestAnimationFrame( render );
     x += 0.02;
     Game.update();
     powerInidcator();
     updateCamera();
-    bigCube.rotation.x  x / 2;
+    bigCube.rotation.x = x / 2;
     renderer.render( scene, camera );
   } else {
     Game.message('Game over - you scored ' + Game.totalPoints);
@@ -149,133 +149,129 @@ function sendUpdate() {
 
 
 
-function updatePlayers (socketId, player) {
-
-    if ( !players[socketId]) {
-
+function updatePlayers ( socketId, player ) {
+    if ( !players[socketId] ) {
       newPlayer = mesh.clone();
-      newPlayer.position.x = player.position.x
-      newPlayer.position.y =  player.position.y
-      newPlayer.position.z =  player.position.z
-      newPlayer.move= player.move
-      newPlayer.playerName = player.playerName
-      addToPlayersList(socketId, player.playerName)
-      scene.add(newPlayer)
-
-      players[socketId] = newPlayer
-    }  else {
-      players[socketId].position.x = player.position.x
-      players[socketId].position.z = player.position.z
-      players[socketId].rotation.y = player.rotation.y
-      if (socketId != playerSocketId) {
-        players[socketId].move = player.move
+      newPlayer.position.x = player.position.x;
+      newPlayer.position.y =  player.position.y;
+      newPlayer.position.z =  player.position.z;
+      newPlayer.move= player.move;
+      newPlayer.playerName = player.playerName;
+      addToPlayersList(socketId, player.playerName);
+      scene.add(newPlayer);
+      players[socketId] = newPlayer;
+    } else {
+      players[socketId].position.x = player.position.x;
+      players[socketId].position.z = player.position.z;
+      players[socketId].rotation.y = player.rotation.y;
+      if ( socketId !== playerSocketId ) {
+        players[socketId].move = player.move;
       }
     }
 }
 
 
-var playerToCreate
+var playerToCreate;
 
 function joinGame( playerName ) {
-    thisPlayerName = playerName
-    players[playerSocketId] = mesh.clone()
-    players[playerSocketId].add(highlight)
-    players[playerSocketId].move = {
-      incx: 0,
-      incRot: 0
-    }
-    players[playerSocketId].playerName = playerName
-    scene.add(players[playerSocketId]);
-    sendUpdate()
+  thisPlayerName = playerName;
+  players[playerSocketId] = mesh.clone();
+  players[playerSocketId].add(highlight);
+  players[playerSocketId].move = {
+    incx: 0,
+    incRot: 0
+  };
+  players[playerSocketId].playerName = playerName;
+  scene.add(players[playerSocketId]);
+  sendUpdate();
 }
-
 
 // players[playerSocketId].move.incRot =  Math.min(players[playerSocketId].move.incRot + 0.1,  0.1)
 
-socket.on('connected', function(socketId, currentPlayers, score){
-    firstTimeConnect = false;
-    playerSocketId = socketId
+socket.on('connected', function ( socketId, currentPlayers, score ) {
+  firstTimeConnect = false;
+  playerSocketId = socketId;
 
-    Object.keys(currentPlayers).forEach( function( playerId) {
-      playerToCreate = {
-          position: currentPlayers[playerId].position,
-          rotation: {
-            y: currentPlayers[playerId].rotation.y
-          },
-          move: currentPlayers[playerId].move,
-          playerName: currentPlayers[playerId].playerName
-          // score: currentPlayers[playerId].score
-        }
-      updatePlayers(playerId, playerToCreate)
-      updateScoreboard( score )
-    });
-
+  Object.keys(currentPlayers).forEach( function ( playerId ) {
+    playerToCreate = {
+      position: currentPlayers[playerId].position,
+      rotation: {
+        y: currentPlayers[playerId].rotation.y
+      },
+      move: currentPlayers[playerId].move,
+      playerName: currentPlayers[playerId].playerName
+      // score: currentPlayers[playerId].score
+    };
+    updatePlayers(playerId, playerToCreate);
+    updateScoreboard(score);
+  });
 
 });
 
-function updateScoreboard ( score ) {
-  console.log( score )
+function updateScoreboard( score ) {
+  console.log( score );
   Object.keys(score).forEach( function ( playerId ) {
-    $('#'+playerId +' .win').text(score[playerId].w)
-    $('#'+playerId +' .loss').text(score[playerId].l)
-  })
+    $('#' + playerId + ' .win').text(score[playerId].w);
+    $('#' + playerId + ' .loss').text(score[playerId].l);
+  });
 }
 
-function regenerate ( whyRegenerate) {
-
-  if (thisPlayerName) {
-    $('.controls').addClass('ingame')
-    $('.controls').removeClass('hide-controls')
-    $('#player-name').val(thisPlayerName)
-
+function regenerate( whyRegenerate ) {
+  if ( thisPlayerName ) {
+    $('.controls').addClass('ingame');
+    $('.controls').removeClass('hide-controls');
+    $('#player-name').val(thisPlayerName);
   } else {
-    $('.controls').removeClass('hide-controls')
+    $('.controls').removeClass('hide-controls');
   }
-
-  if ( whyRegenerate === 'disconnect') {
-    $('.regenerate h2').text('Reconnected to the server - click the button to rejoin the game')
+  if ( whyRegenerate === 'disconnect' ) {
+    $('.regenerate h2').text('Reconnected to the server - click the button to rejoin the game');
   } else {
-    $('.regenerate h2').text('You got shot! Click the button to rejoin')
+    $('.regenerate h2').text('You got shot! Click the button to rejoin');
   }
-
-  $('.controls').removeClass('hide-controls')
+  $('.controls').removeClass('hide-controls');
 }
 
-var haveDisconnected = false
+var haveDisconnected = false;
 
-socket.on('fireSnowball', function( socketId ) {
-  fireSnowball( socketId )
-})
+socket.on('fireSnowball', function ( socketId ) {
+  fireSnowball( socketId );
+});
 
 socket.on('score', function ( score ) {
-  updateScoreboard( score )
-})
+  updateScoreboard( score );
+});
 
-socket.on('update', function( socketId, player ) {
-  updatePlayers(socketId, player
-})
+socket.on('update', function ( socketId, player ) {
+  updatePlayers(socketId, player);
+});
 
-socket.on('user disconnected', function( playerId ) {
-    $('#' + playerId).remove()
-    scene.remove(players[playerId])
-    delte players[playerId]})
+socket.on('user disconnected', function ( playerId ) {
+  $('#' + playerId).remove();
+  scene.remove(players[playerId]);
+  delete players[playerId];
+});
 
-socket.on('connect', function(){
-  $('#messag').text('Connected');
-  regenerate('disconnect')
-socket.on('disconnec', function(){
-  $('#message').text('Disconnected from the server')
-  Object.key(players).forEach(function ( playerId) {;
-    $('#' + playerId).remove()  scene.remove(players[playerId])
-    delete players[playerId;
-  }))
-;
-set.on('plaer shot',  fuction( killerId, deadId) {
-  $('#message').text(players[killerId].playerName + ' hit ' + players[deadId].playerName + ' with a snowball!')
-  scene.remove(players[deadId])
-  if ( deadId == playerSocketId) {;
-    regenerate()}
-  delete playes[deadId]
-  console.log('killed', killerId, deadId)
-})
-;
+socket.on('connect', function () {
+  $('#message').text('Connected');
+  regenerate('disconnect');
+});
+
+socket.on('disconnect', function () {
+  $('#message').text('Disconnected from the server');
+  Object.keys(players).forEach(function ( playerId) {
+    $('#' + playerId).remove();
+    scene.remove(players[playerId]);
+    delete players[playerId];
+  });
+});
+
+socket.on('player shot', function ( killerId, deadId ) {
+  $('#message').text(players[killerId].playerName + ' hit ' + players[deadId].playerName + ' with a snowball!');
+  scene.remove(players[deadId]);
+  if ( deadId === playerSocketId ) {
+    regenerate();
+  }
+  delete players[deadId];
+  console.log('killed', killerId, deadId);
+});
