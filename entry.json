@@ -20,6 +20,7 @@
     "spawn": {
       "command": "nodemon",
       "args":  [
+        "bin/www",
         "-w",
         "bin/www",
         "-w",
