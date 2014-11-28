@@ -130,11 +130,12 @@ function render() {
   } else {
     Game.message('Game over - you scored ' + Game.totalPoints);
   }
-}render();
+}
 
+render();
 
 function sendUpdate() {
-  if ( players[playerSocId] ) {
+  if ( players[playerSocketId] ) {
     socket.emit('update', {
       position: players[playerSocketId].position,
       rotation: {
@@ -146,30 +147,26 @@ function sendUpdate() {
   }
 }
 
-
-
-
 function updatePlayers ( socketId, player ) {
-    if ( !players[socketId] ) {
-      newPlayer = mesh.clone();
-      newPlayer.position.x = player.position.x;
-      newPlayer.position.y =  player.position.y;
-      newPlayer.position.z =  player.position.z;
-      newPlayer.move= player.move;
-      newPlayer.playerName = player.playerName;
-      addToPlayersList(socketId, player.playerName);
-      scene.add(newPlayer);
-      players[socketId] = newPlayer;
-    } else {
-      players[socketId].position.x = player.position.x;
-      players[socketId].position.z = player.position.z;
-      players[socketId].rotation.y = player.rotation.y;
-      if ( socketId !== playerSocketId ) {
-        players[socketId].move = player.move;
-      }
+  if ( !players[socketId] ) {
+    newPlayer = mesh.clone();
+    newPlayer.position.x = player.position.x;
+    newPlayer.position.y =  player.position.y;
+    newPlayer.position.z =  player.position.z;
+    newPlayer.move = player.move;
+    newPlayer.playerName = player.playerName;
+    addToPlayersList(socketId, player.playerName);
+    scene.add(newPlayer);
+    players[socketId] = newPlayer;
+  } else {
+    players[socketId].position.x = player.position.x;
+    players[socketId].position.z = player.position.z;
+    players[socketId].rotation.y = player.rotation.y;
+    if ( socketId !== playerSocketId ) {
+      players[socketId].move = player.move;
     }
+  }
 }
-
 
 var playerToCreate;
 
