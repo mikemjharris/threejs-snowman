@@ -1,7 +1,6 @@
 (function (window, THREE, Snowman) {
 
   var snowballSize = 2;
-  var snowballSpeed = 2;
   var snowballGeometry = new THREE.SphereGeometry(snowballSize, 30, 30);
   var snowballMaterial = new THREE.MeshLambertMaterial({
     color: 0xffffff, wireframe: false
