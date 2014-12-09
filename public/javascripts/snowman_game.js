@@ -5,10 +5,6 @@
 
 var snowBallPowerUp = false;
 var snowBallPower = 0;
-var cameraY = 0;
-var cameraRotate = 0;
-var cameraRotateInc = 0;
-var cameraZoom = 0;
 var x = 0;
 var light;
 var playerSocketId;

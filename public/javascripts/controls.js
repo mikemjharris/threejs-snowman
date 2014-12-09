@@ -12,24 +12,6 @@ function eventListeners () {
   window.addEventListener('keydown', function( event ) {
     sendUpdate();
     switch ( event.keyCode ) {
-      case 87: // W
-        cameraRotateInc = 1;
-      break;
-      case 83: // Left
-        cameraRotateInc = -1;
-      break;
-      case 68: // E
-        cameraY = 5;
-      break;
-      case 69: // D
-        cameraY = -5;
-      break;
-      case 82: // R
-        cameraZoom = 1;
-      break;
-      case 70: // F
-        cameraZoom = -1;
-      break;
       case 37: // left
         Game.playerToMove.rotateDirection( 0.05 );
       break;
@@ -44,13 +26,6 @@ function eventListeners () {
       break;
       case 32: // spacebar
         snowBallPowerUp = true;
-      break;
-      case 77: //m
-        if ( cameraType === 'static' ) {
-          cameraType = 'move';
-        } else {
-          cameraType = 'static';
-        }
       break;
     }
     sendUpdate();
@@ -73,21 +48,6 @@ function eventListeners () {
       case 40: // down
         Game.playerToMove.moveDirection(0);
       break;
-      case 68: // E
-        cameraY = 0;
-      break;
-      case 69: // D
-        cameraY = 0;
-      break;
-      case 87: // W
-        cameraRotateInc = 0;
-      break;
-      case 83: // Left
-        cameraRotateInc = 0;
-      break;
-      case 82: // R
-        cameraZoom = 0;
-      break;
       case 32:
         var snowball = Game.playerToMove.makeSnowball( snowballPower );
         scene.add(snowball.mesh);
@@ -95,9 +55,6 @@ function eventListeners () {
         Game.snowballs.push(snowball);
         snowBallPowerUp = false;
         snowballPower = 0;
-      break;
-      case 70: // F
-        cameraZoom = 0;
       break;
     }
     sendUpdate();
