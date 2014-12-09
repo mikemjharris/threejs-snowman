@@ -3,6 +3,12 @@ renderer.setClearColor(new THREE.Color(0xEEEEEE));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMapEnabled = true;
 
+var tree = new Tree();
+tree.mesh.position.x = 100;
+tree.mesh.position.z = 100;
+
+scene.add(tree.mesh);
+
 var x = 0;
 var light;
 var playerSocketId;

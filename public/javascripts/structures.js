@@ -25,35 +25,6 @@ plane.receiveShadow = true;
 // add the sphere to the scene
 scene.add(plane);
 
-var treeHeight = 60;
-var trunkHeight = 15;
-
-var treeGeometry = new THREE.CylinderGeometry(0, 20, treeHeight, 40);
-var treeMaterial = new THREE.MeshLambertMaterial({
-  color: 0x00ff00,
-  wireframe: false
-});
-var tree = new THREE.Mesh(treeGeometry,treeMaterial);
-var trunkGeometry = new THREE.CylinderGeometry(5, 5, trunkHeight, 40);
-var trunkMaterial = new THREE.MeshLambertMaterial({
-  color: 0x000000,
-  wireframe: false
-});
-var trunk = new THREE.Mesh(trunkGeometry,trunkMaterial);
-
-tree.position.y = treeHeight / 2 + trunkHeight;
-trunk.position.y = trunkHeight / 2;
-tree.castShadow = true;
-
-var wholeTree = new THREE.Group();
-wholeTree.add(trunk);
-wholeTree.add(tree);
-wholeTree.castShadow = true;
-wholeTree.position.x = 100;
-wholeTree.position.z = 100;
-
-scene.add(wholeTree);
-
 var cubeSide = 10;
 var cubeGeometry = new THREE.BoxGeometry(cubeSide,cubeSide,cubeSide);
 var cubeMaterial = new THREE.MeshLambertMaterial({
