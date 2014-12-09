@@ -10,7 +10,7 @@ var Game = {
 
 Game.createPlayer = function ( id, options ) {
   var newPlayer = new Player(new Snowman(), id, options);
-  scene.add(newPlayer.tjs);
+  scene.add(newPlayer.mesh);
   this.players.push(newPlayer);
   this.playerToMove = newPlayer;
 };
@@ -56,11 +56,11 @@ Game.update = function () {
   var distanceToTarget = Math.round(
       Math.sqrt(
           Math.pow(
-              this.players[0].tjs.position.x - this.targets[0].mesh.position.x,
+              this.players[0].mesh.position.x - this.targets[0].mesh.position.x,
               2
           ) +
           Math.pow(
-              this.players[0].tjs.position.z - this.targets[0].mesh.position.z,
+              this.players[0].mesh.position.z - this.targets[0].mesh.position.z,
               2
           )
       )

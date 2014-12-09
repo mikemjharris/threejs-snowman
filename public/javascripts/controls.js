@@ -89,8 +89,10 @@ function eventListeners () {
         cameraZoom = 0;
       break;
       case 32:
-        var test = snowballPower;
-        Game.playerToMove.fireSnowball( test );
+        var snowball = Game.playerToMove.makeSnowball( snowballPower );
+        scene.add(snowball.mesh);
+        Game.lastPower = snowballPower;
+        Game.snowballs.push(snowball);
         snowBallPowerUp = false;
         snowballPower = 0;
       break;
