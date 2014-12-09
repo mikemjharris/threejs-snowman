@@ -5,10 +5,13 @@ var planeSize = 1000;
 var scene = new THREE.Scene();
 
 //Geometries
-var planeGeometry = new THREE.PlaneGeometry(planeSize, planeSize);
+var planeGeometry = new THREE.PlaneGeometry(planeSize, planeSize, 32, 32);
+
+for (var i = 0, l = planeGeometry.vertices.length; i < l; i++) {
+  planeGeometry.vertices[i].z = Math.random() * 10;
+}
 
 //Materials
-// var snowballMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false});
 var planeMaterial = new THREE.MeshPhongMaterial({
   color: 0xcccccc
 });
