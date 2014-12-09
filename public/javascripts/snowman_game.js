@@ -1,10 +1,8 @@
-//structures.js
-//controls.js
-//player.js
-//snowman.js
+var renderer = new THREE.WebGLRenderer();
+renderer.setClearColor(new THREE.Color(0xEEEEEE));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMapEnabled = true;
 
-var snowBallPowerUp = false;
-var snowBallPower = 0;
 var x = 0;
 var light;
 var playerSocketId;
@@ -19,15 +17,6 @@ var toLookat = {
 };
 var socket = io.connect(window.location.hostname);
 
-function compareRect(R1, R2) {
-  return !(
-      R1.x + Snowman.BODY_RADIUS * 2  <= R2.x + cubeSide / 2 ||
-      R1.z - Snowman.BODY_RADIUS * 2  >= R2.z - cubeSide / 2 ||
-      R1.x >= R2.x + cubeSide ||
-      R1.z + Snowman.BODY_RADIUS * 2  <= R2.z + cubeSide / 2
-  );
-}
-
 function sendUpdate() {
   socket.emit('update', {
     position: players[playerSocketId].position,
@@ -38,11 +27,6 @@ function sendUpdate() {
   });
 }
 
-function init() {
-
-
-}
-
 window.addEventListener('keydown', function( event ) {
   switch (event.keyCode) {
     case 13: // Enter
@@ -51,12 +35,13 @@ window.addEventListener('keydown', function( event ) {
   }
 });
 
-
 document.getElementById('canvas-view').appendChild(renderer.domElement);
 
-window.addEventListener( 'resize', onWindowResize, false );
-
-init();
+window.addEventListener( 'resize', function () {
+  followCam.camera.aspect = window.innerWidth / window.innerHeight;
+  followCam.camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}, false );
 
 light = new THREE.DirectionalLight(0xdfebff, 1.75);
 light.position.set(100, 100, 100);
@@ -103,12 +88,6 @@ Game.createTarget();
 
 var followCam = new FollowCamera(Game.playerToMove);
 
-function onWindowResize() {
-  followCam.camera.aspect = window.innerWidth / window.innerHeight;
-  followCam.camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
 //game loop
 function render() {
   if ( Game.time > 0 ) {
@@ -117,7 +96,6 @@ function render() {
     Game.update();
     powerInidcator();
     followCam.update();
-    bigCube.rotation.x = x / 2;
     renderer.render( scene, followCam.camera );
   } else {
     Game.message('Game over - you scored ' + Game.totalPoints);

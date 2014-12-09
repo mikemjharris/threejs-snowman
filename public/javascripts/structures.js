@@ -1,17 +1,11 @@
 // Object variables initialized
-var snowBallSize = 2;
 var planeSize = 1000;
 
 //init THREE.js scene
 var scene = new THREE.Scene();
-var renderer = new THREE.WebGLRenderer();
-renderer.setClearColor(new THREE.Color(0xEEEEEE));
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMapEnabled = true;
 
 //Geometries
-// var snowballGeometry = new THREE.SphereGeometry(snowBallSize,30,30);
-var planeGeometry = new THREE.PlaneGeometry(planeSize,planeSize);
+var planeGeometry = new THREE.PlaneGeometry(planeSize, planeSize);
 
 //Materials
 // var snowballMaterial = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false});
@@ -21,7 +15,6 @@ var planeMaterial = new THREE.MeshPhongMaterial({
 
 //Create objects
 var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-
 
 plane.rotation.x = -0.5 * Math.PI;
 plane.position.x = 0;
@@ -91,19 +84,6 @@ for (var i = 0; i < cubePositions.length; i++) {
     cubes[i].castShadow = true;
     scene.add(cubes[i]);
 }
-
-// var cubebigSide = 10
-var bigCubeGeometry = new THREE.BoxGeometry(50,50,300);
-var bigCubeMaterial = new THREE.MeshLambertMaterial({
-  map: THREE.ImageUtils.loadTexture('../images/mammal_logo.jpg')
-});
-var bigCube = new THREE.Mesh(bigCubeGeometry, bigCubeMaterial);
-bigCube.position.y = 100;
-bigCube.position.x = 0;
-bigCube.position.z = -300;
-bigCube.rotation.y = Math.PI / 2;
-
-scene.add(bigCube);
 
 var highlightRadius = Snowman.BODY_RADIUS,
 highlightMaterial = new THREE.MeshLambertMaterial({
