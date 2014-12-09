@@ -43,6 +43,15 @@ function init() {
 
 }
 
+window.addEventListener('keydown', function( event ) {
+  switch (event.keyCode) {
+    case 13: // Enter
+      joinGameClicked();
+    break;
+  }
+});
+
+
 document.getElementById('canvas-view').appendChild(renderer.domElement);
 
 window.addEventListener( 'resize', onWindowResize, false );
@@ -66,7 +75,6 @@ function joinGameClicked() {
   var playerName = $('#player-name').val();
   $('#player-name').val('');
   if ( playerName !== '' ) {
-    eventListeners();
     $('.controls').addClass('hide-controls');
     addToPlayersList(playerSocketId, playerName);
     joinGame(playerName);
@@ -81,15 +89,17 @@ function addToPlayersList( socketId, playerName ) {
 
 function powerInidcator() {
   $('#last-power').css('width', window.innerWidth / 12 * Game.lastPower + 'px');
-  $('#power').css('width', window.innerWidth / 12 * snowballPower + 'px');
-  if ( snowBallPowerUp && snowballPower < 10 ) {
-    snowballPower += 0.1;
-  }
+  $('#power').css('width', window.innerWidth / 12 * Game.playerToMove.snowballPower + 'px');
 }
 
-Game.createPlayer('t');
+Game.createPlayer('t', {
+  keysEnabled: true,
+  move: {
+    incx: 0,
+    incRot: 0
+  }
+});
 Game.createTarget();
-eventListeners();
 
 var followCam = new FollowCamera(Game.playerToMove);
 
