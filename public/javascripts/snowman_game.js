@@ -53,22 +53,6 @@ window.addEventListener( 'resize', onWindowResize, false );
 
 init();
 
-var cameraType = 'move';
-camera.position.x = 170;
-camera.position.y = 60;
-camera.position.z = 170;
-camera.lookAt(scene.position);
-camera.position.x = camera.position.x + Math.sin(camera.rotation.y) * cameraZoom;
-camera.position.z = camera.position.z + Math.cos(camera.rotation.y) * cameraZoom;
-distanceFromCenter = Math.sqrt((camera.position.x * camera.position.x ) + (camera.position.z * camera.position.z ));
-cameraRotate = cameraRotate + cameraRotateInc;
-camera.position.x = Math.sin(cameraRotate / 50) * distanceFromCenter;
-camera.position.z = Math.cos(cameraRotate / 50) * distanceFromCenter;
-camera.lookAt(scene.position);
-camY = camera.rotation.y;
-camz = camera.rotation.z;
-camx = camera.rotation.x;
-
 light = new THREE.DirectionalLight(0xdfebff, 1.75);
 light.position.set(100, 100, 100);
 light.position.multiplyScalar(1.3);
@@ -111,9 +95,11 @@ Game.createPlayer('t');
 Game.createTarget();
 eventListeners();
 
+var followCam = new FollowCamera(Game.playerToMove);
+
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+  followCam.camera.aspect = window.innerWidth / window.innerHeight;
+  followCam.camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
@@ -124,9 +110,9 @@ function render() {
     x += 0.02;
     Game.update();
     powerInidcator();
-    updateCamera();
+    followCam.update();
     bigCube.rotation.x = x / 2;
-    renderer.render( scene, camera );
+    renderer.render( scene, followCam.camera );
   } else {
     Game.message('Game over - you scored ' + Game.totalPoints);
   }

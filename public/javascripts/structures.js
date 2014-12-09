@@ -4,7 +4,6 @@ var planeSize = 1000;
 
 //init THREE.js scene
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 var renderer = new THREE.WebGLRenderer();
 renderer.setClearColor(new THREE.Color(0xEEEEEE));
 renderer.setSize(window.innerWidth, window.innerHeight);
