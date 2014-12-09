@@ -13,7 +13,7 @@ for (var i = 0, l = planeGeometry.vertices.length; i < l; i++) {
 
 //Materials
 var planeMaterial = new THREE.MeshPhongMaterial({
-  color: 0xcccccc
+  color: 0xEAF4FE
 });
 
 //Create objects

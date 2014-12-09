@@ -1,16 +1,15 @@
 var renderer = new THREE.WebGLRenderer();
-renderer.setClearColor(new THREE.Color(0xEEEEEE));
+renderer.setClearColor(new THREE.Color(0x042029));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMapEnabled = true;
 
 var tree = new Tree();
 tree.mesh.position.x = 100;
-tree.mesh.position.z = 100;
+tree.mesh.position.z = 0;
 
 scene.add(tree.mesh);
 
 var x = 0;
-var light;
 var playerSocketId;
 var oldx = {};
 var oldz = {};
@@ -49,11 +48,11 @@ window.addEventListener( 'resize', function () {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }, false );
 
-light = new THREE.DirectionalLight(0xdfebff, 1.75);
-light.position.set(100, 100, 100);
-light.position.multiplyScalar(1.3);
+var light = new THREE.DirectionalLight(0xdfebff, 1);
+light.position.set(100, 1000, 100);
+light.position.multiplyScalar(1);
 light.castShadow = true;
-light.shadowCameraFar = 1000;
+light.shadowCameraFar = 10000;
 light.shadowDarkness = 0.2;
 
 scene.add(light);
