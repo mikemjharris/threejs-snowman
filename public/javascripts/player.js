@@ -1,5 +1,5 @@
-function Player( threeJSObject, id, options ) {
-  this.tjs = threeJSObject;
+function Player( id, options ) {
+  this.tjs = new window.Snowman().mesh;
   this.id = id;
   this.move = {
       incx: 0,
@@ -35,7 +35,8 @@ Player.prototype.update = function() {
 };
 
 Player.prototype.fireSnowball = function( power ) {
-  var newSnowball = new Snowball(this.id, this.tjs.position, this.tjs.rotation.y, power);
+  var snowball = new Snowball(this.id, this.tjs.position, this.tjs.rotation.y, power);
+  scene.add(snowball.mesh);
   Game.lastPower = power;
-  Game.snowballs.push( newSnowball );
+  Game.snowballs.push( snowball );
 };

@@ -25,10 +25,10 @@ var socket = io.connect(window.location.hostname);
 
 function compareRect(R1, R2) {
   return !(
-      R1.x + bodyRadius * 2  <= R2.x + cubeSide / 2 ||
-      R1.z - bodyRadius * 2  >= R2.z - cubeSide / 2 ||
+      R1.x + Snowman.BODY_RADIUS * 2  <= R2.x + cubeSide / 2 ||
+      R1.z - Snowman.BODY_RADIUS * 2  >= R2.z - cubeSide / 2 ||
       R1.x >= R2.x + cubeSide ||
-      R1.z + bodyRadius * 2  <= R2.z + cubeSide / 2
+      R1.z + Snowman.BODY_RADIUS * 2  <= R2.z + cubeSide / 2
   );
 }
 
@@ -149,7 +149,7 @@ function sendUpdate() {
 
 function updatePlayers ( socketId, player ) {
   if ( !players[socketId] ) {
-    newPlayer = mesh.clone();
+    newPlayer = snowmanMesh.clone();
     newPlayer.position.x = player.position.x;
     newPlayer.position.y =  player.position.y;
     newPlayer.position.z =  player.position.z;
@@ -172,7 +172,7 @@ var playerToCreate;
 
 function joinGame( playerName ) {
   thisPlayerName = playerName;
-  players[playerSocketId] = mesh.clone();
+  players[playerSocketId] = snowmanMesh.clone();
   players[playerSocketId].add(highlight);
   players[playerSocketId].move = {
     incx: 0,

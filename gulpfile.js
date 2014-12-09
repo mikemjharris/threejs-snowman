@@ -10,6 +10,7 @@ gulp.task('sass', function () {
 
 gulp.task('js', function () {
   gulp.src([
+    './public/javascripts/snowman.js',
     './public/javascripts/structures.js',
     './public/javascripts/controls.js',
     './public/javascripts/explosion.js',

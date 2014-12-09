@@ -9,7 +9,7 @@ var Game = {
 };
 
 Game.createPlayer = function ( id, options ) {
-  var newPlayer = new Player(mesh.clone(), id, options);
+  var newPlayer = new Player(new Snowman(), id, options);
   scene.add(newPlayer.tjs);
   this.players.push(newPlayer);
   this.playerToMove = newPlayer;
@@ -34,11 +34,11 @@ Game.update = function () {
   });
 
   //move snowballs
-  this.snowballs.forEach(function ( snowball) {
+  this.snowballs.forEach(function ( snowball ) {
     if ( snowball.alive ) {
       snowball.update();
     } else {
-      scene.remove(snowball.tjs);
+      scene.remove(snowball.mesh);
     }
   });
 
@@ -56,11 +56,11 @@ Game.update = function () {
   var distanceToTarget = Math.round(
       Math.sqrt(
           Math.pow(
-              this.players[0].tjs.position.x - this.targets[0].tjs.position.x,
+              this.players[0].tjs.position.x - this.targets[0].mesh.position.x,
               2
           ) +
           Math.pow(
-              this.players[0].tjs.position.z - this.targets[0].tjs.position.z,
+              this.players[0].tjs.position.z - this.targets[0].mesh.position.z,
               2
           )
       )
@@ -81,26 +81,28 @@ Game.checkSnowballsHitFloor = function () {
 };
 
 Game.markHit = function ( x, z ) {
-  var newMark = snowball.clone();
-  newMark.position.x = x;
-  newMark.position.z = z;
-  newMark.position.y = -1 + 2 * Math.random();
-  this.marks.push(newMark);
-  scene.add(newMark);
+  var snowball = new Snowball().mesh;
+  snowball.position.x = x;
+  snowball.position.z = z;
+  snowball.position.y = -1 + 2 * Math.random();
+  this.marks.push(snowball);
+  scene.add(snowball);
 };
 
 Game.createTarget = function ( ) {
-  var targetToAdd = {};
-  targetToAdd.tjs = target.clone();
-  targetToAdd.widthX = targetWidthX;
-  targetToAdd.widthZ = targetWidthZ;
-  targetToAdd.widthY = targetWidthY;
-  targetToAdd.tjs.position.x = 250 - Math.random() * 500;
-  targetToAdd.tjs.position.z = 250 - Math.random() * 500;
+  var snowManTarget = new window.Snowman();
+  var targetWidthX = window.Snowman.BODY_RADIUS * 2;
+  var targetWidthZ = window.Snowman.BODY_RADIUS * 2;
+  var targetWidthY = window.Snowman.BODY_RADIUS * 2 + window.Snowman.HEAD_RADIUS * 2;
+  snowManTarget.widthX = targetWidthX;
+  snowManTarget.widthZ = targetWidthZ;
+  snowManTarget.widthY = targetWidthY;
+  snowManTarget.position.x = 250 - Math.random() * 500;
+  snowManTarget.position.z = 250 - Math.random() * 500;
 
-  targetToAdd.counter = 20;
-  this.targets[0] = targetToAdd;
-  scene.add(targetToAdd.tjs);
+  snowManTarget.counter = 20;
+  this.targets[0] = snowManTarget;
+  scene.add(snowManTarget.mesh);
 };
 
 Game.updateTarget = function () {
@@ -119,21 +121,21 @@ Game.message = function( text ) {
 };
 
 Game.checkTargetCollision = function () {
-  var targetToCheck = this.targets[0];
+  var snowManTarget = this.targets[0];
   this.snowballs.forEach(function ( snowball ) {
-    // if ( !snowball.checkedTargetCollision && snowball.tjs.position.y < 2 && Game.check3dCollision( targetToCheck, snowball) ) {
-    if ( !snowball.checkedTargetCollision && Game.check3dCollision(targetToCheck, snowball) ) {
+    // if ( !snowball.checkedTargetCollision && snowball.tjs.position.y < 2 && Game.check3dCollision( snowManTarget, snowball) ) {
+    if ( !snowball.checkedTargetCollision && Game.check3dCollision(snowManTarget.mesh, snowball.mesh) ) {
       snowball.checkedTargetCollision = true;
       Game.targets[0].dead = true;
-      timePoints = Math.round(targetToCheck.counter * 10) / 10;
+      timePoints = Math.round(snowManTarget.counter * 10) / 10;
       distPoints = Math.round(
           Math.sqrt(
               Math.pow(
-                  snowball.startX - targetToCheck.tjs.position.x,
+                  snowball.startX - snowManTarget.position.x,
                   2
               ) +
           Math.pow(
-              snowball.startZ - targetToCheck.tjs.position.z,
+              snowball.startZ - snowManTarget.position.z,
               2
           )
         )
@@ -143,7 +145,7 @@ Game.checkTargetCollision = function () {
       Game.totalPoints += points;
       $('#score').text(Game.totalPoints);
       Game.explosions.push(
-          new ExplodeAnimation(targetToCheck.tjs.position.x, targetWidthY / 2, targetToCheck.tjs.position.z)
+          new ExplodeAnimation(snowManTarget.position.x, snowManTarget.widthZ / 2, snowManTarget.position.z)
       );
       scene.remove(snowball.tjs);
       scene.remove(Game.targets[0].tjs);
@@ -160,9 +162,9 @@ Game.checkCollision = function ( rect1, rect2 ) {
 };
 
 Game.check3dCollision = function ( rect1, rect2 ) {
- return !(rect1.tjs.position.x + rect1.widthX / 2 <= rect2.tjs.position.x  -  rect2.widthX / 2 ||
-    rect1.tjs.position.z - rect1.widthZ / 2  >= rect2.tjs.position.z + rect2.widthZ / 2 ||
-    rect1.tjs.position.x - rect1.widthX / 2 >= rect2.tjs.position.x + rect2.widthX / 2 ||
-    rect1.tjs.position.z + rect1.widthZ / 2  <= rect2.tjs.position.z - rect2.widthZ / 2 ||
-    rect1.tjs.position.y + rect1.widthY   <= rect2.tjs.position.y - rect2.widthY / 2);
+ return !(rect1.position.x + rect1.widthX / 2 <= rect2.position.x  -  rect2.widthX / 2 ||
+    rect1.position.z - rect1.widthZ / 2  >= rect2.position.z + rect2.widthZ / 2 ||
+    rect1.position.x - rect1.widthX / 2 >= rect2.position.x + rect2.widthX / 2 ||
+    rect1.position.z + rect1.widthZ / 2  <= rect2.position.z - rect2.widthZ / 2 ||
+    rect1.position.y + rect1.widthY   <= rect2.position.y - rect2.widthY / 2);
 };

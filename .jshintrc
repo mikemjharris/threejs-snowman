@@ -20,6 +20,8 @@
     "describe",
     "beforeEach",
     "afterEach",
-    "it"
+    "it",
+    "window",
+    "THREE"
   ]
 }
