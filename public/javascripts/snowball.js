@@ -40,8 +40,6 @@
     this.mesh.position.y += this.speedY;
     this.speedY -= 0.1;
 
-    console.log(this.mesh.position);
-
     if ( !this.crossY && this.mesh.position.y <= 0 ) {
       this.crossY = true;
       this.crossX = this.mesh.position.x;
