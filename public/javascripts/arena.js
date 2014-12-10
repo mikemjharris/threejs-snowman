@@ -27,6 +27,8 @@
     this.mesh = plane.clone();
   }
 
+  Arena.PLANE_SIZE = PLANE_SIZE;
+
   window.Arena = Arena;
 
 })(window, window.THREE);

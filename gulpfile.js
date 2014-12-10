@@ -13,7 +13,7 @@ gulp.task('js', function () {
     './public/javascripts/snowman.js',
     './public/javascripts/tree.js',
     './public/javascripts/arena.js',
-    './public/javascripts/structures.js',
+    './public/javascripts/mammal-cube.js',
     './public/javascripts/explosion.js',
     './public/javascripts/snowball.js',
     './public/javascripts/player.js',
