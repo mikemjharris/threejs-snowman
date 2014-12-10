@@ -4,29 +4,6 @@ var planeSize = 1000;
 //init THREE.js scene
 var scene = new THREE.Scene();
 
-//Geometries
-var planeGeometry = new THREE.PlaneGeometry(planeSize, planeSize, 32, 32);
-
-for (var i = 0, l = planeGeometry.vertices.length; i < l; i++) {
-  planeGeometry.vertices[i].z = Math.random() * 10;
-}
-
-//Materials
-var planeMaterial = new THREE.MeshPhongMaterial({
-  color: 0xEAF4FE
-});
-
-//Create objects
-var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-
-plane.rotation.x = -0.5 * Math.PI;
-plane.position.x = 0;
-plane.position.y = 0;
-plane.position.z = 0;
-plane.receiveShadow = true;
-
-// add the sphere to the scene
-scene.add(plane);
 
 var cubeSide = 10;
 var cubeGeometry = new THREE.BoxGeometry(cubeSide,cubeSide,cubeSide);

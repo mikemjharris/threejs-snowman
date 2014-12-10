@@ -12,6 +12,7 @@ gulp.task('js', function () {
   gulp.src([
     './public/javascripts/snowman.js',
     './public/javascripts/tree.js',
+    './public/javascripts/arena.js',
     './public/javascripts/structures.js',
     './public/javascripts/explosion.js',
     './public/javascripts/snowball.js',

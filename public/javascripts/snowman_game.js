@@ -3,6 +3,10 @@ renderer.setClearColor(new THREE.Color(0x042029));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMapEnabled = true;
 
+var arena = new Arena();
+// add the sphere to the scene
+scene.add(arena.mesh);
+
 var tree = new Tree();
 tree.mesh.position.x = 100;
 tree.mesh.position.z = 0;
