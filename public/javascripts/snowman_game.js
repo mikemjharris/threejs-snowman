@@ -10,23 +10,23 @@ var arena = new Arena();
 // add the sphere to the scene
 scene.add(arena.mesh);
 
-var cubes = [];
-for (var i = 0; i < 30; i++) {
-  var cube = new MammalCube();
-  cube.mesh.position.x = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
-  cube.mesh.position.y = Math.random() * MammalCube.CUBE_SIDE / 2 ;
-  cube.mesh.position.z = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
-  cubes.push(cube);
-  scene.add(cube.mesh);
-}
-for (var i = 0; i < 10; i++) {
-  var tree = new Tree();
-  tree.mesh.position.x = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
-  tree.mesh.position.z = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
+// var cubes = [];
+// for (var i = 0; i < 30; i++) {
+//   var cube = new MammalCube();
+//   cube.mesh.position.x = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
+//   cube.mesh.position.y = Math.random() * MammalCube.CUBE_SIDE / 2 ;
+//   cube.mesh.position.z = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
+//   cubes.push(cube);
+//   scene.add(cube.mesh);
+// }
+// for (var i = 0; i < 10; i++) {
+//   var tree = new Tree();
+//   tree.mesh.position.x = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
+//   tree.mesh.position.z = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
 
-  scene.add(tree.mesh);
+//   scene.add(tree.mesh);
 
-}
+// }
 
 var x = 0;
 var playerSocketId;

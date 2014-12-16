@@ -18,3 +18,4 @@
   window.FollowCamera = FollowCamera;
 
 })(window, window.THREE);
+

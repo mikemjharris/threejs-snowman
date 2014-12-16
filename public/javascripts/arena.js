@@ -6,7 +6,7 @@
   var planeGeometry = new THREE.PlaneGeometry(PLANE_SIZE, PLANE_SIZE, 32, 32);
 
   for (var i = 0, l = planeGeometry.vertices.length; i < l; i++) {
-    planeGeometry.vertices[i].z = Math.random() * 10;
+    planeGeometry.vertices[i].z = Math.random() * 5;
   }
 
   //Materials
@@ -22,6 +22,7 @@
   plane.position.y = 0;
   plane.position.z = 0;
   plane.receiveShadow = true;
+  plane.castShadow = true;
 
   function Arena() {
     this.mesh = plane.clone();
