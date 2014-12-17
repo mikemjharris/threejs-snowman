@@ -3,7 +3,7 @@ MAINTAINER Mike Harris "mike.harris@mammal.io"
 
 RUN npm --no-color install -g bower && \
     npm --no-color install -g gulp && \
-    npm --no-color install gulp &&
+    npm --no-color install gulp
 
 
 ADD package.json /tmp/package.json
@@ -29,4 +29,4 @@ RUN gulp --no-color sass && \
 
 CMD npm start
 
-EXPOSE 80
+EXPOSE 8000

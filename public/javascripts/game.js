@@ -28,14 +28,23 @@ Game.createPlayers = function ( currentPlayers ) {
 };
 
 Game.reset = function () {
-  Game.players = [];
+
+  [Game.snowballs, Game.targets, Game.marks].forEach(function( collection ) {
+    collection.forEach(function ( gameObj ) {
+      scene.remove(gameObj.mesh);
+    });
+  });
+
+
   Game.snowballs = [];
+  Game.targets = [];
   Game.marks = [];
   Game.explosions = [];
-  Game.targets = [];
   Game.totalPoints = 0;
   Game.time = 20;
-  Game.createPlayer();
+  Game.createTarget();
+   $('#score').text(Game.totalPoints);
+
 };
 
 Game.update = function () {

@@ -27,7 +27,7 @@ scene.add(arena.mesh);
 //   scene.add(tree.mesh);
 
 // }
-
+var topscores = [];
 var x = 0;
 var playerSocketId;
 var oldx = {};
@@ -39,7 +39,7 @@ var toLookat = {
   y: 0,
   z: 0
 };
-// var socket = io.connect(window.location.hostname);
+var socket = io.connect(window.location.hostname);
 
 function sendUpdate() {
   socket.emit('update', {
@@ -51,13 +51,13 @@ function sendUpdate() {
   });
 }
 
-window.addEventListener('keydown', function( event ) {
-  switch (event.keyCode) {
-    case 13: // Enter
-      joinGameClicked();
-    break;
-  }
-});
+// window.addEventListener('keydown', function( event ) {
+//   switch (event.keyCode) {
+//     case 13: // Enter
+//       joinGameClicked();
+//     break;
+//   }
+// });
 
 document.getElementById('canvas-view').appendChild(renderer.domElement);
 
@@ -82,7 +82,7 @@ $('#join-game').on('click', function () {
 
 $('#single-player-start').on('click', function () {
   Game.reset();
-  startGame();
+
   Game.message("Go! Throw a snowball! Hit a snowman!");
   $('.single-player-start').hide();
   render();
@@ -134,6 +134,7 @@ function render() {
     renderer.render( scene, followCam.camera );
   } else {
     Game.message('Game over - you scored ' + Game.totalPoints);
+    socket.emit('single-score' , Game.totalPoints);
     Game.time = 30;
     $('.single-player-start').show();
   }
@@ -258,10 +259,26 @@ var haveDisconnected = false;
 //   delete players[playerId];
 // });
 
-// socket.on('connect', function () {
-//   $('#message').text('Connected');
-//   regenerate('disconnect');
-// });
+
+function updateTopScores ( scores ) {
+  for ( var i = 1; i <= 5; i++ ) {
+    $('.topscores:nth-of-type(' + i +')').text(scores[i-1]);
+  }
+}
+
+socket.on('connected', function ( a, b, c, scores ) {
+  topscores = scores.sort(function(a,b) { return b-a });
+  updateTopScores( topscores );
+  $('#message').text('Connected');
+  // regenerate('disconnect');
+});
+
+socket.on('topscores', function ( scores) {
+  topscores = scores.sort(function(a,b) { return b-a });
+  $('#message').text('Gotscores');
+  updateTopScores( topscores );
+  // regenerate('disconnect');
+});
 
 // socket.on('disconnect', function () {
 //   $('#message').text('Disconnected from the server');
