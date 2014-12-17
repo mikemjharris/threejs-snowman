@@ -269,13 +269,13 @@ function updateTopScores ( scores ) {
 socket.on('connected', function ( a, b, c, scores ) {
   topscores = scores.sort(function(a,b) { return b-a });
   updateTopScores( topscores );
-  $('#message').text('Connected');
+
   // regenerate('disconnect');
 });
 
 socket.on('topscores', function ( scores) {
   topscores = scores.sort(function(a,b) { return b-a });
-  $('#message').text('Gotscores');
+
   updateTopScores( topscores );
   // regenerate('disconnect');
 });
