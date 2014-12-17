@@ -2,6 +2,13 @@ extends layout
 
 block content
   div(id="canvas-view")
+  div(class='single-player-start')
+    h2 Snowball Fight!
+    ul
+      li Move with arrow keys
+      li Throw snowball with space bar.  Hold down for more power.
+      li Points = distance from target squared.
+    button(id='single-player-start') Start game
   div(class='controls')
     div(class='start')
       h2 Snowball Fight!

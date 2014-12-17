@@ -37,7 +37,7 @@
               self.snowBallPowerUp = true;
             break;
           }
-          sendUpdate();
+          // sendUpdate();
         });
 
         window.addEventListener('keyup', function( event ) {
@@ -63,7 +63,7 @@
               self.snowballPower = 0;
             break;
           }
-          sendUpdate();
+          // sendUpdate();
         }, false);
       }
     }

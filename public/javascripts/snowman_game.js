@@ -39,7 +39,7 @@ var toLookat = {
   y: 0,
   z: 0
 };
-var socket = io.connect(window.location.hostname);
+// var socket = io.connect(window.location.hostname);
 
 function sendUpdate() {
   socket.emit('update', {
@@ -80,6 +80,14 @@ $('#join-game').on('click', function () {
   joinGameClicked();
 });
 
+$('#single-player-start').on('click', function () {
+  Game.reset();
+  startGame();
+  Game.message("Go! Throw a snowball! Hit a snowman!");
+  $('.single-player-start').hide();
+  render();
+})
+
 function joinGameClicked() {
   var playerName = $('#player-name').val();
   $('#player-name').val('');
@@ -101,14 +109,17 @@ function powerInidcator() {
   $('#power').css('width', window.innerWidth / 12 * Game.playerToMove.snowballPower + 'px');
 }
 
-Game.createPlayer('t', {
-  keysEnabled: true,
-  move: {
-    incx: 0,
-    incRot: 0
-  }
-});
-Game.createTarget();
+function startGame() {
+  Game.createPlayer('t', {
+    keysEnabled: true,
+    move: {
+      incx: 0,
+      incRot: 0
+    }
+  });
+  Game.createTarget();
+}
+startGame();
 
 var followCam = new FollowCamera(Game.playerToMove);
 
@@ -123,10 +134,14 @@ function render() {
     renderer.render( scene, followCam.camera );
   } else {
     Game.message('Game over - you scored ' + Game.totalPoints);
+    Game.time = 30;
+    $('.single-player-start').show();
   }
 }
 
-render();
+Game.update();
+followCam.update();
+renderer.render( scene, followCam.camera );
 
 function sendUpdate() {
   if ( players[playerSocketId] ) {
@@ -179,25 +194,25 @@ function joinGame( playerName ) {
 
 // players[playerSocketId].move.incRot =  Math.min(players[playerSocketId].move.incRot + 0.1,  0.1)
 
-socket.on('connected', function ( socketId, currentPlayers, score ) {
-  firstTimeConnect = false;
-  playerSocketId = socketId;
+// socket.on('connected', function ( socketId, currentPlayers, score ) {
+//   firstTimeConnect = false;
+//   playerSocketId = socketId;
 
-  Object.keys(currentPlayers).forEach( function ( playerId ) {
-    playerToCreate = {
-      position: currentPlayers[playerId].position,
-      rotation: {
-        y: currentPlayers[playerId].rotation.y
-      },
-      move: currentPlayers[playerId].move,
-      playerName: currentPlayers[playerId].playerName
-      // score: currentPlayers[playerId].score
-    };
-    updatePlayers(playerId, playerToCreate);
-    updateScoreboard(score);
-  });
+//   Object.keys(currentPlayers).forEach( function ( playerId ) {
+//     playerToCreate = {
+//       position: currentPlayers[playerId].position,
+//       rotation: {
+//         y: currentPlayers[playerId].rotation.y
+//       },
+//       move: currentPlayers[playerId].move,
+//       playerName: currentPlayers[playerId].playerName
+//       // score: currentPlayers[playerId].score
+//     };
+//     updatePlayers(playerId, playerToCreate);
+//     updateScoreboard(score);
+//   });
 
-});
+// });
 
 function updateScoreboard( score ) {
   console.log( score );
@@ -225,44 +240,44 @@ function regenerate( whyRegenerate ) {
 
 var haveDisconnected = false;
 
-socket.on('fireSnowball', function ( socketId ) {
-  fireSnowball( socketId );
-});
+// socket.on('fireSnowball', function ( socketId ) {
+//   fireSnowball( socketId );
+// });
 
-socket.on('score', function ( score ) {
-  updateScoreboard( score );
-});
+// socket.on('score', function ( score ) {
+//   updateScoreboard( score );
+// });
 
-socket.on('update', function ( socketId, player ) {
-  updatePlayers(socketId, player);
-});
+// socket.on('update', function ( socketId, player ) {
+//   updatePlayers(socketId, player);
+// });
 
-socket.on('user disconnected', function ( playerId ) {
-  $('#' + playerId).remove();
-  scene.remove(players[playerId]);
-  delete players[playerId];
-});
+// socket.on('user disconnected', function ( playerId ) {
+//   $('#' + playerId).remove();
+//   scene.remove(players[playerId]);
+//   delete players[playerId];
+// });
 
-socket.on('connect', function () {
-  $('#message').text('Connected');
-  regenerate('disconnect');
-});
+// socket.on('connect', function () {
+//   $('#message').text('Connected');
+//   regenerate('disconnect');
+// });
 
-socket.on('disconnect', function () {
-  $('#message').text('Disconnected from the server');
-  Object.keys(players).forEach(function ( playerId) {
-    $('#' + playerId).remove();
-    scene.remove(players[playerId]);
-    delete players[playerId];
-  });
-});
+// socket.on('disconnect', function () {
+//   $('#message').text('Disconnected from the server');
+//   Object.keys(players).forEach(function ( playerId) {
+//     $('#' + playerId).remove();
+//     scene.remove(players[playerId]);
+//     delete players[playerId];
+//   });
+// });
 
-socket.on('player shot', function ( killerId, deadId ) {
-  $('#message').text(players[killerId].playerName + ' hit ' + players[deadId].playerName + ' with a snowball!');
-  scene.remove(players[deadId]);
-  if ( deadId === playerSocketId ) {
-    regenerate();
-  }
-  delete players[deadId];
-  console.log('killed', killerId, deadId);
-});
+// socket.on('player shot', function ( killerId, deadId ) {
+//   $('#message').text(players[killerId].playerName + ' hit ' + players[deadId].playerName + ' with a snowball!');
+//   scene.remove(players[deadId]);
+//   if ( deadId === playerSocketId ) {
+//     regenerate();
+//   }
+//   delete players[deadId];
+//   console.log('killed', killerId, deadId);
+// });

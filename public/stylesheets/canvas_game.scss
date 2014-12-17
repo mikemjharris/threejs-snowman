@@ -6,6 +6,41 @@
      font-family: Verdana;
 }
 
+.single-player-start {
+  width: 50%;
+  max-width: 800px;
+  min-width: 400px;
+  z-index: 200;
+  position: absolute;
+  top: 20vh;
+  left:0;
+  right: 0;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+    text-align: center;
+
+  h2 {
+    margin: 20px;
+
+  }
+  li {
+    padding: 5px;
+    text-align: center;
+  }
+  button {
+    margin: 10px;
+    padding: 10px;
+    background: hsl( 120, 50%, 70%);
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    &:hover {
+      background: hsl( 120, 50%, 50%);
+    }
+  }
+
+}
 
 .controls{
   position: absolute;
@@ -98,6 +133,7 @@ label {
   left: 10px;
   width: 200px;
   border: 1px solid black;
+  display: none;
 
 }
 
@@ -132,7 +168,6 @@ td {
   text-align: center;
 
 }
-
 
 
 .scores {

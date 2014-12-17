@@ -5,7 +5,7 @@ var Game = {
   explosions: [],
   targets: [],
   totalPoints: 0,
-  time: 60
+  time: 20
 };
 
 Game.createPlayer = function ( id, options ) {
@@ -25,6 +25,17 @@ Game.createPlayers = function ( currentPlayers ) {
   currentPlayers.forEach(function ( player ) {
     this.createPlayer(player.id, player);
   });
+};
+
+Game.reset = function () {
+  Game.players = [];
+  Game.snowballs = [];
+  Game.marks = [];
+  Game.explosions = [];
+  Game.targets = [];
+  Game.totalPoints = 0;
+  Game.time = 20;
+  Game.createPlayer();
 };
 
 Game.update = function () {
