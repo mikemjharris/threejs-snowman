@@ -10,4 +10,4 @@ WORKDIR /var/www/
 
 CMD npm start
 
-EXPOSE 80
+EXPOSE 4000
