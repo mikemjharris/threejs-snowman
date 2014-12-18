@@ -134,7 +134,7 @@ function render() {
     renderer.render( scene, followCam.camera );
   } else {
     Game.message('Game over - you scored ' + Game.totalPoints);
-    socket.emit('single-score' , Game.totalPoints);
+    socket.emit('single-score' , [Game.totalPoints, $('#player-name').val() || 'Anon']);
     Game.time = 30;
     $('.single-player-start').show();
   }
@@ -261,20 +261,20 @@ var haveDisconnected = false;
 
 
 function updateTopScores ( scores ) {
-  for ( var i = 1; i <= 5; i++ ) {
-    $('.topscores:nth-of-type(' + i +')').text(scores[i-1]);
+  for ( var i = 1; i <= Math.min(5 , scores.length); i++ ) {
+    $('.topscores:nth-of-type(' + i +')').text(scores[i-1][0] + ' ' + scores[i-1][1]);
   }
 }
 
 socket.on('connected', function ( a, b, c, scores ) {
-  topscores = scores.sort(function(a,b) { return b-a });
+  topscores = scores.sort(function(a,b) { return b[0]-a[0] });
   updateTopScores( topscores );
 
   // regenerate('disconnect');
 });
 
 socket.on('topscores', function ( scores) {
-  topscores = scores.sort(function(a,b) { return b-a });
+   topscores = scores.sort(function(a,b) { return b[0]-a[0] });
 
   updateTopScores( topscores );
   // regenerate('disconnect');
