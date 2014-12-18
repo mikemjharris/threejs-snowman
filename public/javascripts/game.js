@@ -1,3 +1,5 @@
+var GAME_TIME = 30;
+
 var Game = {
   players: [],
   snowballs: [],
@@ -5,7 +7,7 @@ var Game = {
   explosions: [],
   targets: [],
   totalPoints: 0,
-  time: 20
+  time: GAME_TIME
 };
 
 Game.createPlayer = function ( id, options ) {
@@ -41,7 +43,7 @@ Game.reset = function () {
   Game.marks = [];
   Game.explosions = [];
   Game.totalPoints = 0;
-  Game.time = 20;
+  Game.time = GAME_TIME;
   Game.createTarget();
    $('#score').text(Game.totalPoints);
 
