@@ -51,9 +51,9 @@ var snowStorm = new THREE.PointCloud(geometry);
 // var cubes = [];
 // for (var i = 0; i < 30; i++) {
 //   var cube = new MammalCube();
-//   cube.mesh.position.x = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
+//   cube.mesh.position.x = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.random() < 0.5 ? -1 : 1);
 //   cube.mesh.position.y = Math.random() * MammalCube.CUBE_SIDE / 2 ;
-//   cube.mesh.position.z = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
+//   cube.mesh.position.z = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.random() < 0.5 ? -1 : 1);
 //   cubes.push(cube);
 //   scene.add(cube.mesh);
 // }
@@ -62,13 +62,14 @@ var NOS_TREES = 0;
 for (var i = 0; i < NOS_TREES; i++) {
   var tree = new Tree();
   if( i < NOS_TREES / 2 ) {
+    tree.mesh.position.x = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.random() < 0.5 ? -1 : 1);
     tree.mesh.position.x = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
     tree.mesh.position.z = (Arena.PLANE_SIZE / 2) - Math.random() * 50;
     if (i < NOS_TREES/4 ) {
       tree.mesh.position.z *= -1;
     }
   } else {
-    tree.mesh.position.z = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
+    tree.mesh.position.z = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.random() < 0.5 ? -1 : 1);
     tree.mesh.position.x = (Arena.PLANE_SIZE / 2) - Math.random() * 50;
     if (i < NOS_TREES * 3 / 4  ) {
       tree.mesh.position.x *= -1;
