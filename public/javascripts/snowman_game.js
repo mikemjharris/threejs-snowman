@@ -10,6 +10,44 @@ var arena = new Arena();
 // add the sphere to the scene
 scene.add(arena.mesh);
 
+// var particleCount = 1800,
+//     particles = new THREE.Geometry(),
+//     pMaterial = new THREE.ParticleBasicMaterial({
+//       color: 0xFFFFFF,
+//       size: 20
+//     });
+
+
+
+var geometry = new THREE.Geometry();
+
+NOS_FLAKES = 1;
+var particle;
+var particles = [];
+
+for ( var i = 0; i < NOS_FLAKES ; i++ ) {
+  particle = new THREE.Vector3( (0.5 - Math.random()) * Arena.PLANE_SIZE/2 ,  Math.random() * 100 ,  (0.5 - Math.random()) * Arena.PLANE_SIZE/2)
+  geometry.vertices.push(particle);
+  particles.push[particle]
+}
+
+function moveParticles () {
+  for (var i = 0; i < particles.length; i ++ ) {
+    if ( particles[i].y < 0 ) {
+      particle.y =
+    }
+  }
+
+
+}
+
+
+var snowStorm = new THREE.PointCloud(geometry);
+
+// now create the individual particles
+// add it to the scene
+  scene.add(snowStorm)
+
 // var cubes = [];
 // for (var i = 0; i < 30; i++) {
 //   var cube = new MammalCube();
@@ -19,14 +57,28 @@ scene.add(arena.mesh);
 //   cubes.push(cube);
 //   scene.add(cube.mesh);
 // }
-// for (var i = 0; i < 10; i++) {
-//   var tree = new Tree();
-//   tree.mesh.position.x = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
-//   tree.mesh.position.z = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
 
-//   scene.add(tree.mesh);
+var NOS_TREES = 0;
+for (var i = 0; i < NOS_TREES; i++) {
+  var tree = new Tree();
+  if( i < NOS_TREES / 2 ) {
+    tree.mesh.position.x = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
+    tree.mesh.position.z = (Arena.PLANE_SIZE / 2) - Math.random() * 50;
+    if (i < NOS_TREES/4 ) {
+      tree.mesh.position.z *= -1;
+    }
+  } else {
+    tree.mesh.position.z = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.round(Math.random() * 2) - 1);
+    tree.mesh.position.x = (Arena.PLANE_SIZE / 2) - Math.random() * 50;
+    if (i < NOS_TREES * 3 / 4  ) {
+      tree.mesh.position.x *= -1;
+    }
+  }
 
-// }
+  // var treeScale = (Math.random() + 0.3)* 2;
+  // tree.mesh.scale.set( treeScale, treeScale, treeScale);
+  scene.add(tree.mesh);
+}
 var topscores = [];
 var x = 0;
 var playerSocketId;
@@ -51,13 +103,13 @@ function sendUpdate() {
   });
 }
 
-// window.addEventListener('keydown', function( event ) {
-//   switch (event.keyCode) {
-//     case 13: // Enter
-//       joinGameClicked();
-//     break;
-//   }
-// });
+window.addEventListener('keydown', function( event ) {
+  switch (event.keyCode) {
+    case 13: // Enter
+      startSinglePlayerGame()
+    break;
+  }
+});
 
 document.getElementById('canvas-view').appendChild(renderer.domElement);
 
@@ -81,12 +133,16 @@ $('#join-game').on('click', function () {
 });
 
 $('#single-player-start').on('click', function () {
+  startSinglePlayerGame();
+});
+
+function startSinglePlayerGame() {
   Game.reset();
 
   Game.message("Go! Throw a snowball! Hit a snowman!");
   $('.single-player-start').hide();
   render();
-})
+}
 
 function joinGameClicked() {
   var playerName = $('#player-name').val();

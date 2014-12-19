@@ -10,6 +10,9 @@ var Game = {
   time: GAME_TIME
 };
 
+var canvas = document.getElementById("map-canvas");
+var ctx = canvas.getContext("2d");
+
 Game.createPlayer = function ( id, options ) {
   var newPlayer = new Player(new Snowman(), id, options);
   scene.add(newPlayer.mesh);
@@ -51,6 +54,36 @@ Game.reset = function () {
 
 Game.update = function () {
   //Move the players
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.arc( canvas.width - (this.players[0].mesh.position.x +500) * canvas.width / 1000  , canvas.width - (this.players[0].mesh.position.z + 500) * canvas.width / 1000 ,3,0,2*Math.PI);
+    ctx.fillStyle = "#0000FF";
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.moveTo( canvas.width - (this.players[0].mesh.position.x +500) * canvas.width / 1000 , canvas.width - (this.players[0].mesh.position.z +500) * canvas.width / 1000 );
+    ctx.lineTo( canvas.width - (this.players[0].mesh.position.x +500) * canvas.width / 1000  - 10 * Math.sin( this.players[0].mesh.rotation.y ) , canvas.width - (this.players[0].mesh.position.z +500) * canvas.width / 1000  - 10 * Math.cos( this.players[0].mesh.rotation.y ));
+    ctx.stroke();
+
+
+    this.snowballs.forEach(function(snowball) {
+
+    ctx.beginPath();
+    ctx.arc( canvas.width - (snowball.mesh.position.x +500) * canvas.width / 1000  , canvas.width - (snowball.mesh.position.z + 500) * canvas.width / 1000 ,1,0,2*Math.PI);
+
+    ctx.stroke();
+    })
+
+
+    ctx.beginPath();
+    ctx.arc(canvas.width - (this.targets[0].mesh.position.x +500) * canvas.width / 1000  , canvas.width - (this.targets[0].mesh.position.z + 500) * canvas.width / 1000 ,3,0,2*Math.PI);
+    ctx.fillStyle = "#FF0000";
+    ctx.fill();
+    ctx.stroke();
+    ctx.stroke();
+
+
 
   this.players.forEach(function ( player ) {
     player.update();

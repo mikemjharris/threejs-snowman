@@ -182,3 +182,21 @@ td {
   right: 0px;
   // border: 1px solid black;
 }
+
+.map {
+  position: absolute;
+  right: 50px;
+  bottom: 50px;
+  width: 200px;
+  height: 200px;
+  background: hsla(0,30%, 100%, 0.7);
+  // background: red;
+  opacity: 0.5;
+  z-index: 10000;
+  canvas {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+
