@@ -28,6 +28,10 @@
     this.mesh = plane.clone();
   }
 
+  Arena.prototype.addTo = function( scene ) {
+    scene.add(this.mesh);
+  };
+
   Arena.PLANE_SIZE = PLANE_SIZE;
 
   window.Arena = Arena;

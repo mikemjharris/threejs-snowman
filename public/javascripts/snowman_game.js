@@ -1,5 +1,5 @@
 //init THREE.js scene
-var scene = new THREE.Scene();
+window.scene = new THREE.Scene();
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setClearColor(new THREE.Color(0x042029));
@@ -8,7 +8,7 @@ renderer.shadowMapEnabled = true;
 
 var arena = new Arena();
 // add the sphere to the scene
-scene.add(arena.mesh);
+arena.addTo(scene);
 
 // var particleCount = 1800,
 //     particles = new THREE.Geometry(),
