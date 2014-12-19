@@ -14,7 +14,8 @@ var snowballs = [];
 var snowBallSize = 2;
 var snowballSpeed = 5;
 var score = {};
-var scores = [[7000, 'Anon'], [9000 , 'Anon'] , [10000, 'Anon']];
+var scores = [[270723, "Tobias"], [252039, "My Round"],[ 237322, "Tobias"], [217459, "Mike"], [210529, "Tobias"]];
+// var scores = [[7000, 'Anon'], [9000 , 'Anon'] , [10000, 'Anon']];
 
 var io = require('socket.io').listen(server);
 

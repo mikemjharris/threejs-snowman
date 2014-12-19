@@ -6,8 +6,8 @@
   }
 
   FollowCamera.prototype.update = function() {
-    this.camera.position.x = this.player.mesh.position.x - 40 * Math.sin(this.player.mesh.rotation.y);
-    this.camera.position.z = this.player.mesh.position.z - 40 * Math.cos(this.player.mesh.rotation.y);
+    this.camera.position.x = this.player.mesh.position.x - 80 * Math.sin(this.player.mesh.rotation.y);
+    this.camera.position.z = this.player.mesh.position.z - 80 * Math.cos(this.player.mesh.rotation.y);
     this.camera.position.y = 60;
     var toLookat = this.player.mesh.position.clone();
     toLookat.x = toLookat.x + 100 * Math.sin(this.player.mesh.rotation.y);

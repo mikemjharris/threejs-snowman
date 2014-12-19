@@ -1,4 +1,4 @@
-var GAME_TIME = 30;
+var GAME_TIME = 6000;
 
 var Game = {
   players: [],
@@ -51,6 +51,7 @@ Game.reset = function () {
 
 Game.update = function () {
   //Move the players
+
   this.players.forEach(function ( player ) {
     player.update();
   });

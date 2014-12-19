@@ -121,6 +121,7 @@ function startGame() {
 }
 startGame();
 
+
 var followCam = new FollowCamera(Game.playerToMove);
 
 //game loop

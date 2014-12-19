@@ -13,6 +13,9 @@
     this.playerName = '';
     this.snowBallPowerUp = false;
     this.snowballPower = 0;
+    this.counter = 0;
+    this.walkSlowness = 15;
+    this.scaleShrinkage = 40;
 
     if ( options ) {
       this.move = options.move;
@@ -81,6 +84,12 @@
     this.mesh.position.x += this.move.incx * Math.sin(this.mesh.rotation.y);
     this.mesh.position.z += this.move.incx * Math.cos(this.mesh.rotation.y);
     this.mesh.rotation.y += this.move.incRot;
+
+      this.mesh.position.y = 1 + 1 * Math.sin( this.counter / this.walkSlowness );
+
+      this.mesh.scale.set( 1 + Math.sin(this.counter / this.walkSlowness - Math.PI / 2  ) / this.scaleShrinkage,  1 + Math.cos(this.counter / this.walkSlowness  - Math.PI /2 )/this.scaleShrinkage,  1 + Math.sin(this.counter / this.walkSlowness  - Math.PI / 2 ) / this.scaleShrinkage );
+
+      this.counter++ ;
 
     if ( this.snowBallPowerUp && this.snowballPower < SNOWBALL_POWER_LIMIT ) {
       this.snowballPower += 0.1;
