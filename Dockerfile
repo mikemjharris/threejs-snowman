@@ -24,9 +24,6 @@ ADD . /var/www/
 
 WORKDIR /var/www/
 
-RUN gulp --no-color sass && \
-    gulp --no-color js
-
 CMD npm start
 
 EXPOSE 4000
