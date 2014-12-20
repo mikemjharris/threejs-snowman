@@ -10,53 +10,41 @@ var arena = new Arena();
 // add the sphere to the scene
 arena.addTo(scene);
 
-// var particleCount = 1800,
-//     particles = new THREE.Geometry(),
-//     pMaterial = new THREE.ParticleBasicMaterial({
-//       color: 0xFFFFFF,
-//       size: 20
-//     });
-
-
-
 var geometry = new THREE.Geometry();
+var snowMaterial = new THREE.PointCloudMaterial( { color: 0xffffff } );
 
-NOS_FLAKES = 1;
+NOS_FLAKES = 500;
 var particle;
 var particles = [];
 
 for ( var i = 0; i < NOS_FLAKES ; i++ ) {
-  particle = new THREE.Vector3( (0.5 - Math.random()) * Arena.PLANE_SIZE/2 ,  Math.random() * 100 ,  (0.5 - Math.random()) * Arena.PLANE_SIZE/2)
+  particle = new THREE.Vector3( (0.5 - Math.random() ) * Arena.PLANE_SIZE ,  Math.random() * 200 ,  (0.5 - Math.random()) * Arena.PLANE_SIZE )
   geometry.vertices.push(particle);
-  particles.push[particle]
+  particles.push(particle)
 }
+
+var snowStorm = new THREE.PointCloud(geometry, snowMaterial );
 
 function moveParticles () {
+  scene.remove(snowStorm)
+  geometry = new THREE.Geometry();
+  console.log('here')
   for (var i = 0; i < particles.length; i ++ ) {
     if ( particles[i].y < 0 ) {
-      particle.y =
+      particles[i].y = 100;
     }
+    particles[i].y -= (0.2 * (1 + Math.sin(i)));
+    
+    geometry.vertices.push(particles[i]);
+
   }
-
-
+    snowStorm = new THREE.PointCloud(geometry, snowMaterial);
+    scene.add(snowStorm)
 }
 
 
-var snowStorm = new THREE.PointCloud(geometry);
 
-// now create the individual particles
-// add it to the scene
   scene.add(snowStorm)
-
-// var cubes = [];
-// for (var i = 0; i < 30; i++) {
-//   var cube = new MammalCube();
-//   cube.mesh.position.x = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.random() < 0.5 ? -1 : 1);
-//   cube.mesh.position.y = Math.random() * MammalCube.CUBE_SIDE / 2 ;
-//   cube.mesh.position.z = Math.random() * (Arena.PLANE_SIZE * 0.4) * (Math.random() < 0.5 ? -1 : 1);
-//   cubes.push(cube);
-//   scene.add(cube.mesh);
-// }
 
 var NOS_TREES = 0;
 for (var i = 0; i < NOS_TREES; i++) {
@@ -189,6 +177,7 @@ function render() {
     Game.update();
     powerInidcator();
     followCam.update();
+    moveParticles();
     renderer.render( scene, followCam.camera );
   } else {
     Game.message('Game over - you scored ' + Game.totalPoints);
