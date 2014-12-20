@@ -2,8 +2,8 @@
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;
-     overflow: hidden;
-     font-family: Verdana;
+  overflow: hidden;
+  font-family: Verdana;
 }
 
 .single-player-start {
@@ -18,8 +18,7 @@
   margin: 0 auto;
   padding: 20px;
   background: white;
-    text-align: center;
-
+  text-align: center;
   h2 {
     margin: 20px;
 
@@ -42,29 +41,6 @@
 
 }
 
-.controls{
-  position: absolute;
-  margin: 0 auto;
-  top: 20vh;
-  /*left: 20%;*/
-  /*left: 10px;*/
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  width: 60%;
-  min-width: 400px;
-  border: 15px solid black;
-  height: 350px;
-  text-align: center;
-  background: #444444;
-  /*opacity: 0.7;*/
-  outline: 50px solid white;
-  transition: 0.1s all;
-  opacity: 0.5;
-  display: none;
-}
-
-
 #power {
   height: 20px;
   position: absolute;
@@ -72,7 +48,6 @@
   // width: 20px;
   background: red;
 }
-
 #last-power {
   height: 20px;
   position: absolute;
@@ -80,61 +55,10 @@
   // width: 20px;
   border-right: 5px solid red;
 }
-.ingame .start {
-  display: none;
-}
-
-.regenerate {
-  display: none;
-}
-.ingame > .regenerate {
-  display: block;
-}
-
-.hide-controls {
-  opactiy: 0;
-  z-index: -100;
-}
-
-.controls h2 {
-  color: white;
-  opacity: 1;
-}
 
 input{
   padding: 10px;
   margin: 7px;
-}
-
-label {
-  color: white;
-}
-
-#join-game {
-  padding: 10px;
-  margin: 5px;
-  cursor: pointer;
-  display: inline-block;
-  vertical-align: top;
-  border: 2px solid black;
-  background: white;
-  transition: all 0.2s;
-}
-
-#join-game:hover {
-  border: 2px solid white;
-  background: black;
-  color: white;
-}
-
-.info {
-  position: absolute;
-  top: 55px;
-  left: 10px;
-  width: 200px;
-  border: 1px solid black;
-  display: none;
-
 }
 
 #message {
@@ -152,11 +76,6 @@ label {
   text-align: center;
 }
 
-td {
-  padding: 2px 5px;
-}
-
-
 .dashboard {
   display: inline-block;
   background: hsl( 0, 20%, 60% );
@@ -166,9 +85,7 @@ td {
   width: 100px;
   height: 100px;
   text-align: center;
-
 }
-
 
 .scores {
   color: hsl(0, 80%,80%);
@@ -180,7 +97,6 @@ td {
   height: 100vh;
   top: 0px;
   right: 0px;
-  // border: 1px solid black;
 }
 
 .map {
@@ -190,13 +106,8 @@ td {
   width: 200px;
   height: 200px;
   background: hsla(0,30%, 100%, 0.7);
-  // background: red;
   opacity: 0.5;
   z-index: 10000;
-  canvas {
-    width: 200px;
-    height: 200px;
-  }
 }
 
 

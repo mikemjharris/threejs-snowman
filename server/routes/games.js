@@ -1,9 +1,8 @@
-var express = require('express');
-var router = express.Router();
+module.exports = function ( app ) {
 
-/* GET users listing. */
-router.get('/snowman', function(req, res) {
-  res.render('snowman');
-});
+  app.get('/snowman', function( req, res ) {
+    res.render('snowman.html');
+  });
 
-module.exports = router;
+}
+

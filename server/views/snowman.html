@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Snowman Game</title>
+    <link  rel='stylesheet' href='/dist/canvas_game.css' />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/jquery/dist/jquery.js"></script>
+    <script src="/three.js/three.js"></script>
+    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script>
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-36647147-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </head>
+  <body>
+      
+    <div id="canvas-view">
+    </div>
+
+    <div class='single-player-start'>
+      <h2>Snowball Fight!</h2>
+      <ul>
+        <li>Move with arrow keys</li>
+        <li>Throw snowball with space bar.  Hold down for more power.</li>
+        <li>Points = distance from target squared.</li>
+      </ul>
+      <input type='text' id='player-name' />
+      <button id='single-player-start'>Start game</button>
+      <h2>Top Scores</h2>
+      <div class='topscores'></div>
+      <div class='topscores'></div>
+      <div class='topscores'></div>
+      <div class='topscores'></div>
+      <div class='topscores'></div>
+    </div>
+
+    <div class="map">
+      <canvas id="map-canvas" width="200" height="200"></canvas>
+    </div>
+
+    <div id="message"></div>
+    <div id="power"></div>
+    <div id="last-power"></div>
+    
+    <div class="scores">
+      <h2>Time Left</h2>
+      <div class='dashboard' id='time'></div>
+      <h2>Distance To Target</h2>
+      <div class='dashboard' id='dist'></div>
+      <h2>Score</h2>
+      <div class='dashboard' id='score'></div>
+    </div>
+    <script src="../dist/snowman-game.js"></script>
+  </body>
+</html>
