@@ -11,8 +11,10 @@ gulp.task('sass', function () {
 gulp.task('js', function () {
   gulp.src([
     './public/javascripts/snowman.js',
-    './public/javascripts/tree.js',
     './public/javascripts/arena.js',
+    './public/javascripts/tree.js',
+    './public/javascripts/forest.js',
+    './public/javascripts/snow.js',
     './public/javascripts/mammal-cube.js',
     './public/javascripts/explosion.js',
     './public/javascripts/snowball.js',
