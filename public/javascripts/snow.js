@@ -1,5 +1,5 @@
 (function (window, THREE) {
-  var NOS_FLAKES = 500
+  var NOS_FLAKES = 1000
 
   var snowGeometry = new THREE.Geometry();
   var snowMaterial = new THREE.PointCloudMaterial( { color: 0xffffff } );

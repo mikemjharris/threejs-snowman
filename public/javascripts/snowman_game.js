@@ -1,10 +1,4 @@
-var NOS_TREES = 100;
-var NOS_FLAKES = 500;
-var particle;
-var particles = [];
 var topscores = [];
-var x = 0;
-var newPlayer;
 var socket = io.connect(window.location.hostname);
 
 //init THREE.js scene
@@ -17,14 +11,13 @@ renderer.shadowMapEnabled = true;
 document.getElementById('canvas-view').appendChild(renderer.domElement);
 
 var arena = new Arena();
-// add the sphere to the scene
 arena.addTo(scene);
 
 var snowStorm = new SnowStorm();
-scene.add(snowStorm.mesh)
+scene.add(snowStorm.mesh);
 
 var forest = new Forest();
-scene.add(forest.mesh)
+scene.add(forest.mesh);
 
 var light = new THREE.DirectionalLight(0xdfebff, 1);
 light.position.set(100, 1000, 100);
@@ -35,6 +28,7 @@ light.shadowDarkness = 0.2;
 
 scene.add(light);
 
+//event listeners
 window.addEventListener( 'resize', function () {
   followCam.camera.aspect = window.innerWidth / window.innerHeight;
   followCam.camera.updateProjectionMatrix();
@@ -75,20 +69,18 @@ function startGame() {
   });
   Game.createTarget();
 }
-
-//iniital setup
-startGame(); 
-var followCam = new FollowCamera(Game.playerToMove); 
-Game.update();
-followCam.update();
-renderer.render( scene, followCam.camera );
-
+ 
+//initial setup
+  startGame(); 
+  var followCam = new FollowCamera(Game.playerToMove); 
+  Game.update();
+  followCam.update();
+  renderer.render( scene, followCam.camera );
 
 //game loop
 function render() {
   if ( Game.time > 0 ) {
-    requestAnimationFrame( render );
-    x += 0.02;
+    requestAnimationFrame( render ); 
     Game.update();
     snowStorm.update();
     powerInidcator();
@@ -103,19 +95,17 @@ function render() {
   }
 }
 
-
 function updateTopScores ( scores ) {
+  scores.sort(function(a,b) { return b[0]-a[0] }); 
   for ( var i = 1; i <= Math.min(5 , scores.length); i++ ) {
     $('.topscores:nth-of-type(' + i +')').text(scores[i-1][0] + ' ' + scores[i-1][1]);
   }
 }
 
-socket.on('connected', function ( a, b, c, scores ) {
-  topscores = scores.sort(function(a,b) { return b[0]-a[0] });
-  updateTopScores( topscores );
+socket.on('connected', function ( scores ) {
+  updateTopScores( scores );
 });
 
 socket.on('topscores', function ( scores ) {
- topscores = scores.sort(function(a,b) { return b[0]-a[0] });
-  updateTopScores( topscores );
+  updateTopScores( scores );
 });
