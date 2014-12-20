@@ -20,11 +20,9 @@
     "spawn": {
       "command": "nodemon",
       "args":  [
-        "bin/www",
+        "server/server.js",
         "-w",
-        "bin/www",
-        "-w",
-        "app.js",
+        "server",
         "-e",
         "jade,html,js"
       ]

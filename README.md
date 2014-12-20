@@ -3,10 +3,10 @@ Three Js Node Snowman Multiplayer Game
 
 Multiplayer snowman game built with three.js and node.
 
-
 Clone repositry then:
 
-`npm install` 
+`npm install`
+`bower install` 
 
 To run the game:  
 
@@ -14,6 +14,6 @@ To run the game:
 
 Navigate to:  
 
-`localhost:3000/snowman`   
+`localhost:8000/snowman`   
 
-Controllers - arrows to move, spacebar to fire.  w,s,e,d,r,f to move the camera view.
+Arrows to move. Spacebar to fire a snowball

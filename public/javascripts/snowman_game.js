@@ -85,8 +85,7 @@ function render() {
     snowStorm.update();
     powerInidcator();
     followCam.update();
-    // moveParticles();
-    renderer.render( scene, followCam.camera );
+    renderer.render(scene, followCam.camera);
   } else {
     Game.message('Game over - you scored ' + Game.totalPoints);
     socket.emit('single-score' , [Game.totalPoints, $('#player-name').val() || 'Anon']);
