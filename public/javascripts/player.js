@@ -96,9 +96,9 @@
     this.mesh.position.y = 0.5 * Math.sin( this.counter / this.walkSlowness );
 
     this.mesh.scale.set(
-      1 + Math.sin(this.counter / this.walkSlowness - Math.PI / 2 ) / this.scaleShrinkage,
-      1 + Math.cos(this.counter / this.walkSlowness - Math.PI / 2 ) / this.scaleShrinkage,
-      1 + Math.sin(this.counter / this.walkSlowness - Math.PI / 2 ) / this.scaleShrinkage
+      1 + Math.sin(this.counter / this.scaleShrinkage - Math.PI / 2 ) / this.scaleShrinkage,
+      1 + Math.cos(this.counter / this.scaleShrinkage - Math.PI / 2 ) / this.scaleShrinkage,
+      1 + Math.sin(this.counter / this.scaleShrinkage - Math.PI / 2 ) / this.scaleShrinkage
     );
 
     this.counter++;
