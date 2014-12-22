@@ -84,21 +84,14 @@
 
     this.mesh.position.x += this.move.incx * Math.sin(this.mesh.rotation.y);
     this.mesh.position.z += this.move.incx * Math.cos(this.mesh.rotation.y);
-    if (
-        Math.abs(this.mesh.position.x) > Arena.PLANE_SIZE / 2 ||
-        Math.abs(this.mesh.position.z) > Arena.PLANE_SIZE / 2
-    ) {
-      this.mesh.position.x -= this.move.incx * Math.sin(this.mesh.rotation.y);
-      this.mesh.position.z -= this.move.incx * Math.cos(this.mesh.rotation.y);
-    }
 
     this.mesh.rotation.y += this.move.incRot;
     this.mesh.position.y = 0.5 * Math.sin( this.counter / this.walkSlowness );
 
     this.mesh.scale.set(
-      1 + Math.sin(this.counter / this.scaleShrinkage - Math.PI / 2 ) / this.scaleShrinkage,
-      1 + Math.cos(this.counter / this.scaleShrinkage - Math.PI / 2 ) / this.scaleShrinkage,
-      1 + Math.sin(this.counter / this.scaleShrinkage - Math.PI / 2 ) / this.scaleShrinkage
+      1 + Math.sin(this.counter / this.scaleShrinkage - Math.PI / 2) / this.scaleShrinkage,
+      1 + Math.cos(this.counter / this.scaleShrinkage - Math.PI / 2) / this.scaleShrinkage,
+      1 + Math.sin(this.counter / this.scaleShrinkage - Math.PI / 2) / this.scaleShrinkage
     );
 
     this.counter++;
@@ -111,6 +104,15 @@
   Player.prototype.makeSnowball = function( power ) {
     return new Snowball(this.id, this.mesh.position, this.mesh.rotation.y, power);
   };
+
+  Object.defineProperty(Player.prototype, 'position', {
+    get: function position() {
+      return this.mesh.position;
+    },
+    set: function position( value ) {
+      this.mesh.position = value;
+    }
+  });
 
   window.Player = Player;
 

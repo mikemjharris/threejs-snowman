@@ -103,7 +103,17 @@ Game.update = function () {
   ctx.stroke();
 
   this.players.forEach(function ( player ) {
+    var posX = player.position.x;
+    var posZ = player.position.z;
     player.update();
+    var allowMoveX = Math.abs(player.position.x) + 10 < Arena.PLANE_SIZE / 2;
+    if ( !allowMoveX ) {
+      player.position.x = posX;
+    }
+    var allowMoveZ = Math.abs(player.position.z) + 10 < Arena.PLANE_SIZE / 2;
+    if ( !allowMoveZ ) {
+      player.position.z = posZ;
+    }
   });
 
   //move snowballs
