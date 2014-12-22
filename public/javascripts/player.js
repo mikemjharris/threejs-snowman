@@ -25,10 +25,10 @@
         window.addEventListener('keydown', function( event ) {
           switch ( event.keyCode ) {
             case 37: // left
-              self.rotateDirection(0.05);
+              self.rotateDirection(0.02);
             break;
             case 39: // right
-              self.rotateDirection(-0.05);
+              self.rotateDirection(-0.02);
             break;
             case 38: // up
               self.moveDirection(2);
@@ -82,20 +82,18 @@
 
   Player.prototype.update = function() {
 
-    if ( this.mesh.position.y > 0.5 ) {
-      this.mesh.position.x += this.move.incx * Math.sin(this.mesh.rotation.y);
-      this.mesh.position.z += this.move.incx * Math.cos(this.mesh.rotation.y);
-      if (
-          Math.abs(this.mesh.position.x) > Arena.PLANE_SIZE / 2 ||
-          Math.abs(this.mesh.position.z) > Arena.PLANE_SIZE / 2
-      ) {
-        this.mesh.position.x -= this.move.incx * Math.sin(this.mesh.rotation.y);
-        this.mesh.position.z -= this.move.incx * Math.cos(this.mesh.rotation.y);
-      }
+    this.mesh.position.x += this.move.incx * Math.sin(this.mesh.rotation.y);
+    this.mesh.position.z += this.move.incx * Math.cos(this.mesh.rotation.y);
+    if (
+        Math.abs(this.mesh.position.x) > Arena.PLANE_SIZE / 2 ||
+        Math.abs(this.mesh.position.z) > Arena.PLANE_SIZE / 2
+    ) {
+      this.mesh.position.x -= this.move.incx * Math.sin(this.mesh.rotation.y);
+      this.mesh.position.z -= this.move.incx * Math.cos(this.mesh.rotation.y);
     }
 
     this.mesh.rotation.y += this.move.incRot;
-    this.mesh.position.y = 1 + 1 * Math.sin( this.counter / this.walkSlowness );
+    this.mesh.position.y = 0.5 * Math.sin( this.counter / this.walkSlowness );
 
     this.mesh.scale.set(
       1 + Math.sin(this.counter / this.walkSlowness - Math.PI / 2 ) / this.scaleShrinkage,
