@@ -1,9 +1,7 @@
 var movementSpeed = 8;
 var totalObjects = 100;
 var objectSize = 1;
-var sizeRandomness = 4000;
 var dirs = [];
-var parts = [];
 
 function ExplodeAnimation( x, y, z ) {
   var geometry = new THREE.Geometry();

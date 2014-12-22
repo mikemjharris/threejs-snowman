@@ -10,7 +10,7 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.engine('html', require('ejs').renderFile)
+app.engine('html', require('ejs').renderFile);
 
 app.use(favicon());
 app.use(logger('dev'));
@@ -29,7 +29,7 @@ app.use(function (req, res, next ) {
 });
 
 if (app.get('env') === 'development') {
-  app.use(function ( err, req, res, next ) {
+  app.use(function ( err, req, res ) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -38,7 +38,7 @@ if (app.get('env') === 'development') {
   });
 }
 
-app.use(function ( err, req, res, next ) {
+app.use(function ( err, req, res ) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
@@ -56,12 +56,11 @@ var scores = [[270723, "Tobias"], [252039, "My Round"],[ 237322, "Tobias"], [217
 var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function(socket) {
-  
+
   socket.emit('connected', scores);
-  
+
   socket.on('single-score', function ( score ) {
     scores.push(score);
     socket.emit('topscores' , scores);
-  })
+  });
 });
-

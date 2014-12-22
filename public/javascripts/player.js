@@ -25,16 +25,16 @@
         window.addEventListener('keydown', function( event ) {
           switch ( event.keyCode ) {
             case 37: // left
-              self.rotateDirection( 0.05 );
+              self.rotateDirection(0.05);
             break;
             case 39: // right
-              self.rotateDirection( -0.05 );
+              self.rotateDirection(-0.05);
             break;
             case 38: // up
-              self.moveDirection( 2 );
+              self.moveDirection(2);
             break;
             case 40: // down
-              self.moveDirection( -2 );
+              self.moveDirection(-2);
             break;
             case 32: // spacebar
               self.snowBallPowerUp = true;
@@ -58,7 +58,7 @@
               self.moveDirection(0);
             break;
             case 32: // spacebar
-              var snowball = self.makeSnowball( self.snowballPower );
+              var snowball = self.makeSnowball(self.snowballPower);
               scene.add(snowball.mesh);
               Game.lastPower = self.snowballPower;
               Game.snowballs.push(snowball);
@@ -81,20 +81,29 @@
   };
 
   Player.prototype.update = function() {
-    if (this.mesh.position.y > 0.5) {   
+
+    if ( this.mesh.position.y > 0.5 ) {
       this.mesh.position.x += this.move.incx * Math.sin(this.mesh.rotation.y);
-      this.mesh.position.z += this.move.incx * Math.cos(this.mesh.rotation.y);  
-      if ( Math.abs(this.mesh.position.x) > Arena.PLANE_SIZE /2 || Math.abs(this.mesh.position.z) > Arena.PLANE_SIZE / 2 ) {
+      this.mesh.position.z += this.move.incx * Math.cos(this.mesh.rotation.y);
+      if (
+          Math.abs(this.mesh.position.x) > Arena.PLANE_SIZE / 2 ||
+          Math.abs(this.mesh.position.z) > Arena.PLANE_SIZE / 2
+      ) {
         this.mesh.position.x -= this.move.incx * Math.sin(this.mesh.rotation.y);
         this.mesh.position.z -= this.move.incx * Math.cos(this.mesh.rotation.y);
       }
     }
-      this.mesh.rotation.y += this.move.incRot;
-      this.mesh.position.y = 1 + 1 * Math.sin( this.counter / this.walkSlowness );
 
-      this.mesh.scale.set( 1 + Math.sin(this.counter / this.walkSlowness - Math.PI / 2  ) / this.scaleShrinkage,  1 + Math.cos(this.counter / this.walkSlowness  - Math.PI /2 )/this.scaleShrinkage,  1 + Math.sin(this.counter / this.walkSlowness  - Math.PI / 2 ) / this.scaleShrinkage );
+    this.mesh.rotation.y += this.move.incRot;
+    this.mesh.position.y = 1 + 1 * Math.sin( this.counter / this.walkSlowness );
 
-      this.counter++ ;
+    this.mesh.scale.set(
+      1 + Math.sin(this.counter / this.walkSlowness - Math.PI / 2 ) / this.scaleShrinkage,
+      1 + Math.cos(this.counter / this.walkSlowness - Math.PI / 2 ) / this.scaleShrinkage,
+      1 + Math.sin(this.counter / this.walkSlowness - Math.PI / 2 ) / this.scaleShrinkage
+    );
+
+    this.counter++;
 
     if ( this.snowBallPowerUp && this.snowballPower < SNOWBALL_POWER_LIMIT ) {
       this.snowballPower += 0.1;

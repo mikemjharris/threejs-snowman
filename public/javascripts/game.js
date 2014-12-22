@@ -10,8 +10,8 @@ var Game = {
   time: GAME_TIME
 };
 
-var canvas = document.getElementById("map-canvas");
-var ctx = canvas.getContext("2d");
+var canvas = document.getElementById('map-canvas');
+var ctx = canvas.getContext('2d');
 
 Game.createPlayer = function ( id, options ) {
   var newPlayer = new Player(new Snowman(), id, options);
@@ -40,7 +40,6 @@ Game.reset = function () {
     });
   });
 
-
   Game.snowballs = [];
   Game.targets = [];
   Game.marks = [];
@@ -48,42 +47,60 @@ Game.reset = function () {
   Game.totalPoints = 0;
   Game.time = GAME_TIME;
   Game.createTarget();
-   $('#score').text(Game.totalPoints);
+  $('#score').text(Game.totalPoints);
 
 };
 
 Game.update = function () {
   //Move the players
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath();
+  ctx.arc(
+    canvas.width - ( this.players[0].mesh.position.x + 500 ) * canvas.width / 1000,
+    canvas.width - ( this.players[0].mesh.position.z + 500 ) * canvas.width / 1000,
+    3,
+    0,
+    2 * Math.PI
+  );
+  ctx.fillStyle = '#0000FF';
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.moveTo(
+    canvas.width - ( this.players[0].mesh.position.x + 500 ) * canvas.width / 1000,
+    canvas.width - ( this.players[0].mesh.position.z + 500 ) * canvas.width / 1000
+  );
+  ctx.lineTo(
+    canvas.width - ( this.players[0].mesh.position.x + 500 ) * canvas.width / 1000 - 10 * Math.sin(this.players[0].mesh.rotation.y ),
+    canvas.width - (this.players[0].mesh.position.z + 500) * canvas.width / 1000 - 10 * Math.cos(this.players[0].mesh.rotation.y)
+  );
+  ctx.stroke();
+
+  this.snowballs.forEach(function ( snowball ) {
     ctx.beginPath();
-    ctx.arc( canvas.width - (this.players[0].mesh.position.x +500) * canvas.width / 1000  , canvas.width - (this.players[0].mesh.position.z + 500) * canvas.width / 1000 ,3,0,2*Math.PI);
-    ctx.fillStyle = "#0000FF";
-    ctx.fill();
+    ctx.arc(
+      canvas.width - ( snowball.mesh.position.x + 500 ) * canvas.width / 1000,
+      canvas.width - (snowball.mesh.position.z + 500) * canvas.width / 1000,
+      1,
+      0,
+      2 * Math.PI
+    );
     ctx.stroke();
+  });
 
-    ctx.moveTo( canvas.width - (this.players[0].mesh.position.x +500) * canvas.width / 1000 , canvas.width - (this.players[0].mesh.position.z +500) * canvas.width / 1000 );
-    ctx.lineTo( canvas.width - (this.players[0].mesh.position.x +500) * canvas.width / 1000  - 10 * Math.sin( this.players[0].mesh.rotation.y ) , canvas.width - (this.players[0].mesh.position.z +500) * canvas.width / 1000  - 10 * Math.cos( this.players[0].mesh.rotation.y ));
-    ctx.stroke();
-
-
-    this.snowballs.forEach(function(snowball) {
-
-    ctx.beginPath();
-    ctx.arc( canvas.width - (snowball.mesh.position.x +500) * canvas.width / 1000  , canvas.width - (snowball.mesh.position.z + 500) * canvas.width / 1000 ,1,0,2*Math.PI);
-
-    ctx.stroke();
-    })
-
-
-    ctx.beginPath();
-    ctx.arc(canvas.width - (this.targets[0].mesh.position.x +500) * canvas.width / 1000  , canvas.width - (this.targets[0].mesh.position.z + 500) * canvas.width / 1000 ,3,0,2*Math.PI);
-    ctx.fillStyle = "#FF0000";
-    ctx.fill();
-    ctx.stroke();
-    ctx.stroke();
-
-
+  ctx.beginPath();
+  ctx.arc(
+    canvas.width - ( this.targets[0].mesh.position.x + 500 ) * canvas.width / 1000,
+    canvas.width - ( this.targets[0].mesh.position.z + 500 ) * canvas.width / 1000,
+    3,
+    0,
+    2 * Math.PI
+  );
+  ctx.fillStyle = '#FF0000';
+  ctx.fill();
+  ctx.stroke();
+  ctx.stroke();
 
   this.players.forEach(function ( player ) {
     player.update();
@@ -184,7 +201,7 @@ Game.checkTargetCollision = function () {
       snowball.checkedTargetCollision = true;
       Game.targets[0].dead = true;
       // timePoints = Math.round(snowManTarget.counter * 10) / 10;
-      distPoints = Math.round(
+      var distPoints = Math.round(
          Math.pow(
               snowball.startX - snowManTarget.mesh.position.x,
               2
@@ -194,7 +211,7 @@ Game.checkTargetCollision = function () {
             2
         )
       );
-      points = Math.round(distPoints);
+      var points = Math.round(distPoints);
       Game.message('Hit the target! Distance squared = ' + distPoints + 'points');
       Game.totalPoints += points;
       $('#score').text(Game.totalPoints);
@@ -209,14 +226,14 @@ Game.checkTargetCollision = function () {
 };
 
 Game.checkCollision = function ( rect1, rect2 ) {
-  return !(rect1.tjs.position.x + rect1.widthX / 2 <= rect2.tjs.position.x  -  rect2.widthX / 2 ||
+  return !(rect1.tjs.position.x + rect1.widthX / 2 <= rect2.tjs.position.x -  rect2.widthX / 2 ||
       rect1.tjs.position.z - rect1.widthZ / 2  >= rect2.tjs.position.z + rect2.widthZ ||
       rect1.tjs.position.x - rect1.widthX / 2 >= rect2.tjs.position.x + rect2.widthX ||
       rect1.tjs.position.z + rect1.widthZ / 2  <= rect2.tjs.position.z - rect2.widthZ);
 };
 
 Game.check3dCollision = function ( rect1, rect2 ) {
- return !(rect1.mesh.position.x + rect1.widthX / 2 <= rect2.mesh.position.x  -  rect2.widthX / 2 ||
+ return !(rect1.mesh.position.x + rect1.widthX / 2 <= rect2.mesh.position.x -  rect2.widthX / 2 ||
     rect1.mesh.position.z - rect1.widthZ / 2  >= rect2.mesh.position.z + rect2.widthZ / 2 ||
     rect1.mesh.position.x - rect1.widthX / 2 >= rect2.mesh.position.x + rect2.widthX / 2 ||
     rect1.mesh.position.z + rect1.widthZ / 2  <= rect2.mesh.position.z - rect2.widthZ / 2 ||

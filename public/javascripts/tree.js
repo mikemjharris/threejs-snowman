@@ -25,7 +25,7 @@
   wholeTree.add(tree);
   wholeTree.castShadow = true;
 
-  function Tree () {
+  function Tree() {
     this.mesh = wholeTree.clone();
   }
 

@@ -4,5 +4,4 @@ module.exports = function ( app ) {
     res.render('snowman.html');
   });
 
-}
-
+};
