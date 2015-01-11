@@ -1,4 +1,4 @@
-var GAME_TIME = 6000;
+var GAME_TIME = 30;
 
 var Game = {
   players: [],
