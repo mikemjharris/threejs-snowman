@@ -1,6 +1,6 @@
 module.exports = function ( app ) {
 
-  app.get('/snowman', function( req, res ) {
+  app.get('/', function( req, res ) {
     res.render('snowman.html');
   });
 
