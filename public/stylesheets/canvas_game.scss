@@ -1,9 +1,10 @@
-* {
+*{
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;
   overflow: hidden;
-  font-family: Verdana; }
+  font-family: Verdana;
+}
 
 .single-player-start {
   width: 50%;
@@ -12,42 +13,53 @@
   z-index: 200;
   position: absolute;
   top: 20vh;
-  left: 0;
+  left:0;
   right: 0;
   margin: 0 auto;
   padding: 20px;
   background: white;
-  text-align: center; }
-  .single-player-start h2 {
-    margin: 20px; }
-  .single-player-start li {
+  text-align: center;
+  h2 {
+    margin: 20px;
+
+  }
+  li {
     padding: 5px;
-    text-align: center; }
-  .single-player-start button {
+    text-align: center;
+  }
+  button {
     margin: 10px;
     padding: 10px;
-    background: #8cd98c;
+    background: hsl( 120, 50%, 70%);
     border: none;
     cursor: pointer;
-    font-size: 18px; }
-    .single-player-start button:hover {
-      background: #40bf40; }
+    font-size: 18px;
+    &:hover {
+      background: hsl( 120, 50%, 50%);
+    }
+  }
+
+}
 
 #power {
   height: 20px;
   position: absolute;
   bottom: 0;
-  background: red; }
-
+  // width: 20px;
+  background: red;
+}
 #last-power {
   height: 20px;
   position: absolute;
   bottom: 0;
-  border-right: 5px solid red; }
+  // width: 20px;
+  border-right: 5px solid red;
+}
 
-input {
+input{
   padding: 10px;
-  margin: 7px; }
+  margin: 7px;
+}
 
 #message {
   font-size: 30px;
@@ -61,20 +73,22 @@ input {
   right: 0;
   background: white;
   opacity: 0.8;
-  text-align: center; }
+  text-align: center;
+}
 
 .dashboard {
   display: inline-block;
-  background: #ad8585;
+  background: hsl( 0, 20%, 60% );
   border-radius: 50%;
   font-size: 20px;
   line-height: 100px;
   width: 100px;
   height: 100px;
-  text-align: center; }
+  text-align: center;
+}
 
 .scores {
-  color: #f5a3a3;
+  color: hsl(0, 80%,80%);
   opacity: 0.8;
   padding-top: 50px;
   text-align: center;
@@ -82,7 +96,8 @@ input {
   width: 150px;
   height: 100vh;
   top: 0px;
-  right: 0px; }
+  right: 0px;
+}
 
 .map {
   position: absolute;
@@ -90,6 +105,9 @@ input {
   bottom: 50px;
   width: 200px;
   height: 200px;
-  background: rgba(255, 255, 255, 0.7);
+  background: hsla(0,30%, 100%, 0.7);
   opacity: 0.5;
-  z-index: 10000; }
+  z-index: 10000;
+}
+
+

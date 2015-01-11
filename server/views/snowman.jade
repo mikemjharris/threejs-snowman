@@ -1,0 +1,47 @@
+extends layout
+
+block content
+  div(id="canvas-view")
+  div(class='single-player-start')
+    h2 Snowball Fight!
+    ul
+      li Move with arrow keys
+      li Throw snowball with space bar.  Hold down for more power.
+      li Points = distance from target squared.
+    input(type='text' id='player-name')
+    button(id='single-player-start') Start game
+    h2 Top Scores
+    div(class='topscores')
+    div(class='topscores')
+    div(class='topscores')
+    div(class='topscores')
+    div(class='topscores')
+    div(class='topscores')
+  div(class="map")
+    canvas(id="map-canvas" width="200" height="200")
+  div(class='controls')
+    div(class='start')
+      h2 Snowball Fight!
+      label Enter your name to join
+
+    div(class="regenerate")
+      h2 You got shot! Click the button to rejoin
+    div(id='join-game') Join Game!
+  div(class='info')
+    h3 Players
+    table(id='players')
+      th Name
+      th W
+      th L
+  div(id='message')
+  div(id='power')
+  div(id='last-power')
+  div(class='scores')
+    h2 Time Left
+    div(class='dashboard' id='time') 0
+    h2 Distance To Target
+    div(class='dashboard' id='dist') 0
+    h2 Score
+    div(class='dashboard' id='score') 0
+
+  script(src="../dist/snowman-game.js")
