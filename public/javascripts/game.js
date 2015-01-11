@@ -200,7 +200,7 @@ Game.updateTarget = function () {
 };
 
 Game.message = function( text ) {
-  $('#message').text(text);
+  $('#message').html(text);
 };
 
 Game.checkTargetCollision = function () {

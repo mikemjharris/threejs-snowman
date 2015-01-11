@@ -23,15 +23,18 @@
   .single-player-start li {
     padding: 5px;
     text-align: center; }
-  .single-player-start button {
+  .single-player-start button, .single-player-start a {
     margin: 10px;
     padding: 10px;
     background: #8cd98c;
     border: none;
     cursor: pointer;
     font-size: 18px; }
-    .single-player-start button:hover {
+    .single-player-start button:hover, .single-player-start a:hover {
       background: #40bf40; }
+  .single-player-start a {
+    display: inline-block;
+    text-decoration: none; }
 
 #power {
   height: 20px;
@@ -62,6 +65,17 @@ input {
   background: white;
   opacity: 0.8;
   text-align: center; }
+  #message a {
+    text-decoration: none;
+    display: inline-block;
+    vertical-align: top;
+    padding: 10px;
+    background: #8cd98c;
+    border: none;
+    cursor: pointer;
+    font-size: 18px; }
+    #message a:hover {
+      background: #40bf40; }
 
 .dashboard {
   display: inline-block;

@@ -27,7 +27,7 @@
     padding: 5px;
     text-align: center;
   }
-  button {
+  button , a {
     margin: 10px;
     padding: 10px;
     background: hsl( 120, 50%, 70%);
@@ -38,8 +38,14 @@
       background: hsl( 120, 50%, 50%);
     }
   }
+  a {
+    display: inline-block;
+   text-decoration: none;
+  }
 
 }
+
+
 
 #power {
   height: 20px;
@@ -74,6 +80,21 @@ input{
   background: white;
   opacity: 0.8;
   text-align: center;
+
+  a {
+    text-decoration: none;
+    display: inline-block;
+    vertical-align: top;
+    padding: 10px;
+    background: hsl( 120, 50%, 70%);
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    &:hover {
+      background: hsl( 120, 50%, 50%);
+    }
+
+  }
 }
 
 .dashboard {

@@ -87,7 +87,7 @@ function render() {
     followCam.update();
     renderer.render(scene, followCam.camera);
   } else {
-    Game.message('Game over - you scored ' + Game.totalPoints);
+    Game.message('Game over - you scored ' + Game.totalPoints + '  <a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? I scored ' + Game.totalPoints + ' in a snowball fight. See if you can beat me. http://snowman.mikesirrah.co.uk &"  target="_blank">Share on twitter!</a>');
     socket.emit('single-score' , [Game.totalPoints, $('#player-name').val() || 'Anon']);
     Game.time = 30;
     $('.single-player-start').show();
