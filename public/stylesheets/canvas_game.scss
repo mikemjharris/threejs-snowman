@@ -8,10 +8,11 @@
 }
 
 .single-player-start {
-  width: 50%;
-  max-width: 800px;
-  min-width: 400px;
-  z-index: 200;
+  max-width: 70%;
+  overflow: scroll;
+  min-width: 600px;
+  max-height: calc(80vh);
+  z-index: 10000;
   position: absolute;
   top: 20vh;
   left:0;
@@ -20,28 +21,41 @@
   padding: 20px;
   background: white;
   text-align: center;
+  font-size: 20px;
   h2 {
     margin: 20px;
+    font-size: 40px;
 
   }
   li {
     padding: 5px;
     text-align: center;
   }
-  button , a {
-    margin: 10px;
-    padding: 10px;
+  button  {
+    margin: 30px 0;
+    padding: 18px;
     background: hsl( 120, 50%, 70%);
     border: none;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
+    width: 300px;
     &:hover {
       background: hsl( 120, 50%, 50%);
     }
   }
+  input[type="text"] {
+    margin: 20px 0;
+    font-size: 30px;
+    width: 300px;
+    vertical-align: middle;
+  }
   a {
     display: inline-block;
    text-decoration: none;
+  }
+  .message-main {
+    font-size: 30px;
+
   }
 
 }
@@ -68,7 +82,7 @@ input{
   margin: 7px;
 }
 
-#message {
+.message {
   font-size: 30px;
   padding: 5px;
   position: absolute;
@@ -98,6 +112,18 @@ input{
   }
 }
 
+.played .first {
+  display: none;
+}
+
+.after {
+  display: none;
+}
+.played .after {
+  display: block;
+}
+
+
 .dashboard {
   display: inline-block;
   background: hsl( 0, 20%, 60% );
@@ -124,7 +150,7 @@ input{
   position: absolute;
   left: 10px;
   bottom: 50px;
-  font-size:30px;
+  font-size:40px;
 }
 
 .scores {
@@ -147,7 +173,14 @@ input{
   height: 200px;
   background: hsla(0,30%, 100%, 0.7);
   opacity: 0.5;
-  z-index: 10000;
+  z-index: 1000;
+}
+.alert {
+  background: hsla(0,70%,70%, 1);
+  border: 5px solid hsla(0,70%,50%, 1)
 }
 
+input-placeholder.alert {
+  color: hsla(0,70%,50%, 1);
+}
 

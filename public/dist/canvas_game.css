@@ -7,10 +7,11 @@
   font-family: inconsolata; }
 
 .single-player-start {
-  width: 50%;
-  max-width: 800px;
-  min-width: 400px;
-  z-index: 200;
+  max-width: 70%;
+  overflow: scroll;
+  min-width: 600px;
+  max-height: calc(80vh);
+  z-index: 10000;
   position: absolute;
   top: 20vh;
   left: 0;
@@ -18,24 +19,34 @@
   margin: 0 auto;
   padding: 20px;
   background: white;
-  text-align: center; }
+  text-align: center;
+  font-size: 20px; }
   .single-player-start h2 {
-    margin: 20px; }
+    margin: 20px;
+    font-size: 40px; }
   .single-player-start li {
     padding: 5px;
     text-align: center; }
-  .single-player-start button, .single-player-start a {
-    margin: 10px;
-    padding: 10px;
+  .single-player-start button {
+    margin: 30px 0;
+    padding: 18px;
     background: #8cd98c;
     border: none;
     cursor: pointer;
-    font-size: 18px; }
-    .single-player-start button:hover, .single-player-start a:hover {
+    font-size: 20px;
+    width: 300px; }
+    .single-player-start button:hover {
       background: #40bf40; }
+  .single-player-start input[type="text"] {
+    margin: 20px 0;
+    font-size: 30px;
+    width: 300px;
+    vertical-align: middle; }
   .single-player-start a {
     display: inline-block;
     text-decoration: none; }
+  .single-player-start .message-main {
+    font-size: 30px; }
 
 #power {
   height: 20px;
@@ -53,7 +64,7 @@ input {
   padding: 10px;
   margin: 7px; }
 
-#message {
+.message {
   font-size: 30px;
   padding: 5px;
   position: absolute;
@@ -66,7 +77,7 @@ input {
   background: white;
   opacity: 0.8;
   text-align: center; }
-  #message a {
+  .message a {
     text-decoration: none;
     display: inline-block;
     vertical-align: top;
@@ -75,8 +86,17 @@ input {
     border: none;
     cursor: pointer;
     font-size: 18px; }
-    #message a:hover {
+    .message a:hover {
       background: #40bf40; }
+
+.played .first {
+  display: none; }
+
+.after {
+  display: none; }
+
+.played .after {
+  display: block; }
 
 .dashboard {
   display: inline-block;
@@ -102,7 +122,7 @@ input {
   position: absolute;
   left: 10px;
   bottom: 50px;
-  font-size: 30px; }
+  font-size: 40px; }
 
 .scores {
   color: #f5a3a3;
@@ -123,4 +143,11 @@ input {
   height: 200px;
   background: rgba(255, 255, 255, 0.7);
   opacity: 0.5;
-  z-index: 10000; }
+  z-index: 1000; }
+
+.alert {
+  background: #e87d7d;
+  border: 5px solid #d92626; }
+
+input-placeholder.alert {
+  color: #d92626; }

@@ -1,6 +1,18 @@
 var topscores = [];
 var socket = io.connect(window.location.hostname);
 
+function addCommas(nStr) {
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+
 //init THREE.js scene
 window.scene = new THREE.Scene();
 
@@ -43,8 +55,13 @@ window.addEventListener('keydown', function( event ) {
   }
 });
 
-$('#single-player-start').on('click', function () {
-  startSinglePlayerGame();
+$('.single-player-start-button').on('click', function () {
+  if( $('#player-name').val() === "" ) {
+    $('#player-name').addClass('alert');
+  } else {
+    $('.single-player-start').toggleClass('played');
+    startSinglePlayerGame();
+  }
 });
 
 function startSinglePlayerGame() {
@@ -69,10 +86,10 @@ function startGame() {
   });
   Game.createTarget();
 }
- 
+
 //initial setup
-  startGame(); 
-  var followCam = new FollowCamera(Game.playerToMove); 
+  startGame();
+  var followCam = new FollowCamera(Game.playerToMove);
   Game.update();
   followCam.update();
   renderer.render( scene, followCam.camera );
@@ -80,24 +97,26 @@ function startGame() {
 //game loop
 function render() {
   if ( Game.time > 0 ) {
-    requestAnimationFrame( render ); 
+    requestAnimationFrame( render );
     Game.update();
     snowStorm.update();
     powerInidcator();
     followCam.update();
     renderer.render(scene, followCam.camera);
   } else {
-    Game.message('Game over - you scored ' + Game.totalPoints + '  <a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? I scored ' + Game.totalPoints + ' in a snowball fight. See if you can beat me. http://snowman.mikesirrah.co.uk &"  target="_blank">Share on twitter!</a>');
+    Game.message('Game over - you scored ' + addCommas(Game.totalPoints) + '  <a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? I scored ' + Game.totalPoints + ' in a snowball fight. See if you can beat me. http://snowman.mikesirrah.co.uk &"  target="_blank">Share on twitter!</a>');
+    $('.message-main').text('You scored: ' + addCommas(Game.totalPoints));
     socket.emit('single-score' , [Game.totalPoints, $('#player-name').val() || 'Anon']);
+    $('#time').text('Time up!');
     Game.time = 30;
     $('.single-player-start').show();
   }
 }
 
 function updateTopScores ( scores ) {
-  scores.sort(function(a,b) { return b[0]-a[0] }); 
+  scores.sort(function(a,b) { return b[0]-a[0] });
   for ( var i = 1; i <= Math.min(5 , scores.length); i++ ) {
-    $('.topscores:nth-of-type(' + i +')').text(scores[i-1][0] + ' ' + scores[i-1][1]);
+    $('.topscores:nth-of-type(' + i +')').text(addCommas(scores[i-1][0]) + ' ' + scores[i-1][1]);
   }
 }
 

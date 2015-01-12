@@ -27,27 +27,35 @@
 
     <div class='single-player-start'>
       <h2>Snowball Fight!</h2>
+      <div class='first'>
+        <input type='text' id='player-name' placeholder="Enter your name ..." />
+        <button class='single-player-start-button'>Start game</button>
+      </div>
+      <div class='after'>
+      <div class="message-main"></div>
+        <button class='single-player-start-button'>Play Again!</button>
+      </div>
+
       <ul>
-        <li>Move with arrow keys</li>
-        <li>Throw snowball with space bar.  Hold down for more power.</li>
+        <li>Arrow keys to move.</li>
+        <li>Space bar to throw snowball.  Hold down for more power.</li>
         <li>Points = distance from target squared.</li>
       </ul>
-      <input type='text' id='player-name' placeholder="Your Name" />
-      <button id='single-player-start'>Start game</button>
+
       <h2>Top Scores</h2>
       <div class='topscores'></div>
       <div class='topscores'></div>
       <div class='topscores'></div>
       <div class='topscores'></div>
       <div class='topscores'></div>
-      <a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? http://snowman.mikesirrah.co.uk by @mikemjharris &" id='share' target="_blank">Tweet about snowball fight!</a>
+      <a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? http://snowman.mikesirrah.co.uk by @mikemjharris &" target="_blank">Tweet about snowball fight!</a>
     </div>
 
     <div class="map">
       <canvas id="map-canvas" width="200" height="200"></canvas>
     </div>
 
-    <div id="message"></div>
+    <div class="message"></div>
     <div id="power"></div>
     <div id="last-power"></div>
 

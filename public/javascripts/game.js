@@ -192,15 +192,15 @@ Game.updateTarget = function () {
   this.targets.forEach(function ( target ) {
     if ( !target.dead ) {
       // target.counter -= 1 / 60;
-    }
+    };
     if (target.counter < 0) {
       // target.dead = true;
-    }
+    };
   });
 };
 
 Game.message = function( text ) {
-  $('#message').html(text);
+  $('.message').html(text);
 };
 
 Game.checkTargetCollision = function () {
@@ -222,9 +222,9 @@ Game.checkTargetCollision = function () {
         )
       );
       var points = Math.round(distPoints);
-      Game.message('Hit the target! Distance squared = ' + distPoints + 'points');
+      Game.message('Hit the target! Distance to target ^ 2 = +' + addCommas(distPoints) + ' points');
       Game.totalPoints += points;
-      $('#score').text(Game.totalPoints);
+      $('#score').text(addCommas(Game.totalPoints));
       Game.explosions.push(
           new ExplodeAnimation(snowManTarget.position.x, snowManTarget.widthZ / 2, snowManTarget.position.z)
       );
