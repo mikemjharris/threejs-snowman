@@ -7,6 +7,7 @@
     <script src="/jquery/dist/jquery.js"></script>
     <script src="/three.js/three.js"></script>
     <link rel="icon"href="/images/favicon.png">
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
     <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script>
    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -20,7 +21,7 @@
   </script>
   </head>
   <body>
-      
+
     <div id="canvas-view">
     </div>
 
@@ -31,7 +32,7 @@
         <li>Throw snowball with space bar.  Hold down for more power.</li>
         <li>Points = distance from target squared.</li>
       </ul>
-      <input type='text' id='player-name' />
+      <input type='text' id='player-name' placeholder="Your Name" />
       <button id='single-player-start'>Start game</button>
       <h2>Top Scores</h2>
       <div class='topscores'></div>
@@ -49,14 +50,14 @@
     <div id="message"></div>
     <div id="power"></div>
     <div id="last-power"></div>
-    
-    <div class="scores">
-      <h2>Time Left</h2>
-      <div class='dashboard' id='time'></div>
-      <h2>Distance To Target</h2>
-      <div class='dashboard' id='dist'></div>
-      <h2>Score</h2>
-      <div class='dashboard' id='score'></div>
+
+    <div id='time'></div>
+
+    <div class='score'>
+      <p>Score: <span id='score'>0</span></p>
+      <p>Distance to Target:<span id='dist'></p>
+    </div>
+
     </div>
     <script src="../dist/snowman-game.js"></script>
   </body>

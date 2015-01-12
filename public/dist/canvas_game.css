@@ -3,7 +3,8 @@
   margin: 0px;
   padding: 0px;
   overflow: hidden;
-  font-family: Verdana; }
+  font-family: Verdana;
+  font-family: inconsolata; }
 
 .single-player-start {
   width: 50%;
@@ -86,6 +87,22 @@ input {
   width: 100px;
   height: 100px;
   text-align: center; }
+
+#time {
+  position: absolute;
+  text-align: center;
+  color: white;
+  font-size: 100px;
+  top: 60px;
+  margin: 0 auto;
+  left: 0;
+  right: 0; }
+
+.score {
+  position: absolute;
+  left: 10px;
+  bottom: 50px;
+  font-size: 30px; }
 
 .scores {
   color: #f5a3a3;
