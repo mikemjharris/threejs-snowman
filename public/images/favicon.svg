@@ -1,0 +1,8 @@
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   width="100px" height="100px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+      <circle cx="50" cy="50" r="40" stroke="black" stroke-width="2" fill="white" />
+      <circle cx="40" cy="45" r="5" stroke="black" stroke-width="2"  fill="black" />
+      <circle cx="60" cy="45" r="5" stroke="black" stroke-width="2"  fill="black" />
+      <path id="hat" d="M0 35 L0 25 L15 25 L15 0 L85 0 L85 25 L100 25 L100 35 Z" stroke-linejoin="round" stroke="#0" stroke-width="0" stroke-linecap="round" fill="#000" transform="translate(0,0)" />
+      <path id="nose" d="M40 55 L50 85 L60 55 Z" stroke-linejoin="round" stroke="#0" stroke-width="0" stroke-linecap="round" fill="#EE7600" transform="translate(0,0)" />
+</svg>
