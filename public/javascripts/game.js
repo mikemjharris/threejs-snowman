@@ -222,7 +222,7 @@ Game.checkTargetCollision = function () {
         )
       );
       var points = Math.round(distPoints);
-      Game.message('Hit the target! Distance to target ^ 2 = +' + addCommas(distPoints) + ' points');
+      Game.message('Hit the target! Distance to target ^ 2 = ' + addCommas(distPoints) + ' points');
       Game.totalPoints += points;
       $('#score').text(addCommas(Game.totalPoints));
       Game.explosions.push(

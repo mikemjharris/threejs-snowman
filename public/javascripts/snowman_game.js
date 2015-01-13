@@ -50,7 +50,15 @@ window.addEventListener( 'resize', function () {
 window.addEventListener('keydown', function( event ) {
   switch (event.keyCode) {
     case 13: // Enter
-      startSinglePlayerGame()
+       if( Game.time >= GAME_TIME - 1 ) {
+        if( $('#player-name').val() === "" ) {
+            $('#player-name').addClass('alert');
+          } else {
+            $('#player-name').removeClass('alert');
+            $('.single-player-start').addClass('played');
+            startSinglePlayerGame();
+          }
+        }
     break;
   }
 });
@@ -59,7 +67,8 @@ $('.single-player-start-button').on('click', function () {
   if( $('#player-name').val() === "" ) {
     $('#player-name').addClass('alert');
   } else {
-    $('.single-player-start').toggleClass('played');
+    $('#player-name').removeClass('alert');
+    $('.single-player-start').addClass('played');
     startSinglePlayerGame();
   }
 });
@@ -104,7 +113,8 @@ function render() {
     followCam.update();
     renderer.render(scene, followCam.camera);
   } else {
-    Game.message('Game over - you scored ' + addCommas(Game.totalPoints) + '  <a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? I scored ' + Game.totalPoints + ' in a snowball fight. See if you can beat me. http://snowman.mikesirrah.co.uk &"  target="_blank">Share on twitter!</a>');
+    Game.message('Game over - you scored ' + addCommas(Game.totalPoints));
+    $('.after a').replaceWith('<a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? I scored ' + Game.totalPoints + ' in a snowball fight. See if you can beat me. http://snowman.mikesirrah.co.uk &"  target="_blank">Share score on twitter</a>')
     $('.message-main').text('You scored: ' + addCommas(Game.totalPoints));
     socket.emit('single-score' , [Game.totalPoints, $('#player-name').val() || 'Anon']);
     $('#time').text('Time up!');
@@ -114,9 +124,12 @@ function render() {
 }
 
 function updateTopScores ( scores ) {
-  scores.sort(function(a,b) { return b[0]-a[0] });
-  for ( var i = 1; i <= Math.min(5 , scores.length); i++ ) {
-    $('.topscores:nth-of-type(' + i +')').text(addCommas(scores[i-1][0]) + ' ' + scores[i-1][1]);
+  $('.topscores').html("")
+  scores.sort( function ( a,b ) {
+    return b[0] - a[0];
+  });
+  for ( var i = 0; i < Math.min(5 , scores.length); i++ ) {
+    $('.topscores').append('<span>' + scores[i][1] + ' ' + addCommas(scores[i][0]) + '</span>');
   }
 }
 
