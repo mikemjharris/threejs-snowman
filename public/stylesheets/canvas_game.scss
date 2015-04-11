@@ -25,7 +25,6 @@
   h2 {
     margin: 20px 0 0 0;
     font-size: 40px;
-
   }
   li {
     padding: 5px;
@@ -46,6 +45,7 @@
     }
   }
   input[type="text"] {
+    padding: 10px;
     margin: 35px 0;
     font-size: 22px;
     width: 300px;
@@ -59,7 +59,7 @@
   }
   a {
     display: inline-block;
-   text-decoration: none;
+    text-decoration: none;
   }
   .message-main {
     margin-top: 20px;
@@ -81,30 +81,24 @@
       }
     }
   }
-
 }
-
-
 
 #power {
   height: 20px;
   position: absolute;
   bottom: 0;
-  // width: 20px;
   background: red;
 }
 #last-power {
   height: 20px;
   position: absolute;
   bottom: 0;
-  // width: 20px;
   border-right: 5px solid red;
 }
 
-input{
-  padding: 10px;
-  margin: 7px;
-}
+/*input{
+
+}*/
 
 .message {
   font-size: 30px;

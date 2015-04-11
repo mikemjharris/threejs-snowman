@@ -40,6 +40,7 @@
     .single-player-start button:hover, .single-player-start a:hover {
       background: #40bf40; }
   .single-player-start input[type="text"] {
+    padding: 10px;
     margin: 35px 0;
     font-size: 22px;
     width: 300px;
@@ -56,12 +57,11 @@
     font-size: 30px; }
   .single-player-start .topscores {
     padding: 5px;
-    min-width: 300px;
+    width: 600px;
     counter-reset: section; }
     .single-player-start .topscores span {
       display: block;
-      padding: 5px;
-      min-width: 300px; }
+      padding: 5px; }
       .single-player-start .topscores span:nth-child(even) {
         background: #d9f2d9; }
       .single-player-start .topscores span:before {
@@ -80,10 +80,9 @@
   bottom: 0;
   border-right: 5px solid red; }
 
-input {
-  padding: 10px;
-  margin: 7px; }
+/*input{
 
+}*/
 .message {
   font-size: 30px;
   padding: 5px;
