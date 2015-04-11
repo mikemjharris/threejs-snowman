@@ -17,7 +17,7 @@
     "passport": "*",
     "passport-twitter": "*",
     "express-session": "*",
-    "mongodb": "*",
-    "mongoskin": "*"  
+    "mongodb": "~1.4",
+    "mongoskin": "~1.4.13"  
   }
 }
