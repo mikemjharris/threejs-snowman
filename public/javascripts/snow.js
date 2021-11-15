@@ -16,7 +16,7 @@
   }
 
   function SnowStorm() {
-    this.mesh = new THREE.PointCloud(snowGeometry, snowMaterial );
+    this.mesh = new THREE.Points(snowGeometry, snowMaterial );
   }
 
   SnowStorm.prototype.update = function () {
@@ -29,7 +29,7 @@
       particles[i].y -= ( 0.2 * ( 1 + Math.sin(i) ) );
       snowGeometry.vertices.push(particles[i]);
     }
-    this.mesh = new THREE.PointCloud(snowGeometry, snowMaterial);
+    this.mesh = new THREE.Points(snowGeometry, snowMaterial);
     window.scene.add(this.mesh);
   };
 
