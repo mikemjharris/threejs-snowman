@@ -1,5 +1,5 @@
 var topscores = [];
-var socket = io.connect(window.location.hostname);
+var socket = io(window.location.origin);
 
 function addCommas(nStr) {
     nStr += '';
@@ -134,6 +134,7 @@ function updateTopScores ( scores ) {
 }
 
 socket.on('connected', function ( scores ) {
+  console.log('connected')
   updateTopScores( scores );
 });
 

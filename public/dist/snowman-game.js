@@ -817,7 +817,7 @@ Game.check3dCollision = function ( rect1, rect2 ) {
 };
 
 var topscores = [];
-var socket = io.connect(window.location.hostname);
+var socket = io(window.location.origin);
 
 function addCommas(nStr) {
     nStr += '';
@@ -932,7 +932,7 @@ function render() {
     renderer.render(scene, followCam.camera);
   } else {
     Game.message('Game over - you scored ' + addCommas(Game.totalPoints));
-    $('.after a').replaceWith('<a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? I scored ' + Game.totalPoints + ' in a snowball fight. See if you can beat me. http://snowman.mikesirrah.co.uk &"  target="_blank">Share score on twitter</a>')
+    $('.after a').replaceWith('<a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? I scored ' + Game.totalPoints + ' in a snowball fight. See if you can beat me. http://snowman.mikemjharris.com &"  target="_blank">Share score on twitter</a>')
     $('.message-main').text('You scored: ' + addCommas(Game.totalPoints));
     socket.emit('single-score' , [Game.totalPoints, $('#player-name').val() || 'Anon']);
     $('#time').text('Time up!');
@@ -952,6 +952,7 @@ function updateTopScores ( scores ) {
 }
 
 socket.on('connected', function ( scores ) {
+  console.log('connected')
   updateTopScores( scores );
 });
 

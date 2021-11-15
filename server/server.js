@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
-app.use(express.static(path.join(__dirname, '../bower_components')));
+app.use(express.static(path.join(__dirname, '../node_modules')));
 
 require('./routes/games')(app);
 
@@ -48,21 +48,33 @@ app.use(function ( err, req, res ) {
   });
 });
 
+
+
 app.set('port', process.env.PORT || 8000);
 
-var server = app.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + server.address().port);
+const httpServer = require('http').createServer(app);
+
+const { Server } = require('socket.io');
+const io = new Server(httpServer, {
+  cors: {
+    origin: ["*"],
+  }
 });
 
 var scores = [];
-var io = require('socket.io').listen(server);
 
-io.sockets.on('connection', function(socket) {
+httpServer.listen(app.get('port'), function() {
+  console.log('Express server listening on port ' + app.get('port'));
+  io.sockets.on('connection', function(socket) {
 
-  socket.emit('connected', scores);
+    socket.emit('connected', scores);
 
-  socket.on('single-score', function ( score ) {
-    scores.push(score);
-    socket.emit('topscores' , scores);
+    socket.on('single-score', function ( score ) {
+      scores.push(score);
+      socket.emit('topscores' , scores);
+    });
   });
 });
+
+
+
