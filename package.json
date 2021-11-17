@@ -4,7 +4,11 @@
   "private": true,
   "scripts": {
     "start": "node ./server/server.js",
-    "build": "gulp build-all"
+    "build": "gulp build-all",
+    "preinstall": "npx npm-force-resolutions"
+  },
+  "resolutions": {
+      "graceful-fs": "^4.2.4"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
