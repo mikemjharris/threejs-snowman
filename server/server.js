@@ -4,6 +4,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+const fs = require('fs')
+
 var app = express();
 
 // view engine setup
@@ -63,6 +65,15 @@ const io = new Server(httpServer, {
 
 var scores = [];
 
+fs.readFile('./data/scores.json', 'utf8' , (err, data) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  console.log(data)
+  scores = JSON.parse(data);
+})
+
 httpServer.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
   io.sockets.on('connection', function(socket) {
@@ -72,6 +83,14 @@ httpServer.listen(app.get('port'), function() {
     socket.on('single-score', function ( score ) {
       scores.push(score);
       socket.emit('topscores' , scores);
+
+      fs.writeFile('./data/scores.json', JSON.stringify(scores), (err) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        console.log('File has been created')
+      });
     });
   });
 });
