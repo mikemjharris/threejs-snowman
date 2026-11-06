@@ -1,31 +1,21 @@
 {
-  "name": "game",
-  "version": "0.0.1",
+  "name": "snowman",
+  "version": "2.0.0",
   "private": true,
+  "type": "module",
+  "description": "Snowball fight in three.js, as a static site",
   "scripts": {
-    "start": "node ./server/server.js",
-    "build": "gulp build-all",
-    "preinstall": "npx npm-force-resolutions"
-  },
-  "resolutions": {
-      "graceful-fs": "^4.2.4"
+    "build": "node build.mjs",
+    "start": "node build.mjs && cd dist && python3 -m http.server 8000"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "cookie-parser": "^1.4.5",
-    "debug": "^4.3.2",
-    "ejs": "^3.1.6",
-    "entry": "*",
-    "express": "^4.17.1",
-    "express-session": "*",
-    "morgan": "^1.10.0",
-    "nunjucks": "^3.2.3",
-    "socket.io": "^4.3.2",
-    "node-sass": "^6.0.1",
-    "gulp": "^4.0.2",
-    "gulp-concat": "^2.4.2",
-    "gulp-sass": "^5.0.0",
-    "three": "0.73.1",
-    "jquery": "~2.1.1"
+    "jquery": "^3.7.1",
+    "three": "0.73.1"
+  },
+  "devDependencies": {
+    "sass": "^1.108.0"
+  },
+  "engines": {
+    "node": ">=22.12"
   }
 }

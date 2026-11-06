@@ -1,31 +1,17 @@
-Three Js Node Snowman Multiplayer Game
-========================
+Snowball Fight
+==============
 
-Snowman game built with three.js and node.
+A snowball fight in three.js, at [snowman.mikemjharris.com](https://snowman.mikemjharris.com).
 
-Clone repositry then:
+A static site: the game runs entirely in the browser, and top scores are kept in the player's own browser.
+It used to run on a Node server with socket.io for a shared leaderboard; the multiplayer version is on the
+`old-multiplayer` branch.
 
-`npm install`
+```
+npm install
+npm run build    # static files in dist/
+npm start        # build, then serve dist/ on http://localhost:8000
+```
 
-Build the js/css
-`npm run build `
-
-To run the game:
-
-`npm start`
-
-Navigate to:
-
-`localhost:8000`
-
-Arrows to move. Spacebar to fire a snowball
-
-
-## Docker
-
-Build container:
-`docker build . -t snowman`
-
-Run container - we mount the data folder so that we can keep scores even if the containter
-gets rebuilt/restarted.
-`docker run -v $(pwd)/data:/var/www/data -p 8000:8000 --name snowman snowman
+Pushing to `master` deploys to S3 + CloudFront with GitHub Actions
+(infrastructure in [mikemjharris/infra](https://github.com/mikemjharris/infra)).

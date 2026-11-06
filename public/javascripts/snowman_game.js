@@ -1,5 +1,26 @@
-var topscores = [];
-var socket = io(window.location.origin);
+// Top scores are kept in this browser only (there's no server).
+var SCORES_KEY = 'snowman-top-scores';
+
+function loadScores() {
+  try {
+    return JSON.parse(localStorage.getItem(SCORES_KEY)) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveScore(score) {
+  var scores = loadScores();
+  scores.push(score);
+  scores.sort(function (a, b) { return b[0] - a[0]; });
+  scores = scores.slice(0, 5);
+  try {
+    localStorage.setItem(SCORES_KEY, JSON.stringify(scores));
+  } catch (e) {
+    // Private browsing or storage disabled: scores just aren't kept.
+  }
+  return scores;
+}
 
 function addCommas(nStr) {
     nStr += '';
@@ -116,7 +137,7 @@ function render() {
     Game.message('Game over - you scored ' + addCommas(Game.totalPoints));
     $('.after a').replaceWith('<a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? I scored ' + Game.totalPoints + ' in a snowball fight. See if you can beat me. http://snowman.mikemjharris.com &"  target="_blank">Share score on twitter</a>')
     $('.message-main').text('You scored: ' + addCommas(Game.totalPoints));
-    socket.emit('single-score' , [Game.totalPoints, $('#player-name').val() || 'Anon']);
+    updateTopScores(saveScore([Game.totalPoints, $('#player-name').val() || 'Anon']));
     $('#time').text('Time up!');
     Game.time = 30;
     $('.single-player-start').show();
@@ -129,15 +150,9 @@ function updateTopScores ( scores ) {
     return b[0] - a[0];
   });
   for ( var i = 0; i < Math.min(5 , scores.length); i++ ) {
-    $('.topscores').append('<span>' + scores[i][1] + ' ' + addCommas(scores[i][0]) + '</span>');
+    // Names as text, not HTML.
+    $('.topscores').append($('<span>').text(scores[i][1] + ' ' + addCommas(scores[i][0])));
   }
 }
 
-socket.on('connected', function ( scores ) {
-  console.log('connected')
-  updateTopScores( scores );
-});
-
-socket.on('topscores', function ( scores ) {
-  updateTopScores( scores );
-});
+updateTopScores(loadScores());

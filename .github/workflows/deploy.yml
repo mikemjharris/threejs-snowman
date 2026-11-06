@@ -1,0 +1,95 @@
+name: Build and deploy
+
+# Builds on every push and pull request; deploys master to S3 + CloudFront.
+# The bucket and distribution are defined in mikemjharris/infra
+# (terraform/web/sites).
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: eu-west-2
+  AWS_ROLE_ARN: arn:aws:iam::702167621683:role/github-deploy-snowman
+  BUCKET: mikemjharris-snowman-702167621683
+  DISTRIBUTION_ID: E275MOY0NDIU54
+  CLOUDFRONT_URL: https://d2auw86carfhcq.cloudfront.net
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Write version.json
+        run: |
+          cat > dist/version.json <<JSON
+          {
+              "commit": "${GITHUB_SHA}",
+              "branch": "${GITHUB_REF_NAME}",
+              "deploy_date": "$(date -u +%Y-%m-%d_%H-%M-%S)"
+          }
+          JSON
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # OIDC login to AWS; no AWS keys are stored in GitHub
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist
+
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload to S3
+        run: aws s3 sync dist/ "s3://${BUCKET}/" --delete --no-progress
+
+      - name: Clear the CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${DISTRIBUTION_ID}" \
+            --paths "/*" \
+            --query 'Invalidation.Id' --output text
+
+      - name: Check the new version is live
+        run: |
+          for i in $(seq 1 30); do
+            live=$(curl -sf "${CLOUDFRONT_URL}/version.json" | jq -r .commit || true)
+            if [ "$live" = "${GITHUB_SHA}" ]; then
+              echo "serving ${GITHUB_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "still serving ${live:-nothing}, expected ${GITHUB_SHA}"
+          exit 1
