@@ -1,12 +1,12 @@
 name: Build and deploy
 
-# Builds on every push and pull request; deploys master to S3 + CloudFront.
+# Builds on every push and pull request; deploys main to S3 + CloudFront.
 # The bucket and distribution are defined in mikemjharris/infra
 # (terraform/web/sites).
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -51,7 +51,7 @@ jobs:
           path: dist
 
   deploy:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     permissions:
