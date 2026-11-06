@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snowman Game</title>
+    <link rel="stylesheet" href="/canvas_game.css">
+    <script src="/vendor/jquery.min.js"></script>
+    <script src="/vendor/three.min.js"></script>
+    <link rel="icon" href="/images/favicon.png">
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+  </head>
+  <body>
+
+    <div id="canvas-view">
+    </div>
+
+    <div class='single-player-start'>
+      <h2>Snowball Fight!</h2>
+      <div class='first'>
+        <input type='text' id='player-name' placeholder="Enter your name ..." autofocus />
+        <button class='single-player-start-button'>Start game</button>
+      </div>
+      <div class='after'>
+      <div class="message-main"></div>
+        <a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? https://snowman.mikemjharris.com by @mikemjharris &" target="_blank">Tweet about snowball fight!</a>
+        <button class='single-player-start-button'>Play Again!</button>
+      </div>
+
+      <ul>
+        <li>Arrow keys to move.</li>
+        <li>Space bar to throw snowball.  Hold down for more power.</li>
+        <li>Points = distance from target squared.</li>
+      </ul>
+
+      <h2>Top Scores</h2>
+      <div class='topscores'></div>
+    </div>
+
+    <div class="map">
+      <canvas id="map-canvas" width="200" height="200"></canvas>
+    </div>
+
+    <div class="message"></div>
+    <div id="power"></div>
+    <div id="last-power"></div>
+
+    <div id='time'></div>
+
+    <div class='score'>
+      <p>Score: <span id='score'>0</span></p>
+      <p>Distance to Target:<span id='dist'></span></p>
+    </div>
+
+    </div>
+    <script src="/snowman-game.js"></script>
+  </body>
+</html>
