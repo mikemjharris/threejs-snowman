@@ -1,5 +1,8 @@
-// Top scores are kept in this browser only (there's no server).
+// Top scores are shared through /api/scores (a small function and table
+// defined in mikemjharris/infra). If that can't be reached, this browser's own
+// scores are shown instead; they're always saved locally too.
 var SCORES_KEY = 'snowman-top-scores';
+var SCORES_API = '/api/scores';
 
 function loadScores() {
   try {
@@ -20,6 +23,17 @@ function saveScore(score) {
     // Private browsing or storage disabled: scores just aren't kept.
   }
   return scores;
+}
+
+// Shows the shared top scores, or the local ones if the request fails.
+function showSharedScores(request, localScores) {
+  $.ajax($.extend({ url: SCORES_API, dataType: 'json', timeout: 5000 }, request))
+    .done(function (scores) {
+      updateTopScores(Array.isArray(scores) && scores.length ? scores : localScores);
+    })
+    .fail(function () {
+      updateTopScores(localScores);
+    });
 }
 
 function addCommas(nStr) {
@@ -137,7 +151,14 @@ function render() {
     Game.message('Game over - you scored ' + addCommas(Game.totalPoints));
     $('.after a').replaceWith('<a href="https://twitter.com/intent/tweet?&text=Do you wanna throw a snowball? I scored ' + Game.totalPoints + ' in a snowball fight. See if you can beat me. http://snowman.mikemjharris.com &"  target="_blank">Share score on twitter</a>')
     $('.message-main').text('You scored: ' + addCommas(Game.totalPoints));
-    updateTopScores(saveScore([Game.totalPoints, $('#player-name').val() || 'Anon']));
+    var name = $('#player-name').val() || 'Anon';
+    var localScores = saveScore([Game.totalPoints, name]);
+    updateTopScores(localScores);
+    showSharedScores({
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ score: Game.totalPoints, name: name })
+    }, localScores);
     $('#time').text('Time up!');
     Game.time = 30;
     $('.single-player-start').show();
@@ -156,3 +177,4 @@ function updateTopScores ( scores ) {
 }
 
 updateTopScores(loadScores());
+showSharedScores({}, loadScores());
